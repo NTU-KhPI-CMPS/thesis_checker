@@ -11,8 +11,13 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   int selectedIndex = 0;
+
   bool buttonIsHovered = false;
   bool containerIsHovered = false;
+  bool isLight = true;
+  bool themeButtonIsHovered = false;
+
+
   final List<Map<String, dynamic>> buttons = [
     {'icon': 'assets/images/house.png', 'label': 'Головна'},
     {'icon': 'assets/images/clock.png', 'label': 'Аналіз'},
@@ -241,12 +246,48 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ],
             ),
-            ElevatedButton(
-              onPressed: () {
-                
-              },
-              child: Text(
-                'Зміна теми'
+            MouseRegion(
+              onEnter: (event) => setState(() => themeButtonIsHovered = true),
+              onExit: (event) => setState(() => themeButtonIsHovered = false),
+              child: GestureDetector(
+                child: AnimatedContainer(
+                  duration: Duration(
+                    milliseconds: 200
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    vertical: 6.0,
+                    horizontal: 14.0,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: themeButtonIsHovered? AppColors.accent : AppColors.border
+                    ),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20.0)
+                    ),
+                    color: isLight? AppColors.surface2 : AppColors.text2
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        isLight ? 'assets/images/sunny.png' : 'assets/images/moon.png',
+                        width: 20.0,
+                        height: 20.0,
+                      ),
+                      SizedBox(width: 5,),
+                      Text(
+                        isLight ? 'Світла' : 'Темна',
+                        style: TextStyle(
+                          color: themeButtonIsHovered? AppColors.accent : AppColors.text2,
+                          fontSize: 13.0,
+                          fontFamily: 'FunnelSans',
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ],
