@@ -1,6 +1,8 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/core/constants/app_colors.dart';
+import 'package:flutter_app/features/home/widgets/page_container.dart';
+import 'package:flutter_app/features/analysis/view/analysis_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -25,180 +27,162 @@ class _HomeViewState extends State<HomeView> {
     {'icon': 'assets/images/clock.png', 'label': 'Історія'},
   ];
 
+  Widget _homeContent() {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            MouseRegion(
+              onEnter: (event) => setState(() => containerIsHovered = true),
+              onExit: (event) => setState(() => containerIsHovered = false),
+              child: TweenAnimationBuilder<Color?>(
+                tween: ColorTween(
+                  begin: AppColors.border,
+                  end: containerIsHovered ? AppColors.accent : AppColors.border,
+                ),
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeInOut,
+                builder: (context, color, child) {
+                  return DottedBorder(
+                    options: RoundedRectDottedBorderOptions(
+                      padding: EdgeInsets.zero,
+                      radius: Radius.circular(8.0),
+                      dashPattern: [8, 6],
+                      color: color ?? AppColors.border,
+                      strokeWidth: 4.0,
+                    ),
+                    child: child!,
+                  );
+                },
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 200),
+                  curve: Curves.easeInOut,
+                  width: double.infinity,
+                  height: 300.0,
+                  decoration: BoxDecoration(
+                    color: containerIsHovered ? AppColors.bg : AppColors.surface,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/images/open_folder.png',
+                        width: 48.0,
+                        height: 48.0,
+                      ),
+                      SizedBox(height: 16.0),
+                      Text(
+                        'Завантажте документ',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: AppColors.text,
+                          fontSize: 20.0,
+                          fontFamily: 'FunnelSans',
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        'Перетягніть .docx файл або натисніть щоб обрати',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: AppColors.text2,
+                          fontSize: 14.0,
+                          fontFamily: 'FunnelSans',
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(height: 24.0),
+                      MouseRegion(
+                        onEnter: (event) => setState(() => buttonIsHovered = true),
+                        onExit: (event) => setState(() => buttonIsHovered = false),
+                        child: GestureDetector(
+                          onTap: () {},
+                          child: TweenAnimationBuilder<double>(
+                            tween: Tween(begin: 0.0, end: buttonIsHovered ? -2.0 : 0.0),
+                            duration: const Duration(milliseconds: 200),
+                            curve: Curves.easeInOut,
+                            builder: (context, offset, child) {
+                              return Transform.translate(
+                                offset: Offset(0, offset),
+                                child: child,
+                              );
+                            },
+                            child: AnimatedContainer(
+                              duration: Duration(milliseconds: 200),
+                              padding: EdgeInsets.symmetric(
+                                vertical: 8.0,
+                                horizontal: 24.0,
+                              ),
+                              decoration: BoxDecoration(
+                                color: buttonIsHovered ? AppColors.accent.withAlpha(200) : AppColors.accent,
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Text(
+                                '+ Обрати файл',
+                                style: TextStyle(
+                                  color: buttonIsHovered ? Colors.grey[100] : Colors.white,
+                                  fontSize: 16.0,
+                                  fontFamily: 'FunnelSans',
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 28.0),
+            Text(
+              'Що перевіряємо'.toUpperCase(),
+              style: TextStyle(
+                fontFamily: 'FunnelSans',
+                fontSize: 13.0,
+                fontWeight: FontWeight.w600,
+                color: AppColors.text2,
+                letterSpacing: 0.5,
+              ),
+            ),
+            SizedBox(height: 28.0),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final crossAxisCount = constraints.maxWidth < 500 ? 1 : 2;
+                return GridView(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    crossAxisSpacing: 16.0,
+                    mainAxisSpacing: 16.0,
+                    mainAxisExtent: 56.0,
+                  ),
+                  children: [
+                    _buildCheckItem(Text('1')),
+                    _buildCheckItem(Text('2')),
+                    _buildCheckItem(Text('3')),
+                    _buildCheckItem(Text('4')),
+                  ],
+                );
+              },
+            ),
+          ],
+        );
+  }
+
+  late final List<Widget> views = [
+    _homeContent(),
+    AnalysisView(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.surface,
       appBar: _buildCustomAppBar(),
-      body: _mainContainer(),
-    );
-  }
-
-  Container _mainContainer() {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      decoration: BoxDecoration(
-        color: AppColors.bg,
-        border: Border(
-          top: BorderSide(
-            color: AppColors.border,
-            width: 1.0,
-          ),
-        ),
-      ),
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 820.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MouseRegion(
-                    onEnter: (event) => setState(() => containerIsHovered = true),
-                    onExit: (event) => setState(() => containerIsHovered = false),
-                    child: TweenAnimationBuilder<Color?>(
-                      tween: ColorTween(
-                        begin: AppColors.border,
-                        end: containerIsHovered ? AppColors.accent : AppColors.border,
-                      ),
-                      duration: const Duration(milliseconds: 200),
-                      curve: Curves.easeInOut,
-                      builder: (context, color, child) {
-                        return DottedBorder(
-                          options: RoundedRectDottedBorderOptions(
-                            padding: EdgeInsets.zero,
-                            radius: Radius.circular(8.0),
-                            dashPattern: [8, 6],
-                            color: color ?? AppColors.border,
-                            strokeWidth: 4.0,
-                          ),
-                          child: child!,
-                        );
-                      },
-                      child: AnimatedContainer(
-                        duration: Duration(milliseconds: 200),
-                        curve: Curves.easeInOut,
-                        width: double.infinity,
-                        height: 300.0,
-                        decoration: BoxDecoration(
-                          color: containerIsHovered ? AppColors.bg : AppColors.surface,
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'assets/images/open_folder.png',
-                              width: 48.0,
-                              height: 48.0,
-                            ),
-                            SizedBox(height: 16.0),
-                            Text(
-                              'Завантажте документ',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: AppColors.text,
-                                fontSize: 20.0,
-                                fontFamily: 'FunnelSans',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Text(
-                              'Перетягніть .docx файл або натисніть щоб обрати',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: AppColors.text2,
-                                fontSize: 14.0,
-                                fontFamily: 'FunnelSans',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            SizedBox(height: 24.0),
-                            MouseRegion(
-                              onEnter: (event) => setState(() => buttonIsHovered = true),
-                              onExit: (event) => setState(() => buttonIsHovered = false),
-                              child: GestureDetector(
-                                onTap: () {},
-                                child: TweenAnimationBuilder<double>(
-                                  tween: Tween(begin: 0.0, end: buttonIsHovered ? -2.0 : 0.0),
-                                  duration: const Duration(milliseconds: 200),
-                                  curve: Curves.easeInOut,
-                                  builder: (context, offset, child) {
-                                    return Transform.translate(
-                                      offset: Offset(0, offset),
-                                      child: child,
-                                    );
-                                  },
-                                  child: AnimatedContainer(
-                                  duration: Duration(milliseconds: 200),
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 8.0,
-                                    horizontal: 24.0,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: buttonIsHovered ? AppColors.accent.withAlpha(200): AppColors.accent,
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  child: Text(
-                                    '+ Обрати файл',
-                                    style: TextStyle(
-                                      color: buttonIsHovered ? Colors.grey[100]: Colors.white,
-                                      fontSize: 16.0,
-                                      fontFamily: 'FunnelSans',
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 28.0,),
-                  Text(
-                    'Що перевіряємо'.toUpperCase(),
-                    style: TextStyle(
-                      fontFamily: 'FunnelSans',
-                      fontSize: 13.0,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.text2,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                  SizedBox(height: 28.0,),
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      final crossAxisCount = constraints.maxWidth < 500 ? 1 : 2;
-                      return GridView(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: crossAxisCount,
-                          crossAxisSpacing: 16.0,
-                          mainAxisSpacing: 16.0,
-                          mainAxisExtent: 56.0,
-                        ),
-                        children: [
-                          _buildCheckItem(Text('1')),
-                          _buildCheckItem(Text('2')),
-                          _buildCheckItem(Text('3')),
-                          _buildCheckItem(Text('4')),
-                        ],
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
+      body: PageContainer(child: views[selectedIndex]),
     );
   }
 
