@@ -46,6 +46,8 @@ class _UploadDropzoneState extends State<UploadDropzone> {
             final file = details.files.first;
             context.read<FileBloc>().add(FilePickedEvent(file.path, file.name));
           },
+          onDragEntered: (details) => setState(() => _containerIsHovered = true),
+          onDragExited: (details) => setState(() => _containerIsHovered = false),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             curve: Curves.easeInOut,
