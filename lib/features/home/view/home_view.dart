@@ -179,13 +179,49 @@ class _HomeViewState extends State<HomeView> {
                           crossAxisCount: crossAxisCount,
                           crossAxisSpacing: 16.0,
                           mainAxisSpacing: 16.0,
-                          mainAxisExtent: 56.0,
+                          mainAxisExtent: 76.0,
                         ),
                         children: [
-                          _buildCheckItem(Text('1')),
-                          _buildCheckItem(Text('2')),
-                          _buildCheckItem(Text('3')),
-                          _buildCheckItem(Text('4')),
+                          _buildCheckItem(
+                            [
+                              Image.asset(
+                                'assets/images/abc.png',
+                                width: 20.0,
+                                height: 20.0,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    Text(
+                                      'Шрифт',
+                                      style: TextStyle(
+                                        fontSize: 14.0,
+                                        fontFamily: 'FunnelSans',
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.text,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    Text(
+                                      'Назва',
+                                      style: TextStyle(
+                                        fontSize: 14.0,
+                                        fontFamily: 'FunnelSans',
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.text2,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ]
+                          ),
                         ],
                       );
                     },
@@ -382,7 +418,7 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Container _buildCheckItem(Widget child) {
+  Container _buildCheckItem(List<Widget> child) {
     return Container(
       padding: const EdgeInsets.symmetric(
         vertical: 14.0,
@@ -398,8 +434,7 @@ class _HomeViewState extends State<HomeView> {
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
-        spacing: 12.0,
-        children: [child],
+        children: child,
       ),
     );
   }
