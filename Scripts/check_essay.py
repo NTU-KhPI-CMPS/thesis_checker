@@ -5,52 +5,18 @@ import os
 from datetime import datetime
 from docx import Document
 from docx.shared import Pt
-import tkinter as tk
-from tkinter import filedialog
 from collections import defaultdict
-from docx.oxml.ns import qn
-
-
-def select_files():
-    root = tk.Tk()
-    root.withdraw()
-    file_paths = filedialog.askopenfilenames(
-        title="Виберіть файли рефератів",
-        filetypes=[("Word документи", "*.docx"), ("Всі файли", "*.*")]
-    )
-    return list(file_paths)
-
-
-def get_page_numbers(doc):
-    page_numbers = []
-    current_page = 1
-    for paragraph in doc.paragraphs:
-        has_page_break = False
-        for run in paragraph.runs:
-            brs = run._element.findall(qn('w:br'))
-            for br in brs:
-                if br.get(qn('w:type')) == 'page':
-                    has_page_break = True
-                    break
-            if has_page_break:
-                break
-        if has_page_break:
-            current_page += 1
-        page_numbers.append(current_page)
-    return page_numbers
 
 
 def check_essay(file_path, expected_font='Times New Roman', expected_size=14):
-    errors_by_paragraph = defaultdict(lambda: {'font_issues': [], 'size_issues': [], 'text': '', 'page': 1})
+    errors_by_paragraph = defaultdict(lambda: {'font_issues': [], 'size_issues': [], 'text': ''})
 
     try:
         doc = Document(file_path)
     except FileNotFoundError:
-        return [f" Файл не знайдено: {file_path}"]
+        return [{"error": f"Файл не знайдено: {file_path}"}]
     except Exception as e:
-        return [f" Помилка відкриття файлу: {e}"]
-
-    page_numbers = get_page_numbers(doc)
+        return [{"error": f"Помилка відкриття файлу: {e}"}]
 
     for para_index, paragraph in enumerate(doc.paragraphs):
         para_text = paragraph.text
@@ -58,7 +24,6 @@ def check_essay(file_path, expected_font='Times New Roman', expected_size=14):
             continue
 
         errors_by_paragraph[para_index + 1]['text'] = para_text[:200] + ('...' if len(para_text) > 200 else '')
-        errors_by_paragraph[para_index + 1]['page'] = page_numbers[para_index]
 
         runs = list(paragraph.runs)
         for i, run in enumerate(runs):
@@ -72,7 +37,6 @@ def check_essay(file_path, expected_font='Times New Roman', expected_size=14):
             end_pos = start_pos + len(fragment_text)
 
             is_space = fragment_text and not fragment_text.strip()
-
             if is_space:
                 prev_text = ''
                 next_text = ''
@@ -120,7 +84,6 @@ def check_essay(file_path, expected_font='Times New Roman', expected_size=14):
                     'severity': 'error',
                     'title': f"Невірний шрифт: {issue['actual']}",
                     'paragraph_index': para_num,
-                    'page': issues['page'],
                     'paragraph_text': issues['text'],
                     'highlight': {
                         'start': issue['start'],
@@ -139,7 +102,6 @@ def check_essay(file_path, expected_font='Times New Roman', expected_size=14):
                     'severity': 'error',
                     'title': f"Невірний розмір шрифту: {issue['actual']}pt",
                     'paragraph_index': para_num,
-                    'page': issues['page'],
                     'paragraph_text': issues['text'],
                     'highlight': {
                         'start': issue['start'],
@@ -154,13 +116,15 @@ def check_essay(file_path, expected_font='Times New Roman', expected_size=14):
     return json_errors
 
 
-def generate_json_report(file_path, errors, font, size):
+def generate_json_report(file_path, errors, expected_font, expected_size):
     filename = os.path.basename(file_path)
 
     by_severity = {'error': 0, 'warning': 0}
     by_category = {}
 
     for err in errors:
+        if 'error' in err:
+            continue
         by_severity[err['severity']] = by_severity.get(err['severity'], 0) + 1
         category = err['category']
         by_category[category] = by_category.get(category, 0) + 1
@@ -169,24 +133,23 @@ def generate_json_report(file_path, errors, font, size):
         "file_name": filename,
         "analyzed_at": datetime.now().isoformat(),
         "summary": {
-            "total_errors": len(errors),
+            "total_errors": len([e for e in errors if 'error' not in e]),
             "by_severity": by_severity,
             "by_category": by_category
         },
-        "errors": errors
+        "errors": [e for e in errors if 'error' not in e]
     }
     return report
 
 
-def save_json_report(report, base_filename):
-    reports_dir = "../reports"
-    os.makedirs(reports_dir, exist_ok=True)
+def save_json_report(report, base_filename, output_dir="reports"):
+    os.makedirs(output_dir, exist_ok=True)
 
     safe_name = os.path.splitext(os.path.basename(base_filename))[0]
     safe_name = "".join(c if c.isalnum() or c in "._-" else "_" for c in safe_name)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_filename = f"{safe_name}_{timestamp}.json"
-    output_path = os.path.join(reports_dir, output_filename)
+    output_path = os.path.join(output_dir, output_filename)
 
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
@@ -194,44 +157,35 @@ def save_json_report(report, base_filename):
     return output_path
 
 
-def print_report(file_path, errors, font, size):
-    print(f"\n **Файл: {file_path}**")
-    if not errors:
-        print(" Всі текстові елементи мають шрифт Times New Roman 14.")
-    else:
-        print(f" Знайдено {len(errors)} помилок оформлення:")
-        for err in errors:
-            page_info = f", сторінка {err['page']}" if err['page'] else ""
-            print(f"      Абзац {err['paragraph_index']}{page_info} — {err['category']}: {err['title']}")
-            print(f"         у фрагменті: {err['paragraph_text'][:50]}...")
-            print(f"         (очікувалося {err['expected']}, отримано {err['found']})\n")
-
-
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Перевірка оформлення рефератів (шрифт Times New Roman 14)')
-    parser.add_argument('files', nargs='*',
-                        help="Шляхи до файлів .docx (можна вказати декілька). Якщо не вказано, відкриється діалог вибору.")
-    parser.add_argument('--font', default='Times New Roman', help='Очікуваний шрифт')
-    parser.add_argument('--size', type=int, default=14, help='Очікуваний розмір шрифту')
-    parser.add_argument('--no-json', action='store_true', help='Не зберігати JSON-звіт (тільки текстовий вивід)')
+    parser = argparse.ArgumentParser(
+        description='Перевірка оформлення .docx файлів (шрифт Times New Roman 14)'
+    )
+    parser.add_argument(
+        'files',
+        nargs='+',
+        help="Шляхи до файлів .docx (обов'язково вказати хоча б один файл)"
+    )
+    parser.add_argument(
+        '--font',
+        default='Times New Roman',
+        help='Очікуваний шрифт (за замовчуванням Times New Roman)'
+    )
+    parser.add_argument(
+        '--size',
+        type=int,
+        default=14,
+        help='Очікуваний розмір шрифту (за замовчуванням 14)'
+    )
+    parser.add_argument(
+        '--output-dir',
+        default='reports',
+        help='Папка для збереження JSON-звітів (за замовчуванням reports)'
+    )
 
     args = parser.parse_args()
 
-    files_to_check = []
-
-    if not args.files:
-        files_to_check = select_files()
-        if not files_to_check:
-            print("Файли не вибрано. Вихід.")
-            sys.exit(1)
-    else:
-        files_to_check = args.files
-
-    for file_path in files_to_check:
+    for file_path in args.files:
         errors = check_essay(file_path, args.font, args.size)
-        print_report(file_path, errors, args.font, args.size)
-
-        if not args.no_json:
-            report = generate_json_report(file_path, errors, args.font, args.size)
-            json_path = save_json_report(report, file_path)
-            print(f" JSON-звіт збережено: {json_path}")
+        report = generate_json_report(file_path, errors, args.font, args.size)
+        json_path = save_json_report(report, file_path, args.output_dir)
