@@ -6,7 +6,7 @@ class InfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final surfaceColor = Theme.of(context).canvasColor;
+    final surfaceColor = Theme.of(context).scaffoldBackgroundColor;
     final borderColor = Theme.of(context).dividerColor;
 
     return Container(
