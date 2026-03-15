@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/core/constants/app_colors.dart';
+import 'package:flutter_app/core/theme/theme_cubit.dart';
 import 'package:flutter_app/core/widgets/page_container.dart';
 import 'package:flutter_app/features/home/bloc/file_bloc.dart';
 import 'package:flutter_app/features/home/widgets/app_bar_button.dart';
@@ -15,17 +15,13 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   int selectedIndex = 0;
-
-  bool isLight = true;
   bool themeButtonIsHovered = false;
 
   final List<Map<String, dynamic>> buttons = [
     {'icon': 'assets/images/house.png', 'label': 'Головна'},
   ];
 
-  final List<Widget> views = [
-    HomeContent(),
-  ];
+  final List<Widget> views = [HomeContent()];
 
   @override
   Widget build(BuildContext context) {
@@ -40,23 +36,28 @@ class _HomeViewState extends State<HomeView> {
         }
         if (state is FileUploadErrorState) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Виникла помилка: ${state.error}'),
-            ),
+            SnackBar(content: Text('Виникла помилка: ${state.error}')),
           );
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.surface,
-        appBar: _buildCustomAppBar(),
+        appBar: _buildCustomAppBar(context),
         body: PageContainer(child: views[selectedIndex]),
       ),
     );
   }
 
-  AppBar _buildCustomAppBar() {
+  AppBar _buildCustomAppBar(BuildContext context) {
+    final isLight = Theme.of(context).brightness == Brightness.light;
+    final textColor =
+        Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black;
+    final accentColor = Theme.of(context).primaryColor;
+    final borderColor = Theme.of(context).dividerColor;
+    final surface2Color = Theme.of(context).colorScheme.surface;
+    final textColor2 =
+        Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey;
+
     return AppBar(
-      backgroundColor: AppColors.surface,
       titleSpacing: 0.0,
       automaticallyImplyLeading: false,
       toolbarHeight: 85.0,
@@ -71,7 +72,7 @@ class _HomeViewState extends State<HomeView> {
                   width: 32.0,
                   height: 32.0,
                   decoration: BoxDecoration(
-                    color: AppColors.accent,
+                    color: accentColor,
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: Padding(
@@ -83,11 +84,11 @@ class _HomeViewState extends State<HomeView> {
                     ),
                   ),
                 ),
-                SizedBox(width: 12.0),
+                const SizedBox(width: 12.0),
                 Text(
                   'Thesis checker',
                   style: TextStyle(
-                    color: AppColors.text,
+                    color: textColor,
                     fontFamily: 'FunnelSans',
                     fontWeight: FontWeight.w600,
                     fontSize: 17.0,
@@ -99,20 +100,21 @@ class _HomeViewState extends State<HomeView> {
               onEnter: (event) => setState(() => themeButtonIsHovered = true),
               onExit: (event) => setState(() => themeButtonIsHovered = false),
               child: GestureDetector(
+                onTap: () {
+                  context.read<ThemeCubit>().toggleTheme();
+                },
                 child: AnimatedContainer(
-                  duration: Duration(milliseconds: 200),
-                  padding: EdgeInsets.symmetric(
+                  duration: const Duration(milliseconds: 200),
+                  padding: const EdgeInsets.symmetric(
                     vertical: 6.0,
                     horizontal: 14.0,
                   ),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: themeButtonIsHovered
-                          ? AppColors.accent
-                          : AppColors.border,
+                      color: themeButtonIsHovered ? accentColor : borderColor,
                     ),
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                    color: isLight ? AppColors.surface2 : AppColors.text2,
+                    borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+                    color: surface2Color,
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -124,13 +126,13 @@ class _HomeViewState extends State<HomeView> {
                         width: 20.0,
                         height: 20.0,
                       ),
-                      SizedBox(width: 5),
+                      const SizedBox(width: 5),
                       Text(
                         isLight ? 'Світла' : 'Темна',
                         style: TextStyle(
                           color: themeButtonIsHovered
-                              ? AppColors.accent
-                              : AppColors.text2,
+                              ? accentColor
+                              : textColor2,
                           fontSize: 13.0,
                           fontFamily: 'FunnelSans',
                           fontWeight: FontWeight.w600,
@@ -145,11 +147,11 @@ class _HomeViewState extends State<HomeView> {
         ),
       ),
       bottom: PreferredSize(
-        preferredSize: Size.fromHeight(32.0),
+        preferredSize: const Size.fromHeight(32.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(color: Colors.grey[300], height: 1.0),
+            Container(color: borderColor, height: 1.0),
             Padding(
               padding: const EdgeInsets.only(top: 10.0, left: 24.0),
               child: SingleChildScrollView(

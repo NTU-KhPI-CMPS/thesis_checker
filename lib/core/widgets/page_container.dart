@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/core/constants/app_colors.dart';
 
 class PageContainer extends StatelessWidget {
   final Widget child;
@@ -7,14 +6,17 @@ class PageContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bgColor = Theme.of(context).canvasColor;
+    final borderColor = Theme.of(context).dividerColor;
+
     return Container(
       width: double.infinity,
       height: double.infinity,
       decoration: BoxDecoration(
-        color: AppColors.bg,
+        color: bgColor,
         border: Border(
           top: BorderSide(
-            color: AppColors.border,
+            color: borderColor,
             width: 1.0,
           ),
         ),
