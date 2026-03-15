@@ -4,7 +4,11 @@ import 'package:flutter_app/features/home/widgets/info_card.dart';
 import 'package:flutter_app/features/home/widgets/upload_zone.dart';
 
 class HomeContent extends StatelessWidget {
-  const HomeContent({super.key});
+  HomeContent({super.key});
+
+  final List<Map<String, String>> infoCards = [
+    {'icon': 'assets/images/abc.png', 'title': 'Шрифт', 'subtitle': 'Назва'},
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +40,12 @@ class HomeContent extends StatelessWidget {
                 mainAxisSpacing: 16.0,
                 mainAxisExtent: 76.0,
               ),
-              children: [
-                InfoCard(
-                  children: [
+              children: List.generate(
+                infoCards.length,
+                (index) => InfoCard(
+                   children: [
                     Image.asset(
-                      'assets/images/abc.png',
+                      infoCards[index]['icon']!,
                       width: 20.0,
                       height: 20.0,
                     ),
@@ -49,10 +54,10 @@ class HomeContent extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text(
-                            'Шрифт',
-                            style: TextStyle(
+                            infoCards[index]['title']!,
+                            style: const TextStyle(
                               fontSize: 14.0,
                               fontFamily: 'FunnelSans',
                               fontWeight: FontWeight.w600,
@@ -62,7 +67,7 @@ class HomeContent extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            'Назва',
+                            infoCards[index]['subtitle']!,
                             style: TextStyle(
                               fontSize: 14.0,
                               fontFamily: 'FunnelSans',
@@ -77,7 +82,7 @@ class HomeContent extends StatelessWidget {
                     ),
                   ],
                 ),
-              ],
+              )
             );
           },
         ),
