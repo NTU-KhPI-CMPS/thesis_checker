@@ -24,7 +24,7 @@ class _HomeViewState extends State<HomeView> {
   ];
 
   final List<Widget> views = [
-    const HomeContent(),
+    HomeContent(),
   ];
 
   @override
