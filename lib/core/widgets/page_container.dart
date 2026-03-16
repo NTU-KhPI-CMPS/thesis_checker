@@ -30,8 +30,9 @@ class PageContainer extends StatelessWidget {
                 minHeight: minHeight,
               ),
               child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Center(
+                padding: const EdgeInsets.all(36.0),
+                child: Align(
+                  alignment: Alignment.topCenter,
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
                       maxWidth: 820.0,
