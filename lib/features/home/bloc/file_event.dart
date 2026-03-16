@@ -9,9 +9,10 @@ sealed class FileEvent extends Equatable {
 
 final class FileDroppedEvent extends FileEvent {
   final String filePath;
+  final String fileName;
 
-  const FileDroppedEvent(this.filePath);
+  const FileDroppedEvent(this.filePath, this.fileName);
 
   @override
-  List<Object> get props => [filePath];
+  List<Object> get props => [filePath, fileName];
 }

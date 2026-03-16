@@ -30,7 +30,7 @@ class _HomeViewState extends State<HomeView> {
         if (state is FileUploadedState) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Файл ${state.filePath} успішно завантажено!'),
+              content: Text('Файл ${state.fileName} успішно завантажено!'),
             ),
           );
         }

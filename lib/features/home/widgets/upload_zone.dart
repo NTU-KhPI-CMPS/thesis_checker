@@ -53,7 +53,8 @@ class _UploadZoneState extends State<UploadZone> {
           onDragDone: (details) {
             final file = details.files.first;
             final filePath = file.path;
-            context.read<FileBloc>().add(FileDroppedEvent(filePath));
+            final fileName = file.name;
+            context.read<FileBloc>().add(FileDroppedEvent(filePath, fileName));
           },
           child: AnimatedContainer(
             duration: Duration(milliseconds: 200),
@@ -105,7 +106,9 @@ class _UploadZoneState extends State<UploadZone> {
                         allowedExtensions: ['docx'],
                       );
                       if (file != null) {
-                        bloc.add(FileDroppedEvent(file.files.first.path!));
+                        final filePath = file.files.first.path!;
+                        final fileName = file.files.first.name;
+                        bloc.add(FileDroppedEvent(filePath, fileName));
                       }
                     },
                     child: TweenAnimationBuilder<double>(

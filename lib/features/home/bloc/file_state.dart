@@ -11,13 +11,14 @@ final class FileInitial extends FileState {}
 
 final class FileUploadedState extends FileState {
   final String filePath;
+  final String fileName;
   final DateTime _timestamp;
 
-  FileUploadedState({required this.filePath})
+  FileUploadedState({required this.filePath, required this.fileName})
     : _timestamp = DateTime.now();
 
   @override
-  List<Object> get props => [filePath, _timestamp];
+  List<Object> get props => [filePath, fileName, _timestamp];
 }
 
 final class FileUploadErrorState extends FileState {
