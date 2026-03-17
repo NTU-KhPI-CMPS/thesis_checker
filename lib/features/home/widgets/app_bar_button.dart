@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Navigation tab button used in the custom app bar.
 class AppBarNavButton extends StatelessWidget {
   const AppBarNavButton({
     super.key,

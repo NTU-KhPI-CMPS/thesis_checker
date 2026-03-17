@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/features/home/bloc/file_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+/// Interactive drop area for uploading thesis files.
 class UploadZone extends StatefulWidget {
   const UploadZone({super.key});
 
@@ -12,6 +13,7 @@ class UploadZone extends StatefulWidget {
   State<UploadZone> createState() => _UploadZoneState();
 }
 
+/// Internal state for [UploadZone].
 class _UploadZoneState extends State<UploadZone> {
   bool buttonIsHovered = false;
   bool containerIsHovered = false;

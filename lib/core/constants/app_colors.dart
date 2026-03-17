@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+/// Centralized color palette used across the app UI.
 class AppColors {
   static const Color bg = Color(0xFFF5F5F7);
   static const Color surface = Color(0xFFFFFFFF);

@@ -1,5 +1,6 @@
 part of 'file_bloc.dart';
 
+/// Base class for all file upload states.
 sealed class FileState extends Equatable {
   const FileState();
   
@@ -7,8 +8,10 @@ sealed class FileState extends Equatable {
   List<Object> get props => [];
 }
 
+/// Initial state before a file has been validated.
 final class FileInitial extends FileState {}
 
+/// State emitted when a supported file has been accepted.
 final class FileUploadedState extends FileState {
   final String filePath;
   final String fileName;
@@ -21,6 +24,7 @@ final class FileUploadedState extends FileState {
   List<Object> get props => [filePath, fileName, _timestamp];
 }
 
+/// State emitted when file validation fails.
 final class FileUploadErrorState extends FileState {
   final String error;
   final DateTime _timestamp;

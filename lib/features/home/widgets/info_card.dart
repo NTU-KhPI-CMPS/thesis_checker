@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Small bordered card used to display a compact row of info widgets.
 class InfoCard extends StatelessWidget {
   final List<Widget> children;
   const InfoCard({super.key, required this.children});

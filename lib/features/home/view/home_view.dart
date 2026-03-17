@@ -6,6 +6,7 @@ import 'package:flutter_app/features/home/widgets/app_bar_button.dart';
 import 'package:flutter_app/features/home/widgets/home_content.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+/// Main screen that renders navigation, page content, and upload feedback.
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
@@ -13,6 +14,7 @@ class HomeView extends StatefulWidget {
   State<HomeView> createState() => _HomeViewState();
 }
 
+/// Internal state for [HomeView].
 class _HomeViewState extends State<HomeView> {
   int selectedIndex = 0;
   bool themeButtonIsHovered = false;

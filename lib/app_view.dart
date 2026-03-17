@@ -4,6 +4,7 @@ import 'package:flutter_app/core/theme/theme_cubit.dart';
 import 'package:flutter_app/features/home/view/home_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+/// Root view that configures the app-level [MaterialApp].
 class AppView extends StatelessWidget {
   const AppView({super.key});
 
