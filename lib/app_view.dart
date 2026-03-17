@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/features/home/view/home_view.dart';
 
+/// Root view that configures the app-level [MaterialApp].
 class AppView extends StatelessWidget {
   const AppView({super.key});
 

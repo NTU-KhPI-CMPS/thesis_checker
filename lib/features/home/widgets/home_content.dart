@@ -3,6 +3,7 @@ import 'package:flutter_app/core/constants/app_colors.dart';
 import 'package:flutter_app/features/home/widgets/info_card.dart';
 import 'package:flutter_app/features/home/widgets/upload_zone.dart';
 
+/// Primary content area of the home screen.
 class HomeContent extends StatelessWidget {
   HomeContent({super.key});
 

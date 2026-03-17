@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/core/constants/app_colors.dart';
 
+/// Reusable layout wrapper with a full-page background and centered content.
 class PageContainer extends StatelessWidget {
   final Widget child;
   const PageContainer({super.key, required this.child});
