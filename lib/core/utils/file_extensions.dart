@@ -1,3 +1,4 @@
+/// Utility helpers for validating supported file extensions.
 class FileExtensions {
   static const List<String> supportedExtensions = ['docx'];
 
