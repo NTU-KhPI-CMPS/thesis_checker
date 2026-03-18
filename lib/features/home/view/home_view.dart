@@ -4,6 +4,8 @@ import 'package:flutter_app/core/widgets/page_container.dart';
 import 'package:flutter_app/features/home/bloc/file_bloc.dart';
 import 'package:flutter_app/features/home/widgets/app_bar_button.dart';
 import 'package:flutter_app/features/home/widgets/home_content.dart';
+import 'package:flutter_app/features/loading_analysis/bloc/analysis_bloc.dart';
+import 'package:flutter_app/features/loading_analysis/view/loading_analysis_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Main screen that renders navigation, page content, and upload feedback.
@@ -21,43 +23,66 @@ class _HomeViewState extends State<HomeView> {
 
   final List<Map<String, dynamic>> buttons = [
     {'icon': 'assets/images/house.png', 'label': 'Головна'},
+    {'icon': 'assets/images/hourglass.png', 'label': 'Аналіз'},
   ];
 
-  final List<Widget> views = [HomeContent()];
+  late final List<Widget> views;
+
+  @override
+  void initState() {
+    super.initState();
+    views = [
+      HomeContent(),
+      LoadingAnalysisView(onAnalysisComplete: _onAnalysisComplete),
+    ];
+  }
+
+  void _onAnalysisComplete() {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Аналіз завершено!')));
+
+    context.read<FileBloc>().add(ResetFileEvent());
+    setState(() => selectedIndex = 0);
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<FileBloc, FileState>(
       listener: (context, state) {
         if (state is FileUploadedState) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Файл ${state.fileName} успішно завантажено!'),
-            ),
-          );
+          setState(() {
+            selectedIndex = 1;
+            context.read<AnalysisBloc>().add(
+              StartAnalysisEvent(filePath: state.filePath),
+            );
+          });
         }
         if (state is FileUploadErrorState) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Виникла помилка: ${state.error}')),
+            SnackBar(content: Text('Виникла помилка: //${state.error}')),
           );
         }
       },
       child: Scaffold(
         appBar: _buildCustomAppBar(context),
-        body: PageContainer(child: views[selectedIndex]),
+        body: PageContainer(
+          contentAlignment: selectedIndex == 1
+              ? Alignment.center
+              : Alignment.topCenter,
+          child: views[selectedIndex],
+        ),
       ),
     );
   }
 
   AppBar _buildCustomAppBar(BuildContext context) {
     final isLight = Theme.of(context).brightness == Brightness.light;
-    final textColor =
-        Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black;
+    final textColor = Theme.of(context).textTheme.bodyLarge?.color;
     final accentColor = Theme.of(context).primaryColor;
     final borderColor = Theme.of(context).dividerColor;
     final surface2Color = Theme.of(context).colorScheme.surface;
-    final textColor2 =
-        Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey;
+    final textColor2 = Theme.of(context).textTheme.bodyMedium?.color;
 
     return AppBar(
       titleSpacing: 0.0,
@@ -158,22 +183,27 @@ class _HomeViewState extends State<HomeView> {
               padding: const EdgeInsets.only(top: 10.0, left: 24.0),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: List.generate(
-                    buttons.length,
-                    (index) => AppBarNavButton(
-                      icon: buttons[index]['icon'],
-                      label: buttons[index]['label'],
-                      isActive: selectedIndex == index,
-                      onTap: () {
-                        setState(() {
-                          selectedIndex = index;
-                        });
-                      },
-                    ),
-                  ),
+                child: BlocBuilder<AnalysisBloc, AnalysisState>(
+                  builder: (context, state) {
+                    final isLocked = state is AnalysisInProgressState;
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: List.generate(
+                        buttons.length,
+                        (index) => AppBarNavButton(
+                          icon: buttons[index]['icon'],
+                          label: buttons[index]['label'],
+                          isActive: selectedIndex == index,
+                          onTap: !isLocked ? () {
+                            setState(() {
+                              selectedIndex = index;
+                            });
+                          } : null,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
