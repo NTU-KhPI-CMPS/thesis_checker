@@ -9,6 +9,7 @@ part 'file_state.dart';
 class FileBloc extends Bloc<FileEvent, FileState> {
   FileBloc() : super(FileInitial()) {
     on<FileDroppedEvent>(_onFileDroppedEvent);
+    on<ResetFileEvent>((event, emit) => emit(FileInitial()));
   }
 
   void _onFileDroppedEvent(FileDroppedEvent e, Emitter emit) {
