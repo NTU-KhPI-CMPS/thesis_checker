@@ -12,8 +12,8 @@ class HomeContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textColor2 = Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey;
-    final textColor = Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black;
+    final textColor2 = Theme.of(context).textTheme.bodyMedium?.color;
+    final textColor = Theme.of(context).textTheme.bodyLarge?.color;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

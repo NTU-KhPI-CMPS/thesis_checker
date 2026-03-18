@@ -13,14 +13,14 @@ class AppBarNavButton extends StatelessWidget {
   final String icon;
   final String label;
   final bool isActive;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final bgColor = Theme.of(context).canvasColor;
     final borderColor = Theme.of(context).dividerColor;
     final accentColor = Theme.of(context).primaryColor;
-    final textColor = Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black;
+    final textColor = Theme.of(context).textTheme.bodyLarge?.color;
 
     return GestureDetector(
       onTap: onTap,
