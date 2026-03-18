@@ -3,7 +3,13 @@ import 'package:flutter/material.dart';
 /// Reusable layout wrapper with a full-page background and centered content.
 class PageContainer extends StatelessWidget {
   final Widget child;
-  const PageContainer({super.key, required this.child});
+  final AlignmentGeometry contentAlignment;
+
+  const PageContainer({
+    super.key,
+    required this.child,
+    this.contentAlignment = Alignment.topCenter,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +39,7 @@ class PageContainer extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(36.0),
                 child: Align(
-                  alignment: Alignment.topCenter,
+                  alignment: contentAlignment,
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
                       maxWidth: 820.0,
