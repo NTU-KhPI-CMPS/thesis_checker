@@ -13,6 +13,17 @@ class AppColors {
   static const Color accent = Color(0xFF5B5FC7);
   static const Color accent2 = Color(0xFF7B7FD4);
 
+  static const Color bgDark = Color(0xFF12121A);
+  static const Color surfaceDark = Color(0xFF1E1E2E);
+  static const Color surface2Dark = Color(0xFF2A2A3E);
+  static const Color borderDark = Color(0xFF2E2E45);
+
+  static const Color textDark = Color(0xFFE8E8F0);
+  static const Color text2Dark = Color(0xFF8888AA);
+
+  static const Color accentDark = Color(0xFF7B7FD4);
+  static const Color accent2Dark = Color(0xFF9B9FE0);
+
   static const Color error = Color(0xFFE05454);
   static const Color warn = Color(0xFFE08A2A);
   static const Color ok = Color(0xFF3DA85E);

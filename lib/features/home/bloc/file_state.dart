@@ -14,13 +14,14 @@ final class FileInitial extends FileState {}
 /// State emitted when a supported file has been accepted.
 final class FileUploadedState extends FileState {
   final String filePath;
+  final String fileName;
   final DateTime _timestamp;
 
-  FileUploadedState({required this.filePath})
+  FileUploadedState({required this.filePath, required this.fileName})
     : _timestamp = DateTime.now();
 
   @override
-  List<Object> get props => [filePath, _timestamp];
+  List<Object> get props => [filePath, fileName, _timestamp];
 }
 
 /// State emitted when file validation fails.

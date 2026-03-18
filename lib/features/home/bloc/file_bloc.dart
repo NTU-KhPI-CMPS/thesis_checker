@@ -12,9 +12,12 @@ class FileBloc extends Bloc<FileEvent, FileState> {
   }
 
   void _onFileDroppedEvent(FileDroppedEvent e, Emitter emit) {
-    final fileExtension = e.filePath.split('.').last;
+    final fileExtension = e.fileName.split('.').last;
     if (FileExtensions.isSupported(fileExtension)) {
-      emit(FileUploadedState(filePath: e.filePath));
+      emit(FileUploadedState(
+        filePath: e.filePath,
+        fileName: e.fileName
+      ));
     } else {
       emit(FileUploadErrorState(error: 'Файл з розширенням $fileExtension не підтримується'));
     }

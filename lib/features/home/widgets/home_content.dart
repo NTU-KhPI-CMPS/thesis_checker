@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/core/constants/app_colors.dart';
 import 'package:flutter_app/features/home/widgets/info_card.dart';
 import 'package:flutter_app/features/home/widgets/upload_zone.dart';
 
@@ -13,22 +12,25 @@ class HomeContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textColor2 = Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey;
+    final textColor = Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        UploadZone(),
-        SizedBox(height: 28.0,),
+        const UploadZone(),
+        const SizedBox(height: 28.0,),
         Text(
           'Що перевіряємо'.toUpperCase(),
           style: TextStyle(
             fontFamily: 'FunnelSans',
             fontSize: 13.0,
             fontWeight: FontWeight.w600,
-            color: AppColors.text2,
+            color: textColor2,
             letterSpacing: 0.5,
           ),
         ),
-        SizedBox(height: 28.0,),
+        const SizedBox(height: 28.0,),
         LayoutBuilder(
           builder: (context, constraints) {
             final crossAxisCount = constraints.maxWidth < 500 ? 1 : 2;
@@ -58,11 +60,11 @@ class HomeContent extends StatelessWidget {
                         children: [
                           Text(
                             infoCards[index]['title']!,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 14.0,
                               fontFamily: 'FunnelSans',
                               fontWeight: FontWeight.w600,
-                              color: AppColors.text,
+                              color: textColor,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -73,7 +75,7 @@ class HomeContent extends StatelessWidget {
                               fontSize: 14.0,
                               fontFamily: 'FunnelSans',
                               fontWeight: FontWeight.w600,
-                              color: AppColors.text2,
+                              color: textColor2,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
