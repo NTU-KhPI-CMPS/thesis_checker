@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:convert';
 
@@ -16,7 +17,7 @@ Future<void> checkFile(String filePath) async {
     final jarFile = File('${directory.path}/$javaThesisChecker');
 
     // 2. Extract the .jar from assets ONLY if it hasn't been extracted yet
-    if (!await jarFile.exists() || kDebugMode) {
+    // if (!await jarFile.exists() || kDebugMode) {
       print('Extracting .jar file for the first time...');
       final byteData = await rootBundle.load('assets/$javaThesisChecker');
 
@@ -25,7 +26,9 @@ Future<void> checkFile(String filePath) async {
           byteData.offsetInBytes,
           byteData.lengthInBytes
       ));
-    }
+    // }
+
+    printJavaVersion(); // this is just for debug, because we need the same java version as we use to build jar
 
     print('Execute java process to ckech file.');
     final process = await Process.start('java', ['-jar', jarFile.path, '-filePath', filePath, '-checks', '["FONT", "PARAGRAPH"]']);
@@ -47,4 +50,13 @@ Future<void> checkFile(String filePath) async {
   } catch (e) {
     print('Failed to start Java process: $e');
   }
+}
+
+Future<void> printJavaVersion() async {
+  final process = await Process.start('java', ['--version']);
+
+  // Listen to standard output in real-time
+  process.stdout.transform(utf8.decoder).listen((data) {
+    print('STDOUT: $data');
+  });
 }
