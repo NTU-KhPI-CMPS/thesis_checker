@@ -1,0 +1,31 @@
+## Output configuration
+output:
+  dart:
+    ## Generated dart bindings will be written to this path. They will follow
+    ## the same folder hierarchy as the original Java code.
+    path: 'lib/src/third_party/'
+
+## Exclude a problematic static field. Static fields are usually converted
+## directly to dart static fields. In the current implementation some string
+## escaping problems may occur.
+##
+## See issue #31 (https://github.com/dart-lang/native/issues/792) for details.
+## (This field does not appear in bindings unless full package bindings are
+## generated using a `-Dclasses` override.)
+##
+## TODO(#31): For string fields, it may be better to generate a field getter
+## than a direct literal.
+exclude:
+  fields:
+    - 'org.apache.pdfbox.contentstream.operator.OperatorName#SHOW_TEXT_LINE_AND_SPACE'
+
+# Where to find your code
+class_path:
+  # Path to your compiled .class files or the JAR itself
+  - java-checker/target/java-checker-1.0-SNAPSHOT.jar
+
+# Which classes to generate bindings for
+classes:
+  - 'com.cmps.thesischecker.ThesisCheckExecutor'
+#  - 'com.cmps.thesischecker.checker.CheckType'
+#  - 'com.cmps.thesischecker.checker.*' # You can use wildcards for whole packages
