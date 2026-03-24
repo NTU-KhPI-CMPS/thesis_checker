@@ -2,7 +2,6 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/core/constants/app_colors.dart';
 import 'package:flutter_app/features/home/bloc/file_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,13 +20,20 @@ class _UploadZoneState extends State<UploadZone> {
 
   @override
   Widget build(BuildContext context) {
+    final borderColor = Theme.of(context).dividerColor;
+    final accentColor = Theme.of(context).primaryColor;
+    final surfaceColor = Theme.of(context).scaffoldBackgroundColor;
+    final surface2Color = Theme.of(context).inputDecorationTheme.fillColor ?? Colors.grey;
+    final textColor = Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black;
+    final textColor2 = Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey;
+
     return MouseRegion(
       onEnter: (event) => setState(() => containerIsHovered = true),
       onExit: (event) => setState(() => containerIsHovered = false),
       child: TweenAnimationBuilder<Color?>(
         tween: ColorTween(
-          begin: AppColors.border,
-          end: containerIsHovered ? AppColors.accent : AppColors.border,
+          begin: borderColor,
+          end: containerIsHovered ? accentColor : borderColor,
         ),
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
@@ -37,7 +43,7 @@ class _UploadZoneState extends State<UploadZone> {
               padding: EdgeInsets.zero,
               radius: Radius.circular(8.0),
               dashPattern: [8, 6],
-              color: color ?? AppColors.border,
+              color: color ?? borderColor,
               strokeWidth: 4.0,
             ),
             child: child!,
@@ -49,7 +55,8 @@ class _UploadZoneState extends State<UploadZone> {
           onDragDone: (details) {
             final file = details.files.first;
             final filePath = file.path;
-            context.read<FileBloc>().add(FileDroppedEvent(filePath));
+            final fileName = file.name;
+            context.read<FileBloc>().add(FileDroppedEvent(filePath, fileName));
           },
           child: AnimatedContainer(
             duration: Duration(milliseconds: 200),
@@ -57,7 +64,7 @@ class _UploadZoneState extends State<UploadZone> {
             width: double.infinity,
             height: 300.0,
             decoration: BoxDecoration(
-              color: containerIsHovered ? AppColors.bg : AppColors.surface,
+              color: containerIsHovered ? surface2Color : surfaceColor,
               borderRadius: BorderRadius.circular(8.0),
             ),
             child: Column(
@@ -73,7 +80,7 @@ class _UploadZoneState extends State<UploadZone> {
                   'Завантажте документ',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: AppColors.text,
+                    color: textColor,
                     fontSize: 20.0,
                     fontFamily: 'FunnelSans',
                     fontWeight: FontWeight.w600,
@@ -83,7 +90,7 @@ class _UploadZoneState extends State<UploadZone> {
                   'Перетягніть .docx файл або натисніть щоб обрати',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: AppColors.text2,
+                    color: textColor2,
                     fontSize: 14.0,
                     fontFamily: 'FunnelSans',
                     fontWeight: FontWeight.w600,
@@ -101,7 +108,9 @@ class _UploadZoneState extends State<UploadZone> {
                         allowedExtensions: ['docx'],
                       );
                       if (file != null) {
-                        bloc.add(FileDroppedEvent(file.files.first.path!));
+                        final filePath = file.files.first.path!;
+                        final fileName = file.files.first.name;
+                        bloc.add(FileDroppedEvent(filePath, fileName));
                       }
                     },
                     child: TweenAnimationBuilder<double>(
@@ -121,7 +130,7 @@ class _UploadZoneState extends State<UploadZone> {
                         horizontal: 24.0,
                       ),
                       decoration: BoxDecoration(
-                        color: buttonIsHovered ? AppColors.accent.withAlpha(200): AppColors.accent,
+                        color: buttonIsHovered ? accentColor.withAlpha(200): accentColor,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       child: Text(

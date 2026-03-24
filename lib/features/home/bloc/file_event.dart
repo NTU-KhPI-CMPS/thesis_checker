@@ -11,9 +11,10 @@ sealed class FileEvent extends Equatable {
 /// Event fired when a file path is provided by drag-and-drop or picker.
 final class FileDroppedEvent extends FileEvent {
   final String filePath;
+  final String fileName;
 
-  const FileDroppedEvent(this.filePath);
+  const FileDroppedEvent(this.filePath, this.fileName);
 
   @override
-  List<Object> get props => [filePath];
+  List<Object> get props => [filePath, fileName];
 }

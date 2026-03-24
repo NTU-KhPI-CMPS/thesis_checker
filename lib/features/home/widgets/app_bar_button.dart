@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/core/constants/app_colors.dart';
 
 /// Navigation tab button used in the custom app bar.
 class AppBarNavButton extends StatelessWidget {
@@ -18,6 +17,11 @@ class AppBarNavButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bgColor = Theme.of(context).canvasColor;
+    final borderColor = Theme.of(context).dividerColor;
+    final accentColor = Theme.of(context).primaryColor;
+    final textColor = Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black;
+
     return GestureDetector(
       onTap: onTap,
       child: Transform.translate(
@@ -30,18 +34,18 @@ class AppBarNavButton extends StatelessWidget {
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
           decoration: BoxDecoration(
-            color: isActive ? AppColors.bg : AppColors.bg.withAlpha(0),
+            color: isActive ? bgColor : bgColor.withAlpha(0),
             border: Border(
               top: BorderSide(
-                color: isActive ? AppColors.border : AppColors.border.withAlpha(0),
+                color: isActive ? borderColor : borderColor.withAlpha(0),
                 width: 1.0,
               ),
               left: BorderSide(
-                color: isActive ? AppColors.border : AppColors.border.withAlpha(0),
+                color: isActive ? borderColor : borderColor.withAlpha(0),
                 width: 1.0,
               ),
               right: BorderSide(
-                color: isActive ? AppColors.border : AppColors.border.withAlpha(0),
+                color: isActive ? borderColor : borderColor.withAlpha(0),
                 width: 1.0,
               ),
               bottom: BorderSide.none,
@@ -62,7 +66,7 @@ class AppBarNavButton extends StatelessWidget {
               Text(
                 label,
                 style: TextStyle(
-                  color: isActive ? AppColors.accent : AppColors.text,
+                  color: isActive ? accentColor : textColor,
                 ),
               ),
             ],

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/core/constants/app_colors.dart';
 
 /// Small bordered card used to display a compact row of info widgets.
 class InfoCard extends StatelessWidget {
@@ -8,15 +7,18 @@ class InfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final surfaceColor = Theme.of(context).scaffoldBackgroundColor;
+    final borderColor = Theme.of(context).dividerColor;
+
     return Container(
       padding: const EdgeInsets.symmetric(
         vertical: 14.0,
         horizontal: 16.0,
       ),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: surfaceColor,
         border: Border.all(
-          color: AppColors.border,
+          color: borderColor,
           width: 1.0,
         ),
         borderRadius: BorderRadius.circular(12.0),
