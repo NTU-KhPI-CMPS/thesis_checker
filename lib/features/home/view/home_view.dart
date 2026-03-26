@@ -26,24 +26,29 @@ class _HomeViewState extends State<HomeView> {
     {'icon': 'assets/images/hourglass.png', 'label': 'Аналіз'},
   ];
 
-  late final List<Widget> views;
-
-  @override
-  void initState() {
-    super.initState();
-    views = [
-      HomeContent(),
-      LoadingAnalysisView(onAnalysisComplete: _onAnalysisComplete),
-    ];
-  }
-
-  void _onAnalysisComplete() {
+  void _onAnalysisComplete() {    
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text('Аналіз завершено!')));
 
     context.read<FileBloc>().add(ResetFileEvent());
     setState(() => selectedIndex = 0);
+  }
+
+  Widget _buildBodyContent(int index) {
+    return switch (index) {
+      0 => PageContainer(
+          contentAlignment: Alignment.topCenter,
+          child: HomeContent(),
+        ),
+      1 => PageContainer(
+          contentAlignment: Alignment.center,
+          child: LoadingAnalysisView(
+            onAnalysisComplete: _onAnalysisComplete,
+          ),
+        ),
+      _ => const SizedBox.shrink(),
+    };
   }
 
   @override
@@ -66,12 +71,7 @@ class _HomeViewState extends State<HomeView> {
       },
       child: Scaffold(
         appBar: _buildCustomAppBar(context),
-        body: PageContainer(
-          contentAlignment: selectedIndex == 1
-              ? Alignment.center
-              : Alignment.topCenter,
-          child: views[selectedIndex],
-        ),
+        body: _buildBodyContent(selectedIndex),
       ),
     );
   }
