@@ -36,19 +36,21 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget _buildBodyContent(int index) {
-    return switch (index) {
-      0 => PageContainer(
+    return IndexedStack(
+      index: index,
+      children: [
+        PageContainer(
           contentAlignment: Alignment.topCenter,
           child: HomeContent(),
         ),
-      1 => PageContainer(
+        PageContainer(
           contentAlignment: Alignment.center,
           child: LoadingAnalysisView(
             onAnalysisComplete: _onAnalysisComplete,
           ),
         ),
-      _ => const SizedBox.shrink(),
-    };
+      ],
+    );
   }
 
   @override
