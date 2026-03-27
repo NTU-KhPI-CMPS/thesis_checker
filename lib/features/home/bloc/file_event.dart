@@ -18,3 +18,6 @@ final class FileDroppedEvent extends FileEvent {
   @override
   List<Object> get props => [filePath, fileName];
 }
+
+/// Event to reset the file state to initial
+final class ResetFileEvent extends FileEvent {}

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/core/constants/app_colors.dart';
 
+/// Application theme definitions for light and dark modes.
 class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(

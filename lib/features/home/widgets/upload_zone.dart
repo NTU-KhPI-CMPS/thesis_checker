@@ -23,9 +23,9 @@ class _UploadZoneState extends State<UploadZone> {
     final borderColor = Theme.of(context).dividerColor;
     final accentColor = Theme.of(context).primaryColor;
     final surfaceColor = Theme.of(context).scaffoldBackgroundColor;
-    final surface2Color = Theme.of(context).inputDecorationTheme.fillColor ?? Colors.grey;
-    final textColor = Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black;
-    final textColor2 = Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey;
+    final surface2Color = Theme.of(context).inputDecorationTheme.fillColor;
+    final textColor = Theme.of(context).textTheme.bodyLarge?.color;
+    final textColor2 = Theme.of(context).textTheme.bodyMedium?.color;
 
     return MouseRegion(
       onEnter: (event) => setState(() => containerIsHovered = true),
