@@ -10,8 +10,7 @@ class RunnerJavaService {
   static final RunnerJavaService _instance = RunnerJavaService._internal();
   factory RunnerJavaService() => _instance;
 
-  final _javaPath = '/opt/homebrew/Cellar/openjdk@21/21.0.10/libexec/openjdk.jdk/Contents/Home/bin/java';
-  final _javaThesisChecker = 'java-thesis-checker.jar';
+  final _javaThesisChecker = 'java-thesis-checker';
 
   Future<void> checkFile(String filePath) async {
     try {
@@ -31,10 +30,11 @@ class RunnerJavaService {
         ));
       }
 
-      printJavaVersion(); // this is just for debug, because we need the same java version as we use to build jar
-
-      print('Execute java process to ckech file.');
-      final process = await Process.start(_javaPath, ['-jar', jarFile.path, '-filePath', filePath, '-checks', '["FONT", "PARAGRAPH"]']);
+      print('Execute process to check file.');
+      // Mark java-thesis-checker binary as executable
+      await Process.start('chmod', ['+x', jarFile.path]);
+      // Execute binary with args
+      final process = await Process.start(jarFile.path, ['-filePath', filePath, '-checks', '["FONT", "PARAGRAPH"]']);
 
       // Listen to standard output in real-time
       process.stdout.transform(utf8.decoder).listen((data) {
@@ -48,19 +48,10 @@ class RunnerJavaService {
 
       // Check when it exits
       final exitCode = await process.exitCode;
-      print('Java process exited with code $exitCode');
+      print('Process exited with code $exitCode');
 
     } catch (e) {
-      print('Failed to start Java process: $e');
+      print('Failed to start process: $e');
     }
-  }
-
-  Future<void> printJavaVersion() async {
-    final process = await Process.start(_javaPath, ['--version']);
-
-    // Listen to standard output in real-time
-    process.stdout.transform(utf8.decoder).listen((data) {
-      print('STDOUT: $data');
-    });
   }
 }
