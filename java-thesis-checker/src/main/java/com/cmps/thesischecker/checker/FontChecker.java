@@ -1,6 +1,10 @@
 package com.cmps.thesischecker.checker;
 
-import org.apache.poi.xwpf.usermodel.*;
+import com.cmps.thesischecker.model.FormatError;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+
 import java.io.FileInputStream;
 import java.util.*;
 
@@ -32,7 +36,8 @@ public class FontChecker implements Checker {
     }
 
     @Override
-    public List<Map<String, Object>> validate(XWPFParagraph paragraph, int paraIndex, String shortParaText, int[] errorIdCounter) {
+    public List<Map<String, Object>> validate(XWPFParagraph paragraph, int paraIndex, String shortParaText,
+                                              int[] errorIdCounter) {
         List<Map<String, Object>> errors = new ArrayList<>();
         List<XWPFRun> runs = paragraph.getRuns();
         if (runs.isEmpty()) return errors;
@@ -57,6 +62,18 @@ public class FontChecker implements Checker {
             int start = startPositions[i];
             int end = start + fragmentText.length();
 
+            // Example how to use model in combination with builder.
+            // This model you can reuse in all validations and easily
+            // convert to json using example I shared in chat
+            FormatError error =
+                    FormatError.builder()
+                               .id(String.format("err_%03d", ++errorIdCounter[0]))
+                               .severity("error")
+                               .title("Невірний шрифт: " + fontName)
+                               .build();
+
+            // In java, we use objects to describe any model,
+            // using map is a bad practice, and it will be harder to work with
             Map<String, Object> err = new LinkedHashMap<>();
             err.put("id", String.format("err_%03d", ++errorIdCounter[0]));
             err.put("category", "font");
@@ -80,7 +97,7 @@ public class FontChecker implements Checker {
         boolean isSpace = fragmentText.trim().isEmpty();
         if (isSpace) {
             String prevText = "";
-            for (int j = idx-1; j >= 0; j--) {
+            for (int j = idx - 1; j >= 0; j--) {
                 String t = runs.get(j).getText(0);
                 if (t != null && !t.trim().isEmpty()) {
                     prevText = t.trim();
@@ -88,7 +105,7 @@ public class FontChecker implements Checker {
                 }
             }
             String nextText = "";
-            for (int j = idx+1; j < runs.size(); j++) {
+            for (int j = idx + 1; j < runs.size(); j++) {
                 String t = runs.get(j).getText(0);
                 if (t != null && !t.trim().isEmpty()) {
                     nextText = t.trim();

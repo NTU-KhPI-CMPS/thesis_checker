@@ -1,14 +1,20 @@
-package com.cmps.thesischecker.checker;
+package com.cmps.thesischecker;
 
 import com.cmps.thesischecker.argparser.ArgumentParser;
 import com.cmps.thesischecker.argparser.FilePathParser;
-import com.cmps.thesischecker.argparser.ChecksParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import org.apache.poi.xwpf.usermodel.*;
+import com.cmps.thesischecker.checker.Checker;
+import com.cmps.thesischecker.checker.FontChecker;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.SerializationFeature;
 
-import java.io.*;
-import java.nio.file.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -24,10 +30,10 @@ public class Main {
         // Parse command line arguments
         ArgumentParser argParser = new ArgumentParser();
         argParser.parse(args);
-        
+
         // Get file paths
         List<String> files = FilePathParser.parse(args);
-        
+
         // Get check parameters with defaults
         String expectedFont = argParser.isFontSet() ? argParser.getFont() : DEFAULT_FONT;
         int expectedSize = argParser.isSizeSet() ? argParser.getSize() : DEFAULT_SIZE;
@@ -42,8 +48,8 @@ public class Main {
         // Create checkers
         List<Checker> checkers = new ArrayList<>();
         checkers.add(new FontChecker(expectedFont));
-        checkers.add(new SizeChecker(expectedSize));
-        checkers.add(new LineSpacingChecker(expectedLineSpacing));
+//        checkers.add(new SizeChecker(expectedSize));
+//        checkers.add(new LineSpacingChecker(expectedLineSpacing));
 
         for (String filePath : files) {
             List<Map<String, Object>> allErrors = new ArrayList<>();
@@ -60,7 +66,8 @@ public class Main {
                     String shortParaText = paraText.length() > 200 ? paraText.substring(0, 200) + "..." : paraText;
 
                     for (Checker checker : checkers) {
-                        List<Map<String, Object>> errors = checker.validate(paragraph, paraIndex, shortParaText, errorIdCounter);
+                        List<Map<String, Object>> errors = checker.validate(paragraph, paraIndex, shortParaText,
+                                                                            errorIdCounter);
                         allErrors.addAll(errors);
                     }
                 }
@@ -70,7 +77,8 @@ public class Main {
                 allErrors.add(Collections.singletonMap("error", "Помилка відкриття файлу: " + e.getMessage()));
             }
 
-            Map<String, Object> report = generateJsonReport(filePath, allErrors, expectedFont, expectedSize, expectedLineSpacing);
+            Map<String, Object> report = generateJsonReport(filePath, allErrors, expectedFont, expectedSize,
+                                                            expectedLineSpacing);
             saveJsonReport(report, filePath, outputDir);
         }
     }
@@ -81,7 +89,8 @@ public class Main {
     }
 
     private static Map<String, Object> generateJsonReport(String filePath, List<Map<String, Object>> errors,
-                                                          String expectedFont, int expectedSize, double expectedLineSpacing) {
+                                                          String expectedFont, int expectedSize,
+                                                          double expectedLineSpacing) {
         String filename = new File(filePath).getName();
         int totalErrors = 0;
         Map<String, Integer> bySeverity = new HashMap<>();
@@ -127,10 +136,12 @@ public class Main {
             Path outPath = outputPath.resolve(outFile);
 
             ObjectMapper mapper = new ObjectMapper();
-            mapper.enable(SerializationFeature.INDENT_OUTPUT);
-            mapper.writeValue(outPath.toFile(), report);
+            mapper.writer()
+                  .with(SerializationFeature.INDENT_OUTPUT)
+                  .writeValue(outPath.toFile(), report);
         } catch (Exception e) {
             System.err.println("Помилка збереження JSON-звіту: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
