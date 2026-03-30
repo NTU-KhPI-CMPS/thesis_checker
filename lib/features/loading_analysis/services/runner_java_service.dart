@@ -12,7 +12,7 @@ class RunnerJavaService {
 
   final _javaThesisChecker = 'java-thesis-checker';
 
-  Future<void> checkFile(String filePath) async {
+  Future<void> checkFile(String filePath, List<String> checkedOptions) async {
     try {
       // 1. Find a safe directory on the user's computer to store the file
       final directory = await getApplicationSupportDirectory();
@@ -34,7 +34,8 @@ class RunnerJavaService {
       // Mark java-thesis-checker binary as executable
       await Process.start('chmod', ['+x', jarFile.path]);
       // Execute binary with args
-      final process = await Process.start(jarFile.path, ['-filePath', filePath, '-checks', '["FONT", "PARAGRAPH"]']);
+      final checksJson = jsonEncode(checkedOptions);
+      final process = await Process.start(jarFile.path, ['-filePath', filePath, '-checks', checksJson]);
 
       // Listen to standard output in real-time
       process.stdout.transform(utf8.decoder).listen((data) {
