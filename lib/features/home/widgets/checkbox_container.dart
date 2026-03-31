@@ -56,6 +56,7 @@ class _CheckboxContainerState extends State<CheckboxContainer> {
                 child: CustomCheckbox(
                   value: isChecked,
                   onChanged: (value) => setState(() => isChecked = value),
+                  onTap: () => widget.onTap(),
                 ),
               ),
             ],

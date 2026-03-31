@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 class CustomCheckbox extends StatelessWidget {
   final bool value;
   final ValueChanged<bool>? onChanged;
+  final VoidCallback? onTap;
 
   const CustomCheckbox({
     super.key,
     required this.value,
     this.onChanged,
+    this.onTap,
   });
 
   @override
@@ -18,7 +20,10 @@ class CustomCheckbox extends StatelessWidget {
     final borderColor = Theme.of(context).inputDecorationTheme.border?.borderSide.color;
 
     return GestureDetector(
-      onTap: () => onChanged?.call(!value),
+      onTap: () {
+        onChanged?.call(!value);
+        onTap?.call();
+      },
       child: AnimatedContainer(
         width: 20.0,
         height: 20.0,
