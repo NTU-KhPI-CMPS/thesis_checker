@@ -6,6 +6,7 @@ import 'package:flutter_app/features/home/widgets/app_bar_button.dart';
 import 'package:flutter_app/features/home/widgets/home_content.dart';
 import 'package:flutter_app/features/loading_analysis/bloc/analysis_bloc.dart';
 import 'package:flutter_app/features/loading_analysis/view/loading_analysis_view.dart';
+import 'package:flutter_app/features/result/view/result_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Main screen that renders navigation, page content, and upload feedback.
@@ -24,6 +25,7 @@ class _HomeViewState extends State<HomeView> {
   final List<Map<String, dynamic>> buttons = [
     {'icon': 'assets/images/house.png', 'label': 'Головна'},
     {'icon': 'assets/images/hourglass.png', 'label': 'Аналіз'},
+    {'icon': 'assets/images/bar_chart.png', 'label': 'Результати'},
   ];
 
   void _onAnalysisComplete() {    
@@ -32,7 +34,7 @@ class _HomeViewState extends State<HomeView> {
     ).showSnackBar(const SnackBar(content: Text('Аналіз завершено!')));
 
     context.read<FileBloc>().add(ResetFileEvent());
-    setState(() => selectedIndex = 0);
+    setState(() => selectedIndex = 2);
   }
 
   Widget _buildBodyContent(int index) {
@@ -48,6 +50,10 @@ class _HomeViewState extends State<HomeView> {
           child: LoadingAnalysisView(
             onAnalysisComplete: _onAnalysisComplete,
           ),
+        ),
+        PageContainer(
+          contentAlignment: Alignment.topCenter,
+          child: ResultView(),
         ),
       ],
     );
