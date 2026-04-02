@@ -16,7 +16,7 @@ final class AnalysisInProgressState extends AnalysisState {}
 
 /// State emitted when analysis completes successfully with a result.
 final class AnalysisSuccessState extends AnalysisState {
-  final String result;
+  final AnalysisResult result;
   
   const AnalysisSuccessState({required this.result});
   

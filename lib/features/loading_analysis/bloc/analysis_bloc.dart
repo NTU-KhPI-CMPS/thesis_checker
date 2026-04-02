@@ -1,4 +1,5 @@
 import 'package:flutter_app/features/loading_analysis/services/runner_java_service.dart';
+import 'package:flutter_app/features/result/models/analysis_result.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -16,12 +17,11 @@ class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
   Future<void> _onStartAnalysis(StartAnalysisEvent event, Emitter<AnalysisState> emit) async {
     try {
       emit(AnalysisInProgressState());
-      await runnerJavaService.checkFile(event.filePath);
+      final AnalysisResult analysisResult = await runnerJavaService.checkFile(event.filePath);
       
-      // For demonstration, we just return a success message
-      emit(const AnalysisSuccessState(result: "Analysis completed successfully!"));
+      emit(AnalysisSuccessState(result: analysisResult));
     } catch (e) {
-      emit(const AnalysisFailureState(error: "Analysis failed."));
+      emit(const AnalysisFailureState(error: 'Аналіз не вдався.'));
     }
   }
 }
