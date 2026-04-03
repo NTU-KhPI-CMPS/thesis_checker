@@ -1,13 +1,28 @@
 package com.cmps.thesischecker.model;
 
-import lombok.Builder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 /**
- * Describes moder with validation error info.
+ * Represents a formatting error found in the thesis document.
  *
  * @author Mariia Borodin (HappyMary16)
  * @since 1.0
  */
-@Builder // generates builder https://refactoring.guru/uk/design-patterns/builder
-public record FormatError(String id, String severity, String title) {
+@Getter
+@Setter
+@RequiredArgsConstructor
+public class FormatError {
+
+    private String id;
+    private String category;
+    private String severity;
+    private String title;
+    private int paragraphIndex;
+    private String paragraphText;
+    private int highlightStart;
+    private int highlightEnd;
+    private String found;
+    private String expected;
 }

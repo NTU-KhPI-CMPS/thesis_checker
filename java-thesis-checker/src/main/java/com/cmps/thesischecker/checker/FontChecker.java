@@ -1,43 +1,48 @@
 package com.cmps.thesischecker.checker;
 
 import com.cmps.thesischecker.model.FormatError;
+import com.cmps.thesischecker.requirements.RequirementsHolder;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
-
 import java.io.FileInputStream;
 import java.util.*;
 
 public class FontChecker implements Checker {
-    private final String expectedFont;
 
     public FontChecker() {
-        this("Times New Roman");
     }
 
-    public FontChecker(String expectedFont) {
-        this.expectedFont = expectedFont;
-    }
-
+    @Override
     public List<FormatError> check(String filePath) {
+        String expectedFont = RequirementsHolder.getFont();
+        List<FormatError> allErrors = new ArrayList<>();
+
         try (FileInputStream fis = new FileInputStream(filePath);
              XWPFDocument doc = new XWPFDocument(fis)) {
             for (XWPFParagraph paragraph : doc.getParagraphs()) {
                 String paraText = paragraph.getText().trim();
                 if (paraText.isEmpty()) continue;
                 int[] errorIdCounter = new int[]{0};
-                List<Map<String, Object>> errors = validate(paragraph, 1, paraText, errorIdCounter);
-                if (!errors.isEmpty()) return List.of();
+                List<FormatError> errors = validate(paragraph, 1, paraText, errorIdCounter);
+                allErrors.addAll(errors);
             }
-            return List.of();
         } catch (Exception e) {
-            return List.of();
+            FormatError err = new FormatError();
+            err.setId("err_000");
+            err.setCategory("file");
+            err.setSeverity("error");
+            err.setTitle("Помилка відкриття файлу: " + e.getMessage());
+            err.setParagraphIndex(0);
+            err.setParagraphText("");
+            allErrors.add(err);
         }
+        return allErrors;
     }
 
-    private List<Map<String, Object>> validate(XWPFParagraph paragraph, int paraIndex, String shortParaText,
-                                              int[] errorIdCounter) {
-        List<Map<String, Object>> errors = new ArrayList<>();
+    private List<FormatError> validate(XWPFParagraph paragraph, int paraIndex, String shortParaText, int[] errorIdCounter) {
+        List<FormatError> errors = new ArrayList<>();
+        String expectedFont = RequirementsHolder.getFont();
         List<XWPFRun> runs = paragraph.getRuns();
         if (runs.isEmpty()) return errors;
 
@@ -57,62 +62,22 @@ public class FontChecker implements Checker {
             String fontName = run.getFontFamily();
             if (fontName == null || fontName.equalsIgnoreCase(expectedFont)) continue;
 
-            String displayFragment = getDisplayFragment(runs, i, fragmentText);
             int start = startPositions[i];
             int end = start + fragmentText.length();
 
-            // Example how to use model in combination with builder.
-            // This model you can reuse in all validations and easily
-            // convert to json using example I shared in chat
-            FormatError error = new FormatError(String.format("err_%03d", ++errorIdCounter[0]),"error" , "Невірний шрифт: " + fontName);
-
-            // In java, we use objects to describe any model,
-            // using map is a bad practice, and it will be harder to work with
-            Map<String, Object> err = new LinkedHashMap<>();
-            err.put("id", String.format("err_%03d", ++errorIdCounter[0]));
-            err.put("category", "font");
-            err.put("severity", "error");
-            err.put("title", "Невірний шрифт: " + fontName);
-            err.put("paragraph_index", paraIndex);
-            err.put("paragraph_text", shortParaText);
-            Map<String, Integer> highlight = new LinkedHashMap<>();
-            highlight.put("start", start);
-            highlight.put("end", end);
-            err.put("highlight", highlight);
-            err.put("found", fontName);
-            err.put("expected", expectedFont);
-            err.put("suggestions", Collections.singletonList(expectedFont));
+            FormatError err = new FormatError();
+            err.setId(String.format("err_%03d", ++errorIdCounter[0]));
+            err.setCategory("font");
+            err.setSeverity("error");
+            err.setTitle("Невірний шрифт: " + fontName);
+            err.setParagraphIndex(paraIndex);
+            err.setParagraphText(shortParaText);
+            err.setHighlightStart(start);
+            err.setHighlightEnd(end);
+            err.setFound(fontName);
+            err.setExpected(expectedFont);
             errors.add(err);
         }
         return errors;
-    }
-
-    private String getDisplayFragment(List<XWPFRun> runs, int idx, String fragmentText) {
-        boolean isSpace = fragmentText.trim().isEmpty();
-        if (isSpace) {
-            String prevText = "";
-            for (int j = idx - 1; j >= 0; j--) {
-                String t = runs.get(j).getText(0);
-                if (t != null && !t.trim().isEmpty()) {
-                    prevText = t.trim();
-                    break;
-                }
-            }
-            String nextText = "";
-            for (int j = idx + 1; j < runs.size(); j++) {
-                String t = runs.get(j).getText(0);
-                if (t != null && !t.trim().isEmpty()) {
-                    nextText = t.trim();
-                    break;
-                }
-            }
-            if (!prevText.isEmpty() || !nextText.isEmpty()) {
-                return "пробіл між \"" + prevText + "\" та \"" + nextText + "\"";
-            } else {
-                return "<пробіл без контексту>";
-            }
-        } else {
-            return fragmentText.length() > 70 ? fragmentText.substring(0, 70) + "..." : fragmentText;
-        }
     }
 }
