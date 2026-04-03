@@ -1,11 +1,11 @@
-package com.cmps.thesischecker.checker;
+package com.cmps.thesischecker;
 
-import com.cmps.thesischecker.argparser.ArgumentParser;
 import com.cmps.thesischecker.argparser.FilePathParser;
+import com.cmps.thesischecker.checker.Checker;
+import com.cmps.thesischecker.checker.FontChecker;
 import com.cmps.thesischecker.model.FormatError;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.SerializationFeature;
 
 import java.io.*;
 import java.nio.file.*;
@@ -18,11 +18,9 @@ public class Main {
     private static final String DEFAULT_OUTPUT_DIR = "reports";
 
     public static void main(String[] args) {
-        ArgumentParser argParser = new ArgumentParser();
-        argParser.parse(args);
 
         List<String> files = FilePathParser.parse(args);
-        String outputDir = argParser.isOutputDirSet() ? argParser.getOutputDir() : DEFAULT_OUTPUT_DIR;
+        String outputDir = DEFAULT_OUTPUT_DIR;
 
         if (files.isEmpty()) {
             error("No input files specified.");
@@ -75,8 +73,9 @@ public class Main {
             Path outPath = outputPath.resolve(outFile);
 
             ObjectMapper mapper = new ObjectMapper();
-            mapper.enable(SerializationFeature.INDENT_OUTPUT);
-            mapper.writeValue(outPath.toFile(), report);
+            mapper.writer()
+                    .with(SerializationFeature.INDENT_OUTPUT)
+                    .writeValue(outPath.toFile(), report);
         } catch (Exception e) {
             System.err.println("Помилка збереження JSON-звіту: " + e.getMessage());
         }

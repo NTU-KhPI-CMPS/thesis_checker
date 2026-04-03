@@ -19,7 +19,7 @@ public class FontChecker implements Checker {
         this.expectedFont = expectedFont;
     }
 
-    public boolean check(String filePath) {
+    public List<FormatError> check(String filePath) {
         try (FileInputStream fis = new FileInputStream(filePath);
              XWPFDocument doc = new XWPFDocument(fis)) {
             for (XWPFParagraph paragraph : doc.getParagraphs()) {
@@ -27,16 +27,15 @@ public class FontChecker implements Checker {
                 if (paraText.isEmpty()) continue;
                 int[] errorIdCounter = new int[]{0};
                 List<Map<String, Object>> errors = validate(paragraph, 1, paraText, errorIdCounter);
-                if (!errors.isEmpty()) return false;
+                if (!errors.isEmpty()) return List.of();
             }
-            return true;
+            return List.of();
         } catch (Exception e) {
-            return false;
+            return List.of();
         }
     }
 
-    @Override
-    public List<Map<String, Object>> validate(XWPFParagraph paragraph, int paraIndex, String shortParaText,
+    private List<Map<String, Object>> validate(XWPFParagraph paragraph, int paraIndex, String shortParaText,
                                               int[] errorIdCounter) {
         List<Map<String, Object>> errors = new ArrayList<>();
         List<XWPFRun> runs = paragraph.getRuns();
@@ -65,12 +64,7 @@ public class FontChecker implements Checker {
             // Example how to use model in combination with builder.
             // This model you can reuse in all validations and easily
             // convert to json using example I shared in chat
-            FormatError error =
-                    FormatError.builder()
-                               .id(String.format("err_%03d", ++errorIdCounter[0]))
-                               .severity("error")
-                               .title("Невірний шрифт: " + fontName)
-                               .build();
+            FormatError error = new FormatError(String.format("err_%03d", ++errorIdCounter[0]),"error" , "Невірний шрифт: " + fontName);
 
             // In java, we use objects to describe any model,
             // using map is a bad practice, and it will be harder to work with
