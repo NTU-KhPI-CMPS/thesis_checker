@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 /**
  * Represents a formatting error found in the thesis document.
  *
@@ -19,10 +21,8 @@ public class FormatError {
     private String category;
     private String severity;
     private String title;
-    private int paragraphIndex;
     private String paragraphText;
-    private int highlightStart;
-    private int highlightEnd;
-    private String found;
+    private Set<String> found;
     private String expected;
+    private Set<String> suggestions;
 }

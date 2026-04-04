@@ -6,7 +6,10 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import java.io.FileInputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class FontChecker implements Checker {
 
@@ -23,9 +26,19 @@ public class FontChecker implements Checker {
             for (XWPFParagraph paragraph : doc.getParagraphs()) {
                 String paraText = paragraph.getText().trim();
                 if (paraText.isEmpty()) continue;
-                int[] errorIdCounter = new int[]{0};
-                List<FormatError> errors = validate(paragraph, 1, paraText, errorIdCounter);
-                allErrors.addAll(errors);
+                Set<String> incorrectFonts = validate(paragraph);
+                if (!incorrectFonts.isEmpty()) {
+                    FormatError err = new FormatError();
+                    err.setId("err_font");
+                    err.setCategory("font");
+                    err.setSeverity("error");
+                    err.setTitle("Невірні шрифти у параграфі");
+                    err.setParagraphText(paraText);
+                    err.setFound(incorrectFonts);
+                    err.setExpected(RequirementsHolder.getFont());
+                    err.setSuggestions(Set.of(RequirementsHolder.getFont()));
+                    allErrors.add(err);
+                }
             }
         } catch (Exception e) {
             FormatError err = new FormatError();
@@ -33,51 +46,28 @@ public class FontChecker implements Checker {
             err.setCategory("file");
             err.setSeverity("error");
             err.setTitle("Помилка відкриття файлу: " + e.getMessage());
-            err.setParagraphIndex(0);
             err.setParagraphText("");
+            err.setSuggestions(Set.of());
             allErrors.add(err);
         }
         return allErrors;
     }
 
-    private List<FormatError> validate(XWPFParagraph paragraph, int paraIndex, String shortParaText, int[] errorIdCounter) {
-        List<FormatError> errors = new ArrayList<>();
+    private Set<String> validate(XWPFParagraph paragraph) {
+        Set<String> incorrectFonts = new HashSet<>();
         String expectedFont = RequirementsHolder.getFont();
         List<XWPFRun> runs = paragraph.getRuns();
-        if (runs.isEmpty()) return errors;
+        if (runs.isEmpty()) return incorrectFonts;
 
-        int[] startPositions = new int[runs.size()];
-        int pos = 0;
-        for (int i = 0; i < runs.size(); i++) {
-            startPositions[i] = pos;
-            String runText = runs.get(i).getText(0);
-            if (runText != null) pos += runText.length();
-        }
-
-        for (int i = 0; i < runs.size(); i++) {
-            XWPFRun run = runs.get(i);
+        for (XWPFRun run : runs) {
             String fragmentText = run.getText(0);
             if (fragmentText == null) continue;
 
             String fontName = run.getFontFamily();
-            if (fontName == null || fontName.equalsIgnoreCase(expectedFont)) continue;
-
-            int start = startPositions[i];
-            int end = start + fragmentText.length();
-
-            FormatError err = new FormatError();
-            err.setId(String.format("err_%03d", ++errorIdCounter[0]));
-            err.setCategory("font");
-            err.setSeverity("error");
-            err.setTitle("Невірний шрифт: " + fontName);
-            err.setParagraphIndex(paraIndex);
-            err.setParagraphText(shortParaText);
-            err.setHighlightStart(start);
-            err.setHighlightEnd(end);
-            err.setFound(fontName);
-            err.setExpected(expectedFont);
-            errors.add(err);
+            if (fontName != null && !fontName.equalsIgnoreCase(expectedFont)) {
+                incorrectFonts.add(fontName);
+            }
         }
-        return errors;
+        return incorrectFonts;
     }
 }
