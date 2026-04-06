@@ -1,4 +1,4 @@
-/// Reusable presentation model for UI cards with icon and text blocks.
+/// UI model for cards describing available check types.
 class CheckTypeInfo {
   final String iconPath;
   final String title;
