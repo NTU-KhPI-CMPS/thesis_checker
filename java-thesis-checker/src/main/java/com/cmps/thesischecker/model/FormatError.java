@@ -24,5 +24,4 @@ public class FormatError {
     private String paragraphText;
     private Set<String> found;
     private String expected;
-    private Set<String> suggestions;
 }

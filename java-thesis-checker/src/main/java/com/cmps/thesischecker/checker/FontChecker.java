@@ -36,7 +36,6 @@ public class FontChecker implements Checker {
                     err.setParagraphText(paraText);
                     err.setFound(incorrectFonts);
                     err.setExpected(RequirementsHolder.getFont());
-                    err.setSuggestions(Set.of(RequirementsHolder.getFont()));
                     allErrors.add(err);
                 }
             }
@@ -47,7 +46,6 @@ public class FontChecker implements Checker {
             err.setSeverity("error");
             err.setTitle("Помилка відкриття файлу: " + e.getMessage());
             err.setParagraphText("");
-            err.setSuggestions(Set.of());
             allErrors.add(err);
         }
         return allErrors;
