@@ -11,7 +11,7 @@ class AvailableCheckTypes {
     ),
     CheckTypeInfo(
       title: 'Інші',
-      description: 'Інші перевірки, які не входять до певних категорій',
+      description: 'Інші перевірки, які не входять до категорій',
       checks: [],
       iconPath: 'assets/images/other_checks.png',
     )
