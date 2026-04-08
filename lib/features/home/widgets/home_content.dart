@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/core/constants/check_type_info.dart';
+import 'package:flutter_app/core/constants/available_check_types.dart';
 import 'package:flutter_app/features/home/widgets/info_card.dart';
 import 'package:flutter_app/features/home/widgets/upload_zone.dart';
 
