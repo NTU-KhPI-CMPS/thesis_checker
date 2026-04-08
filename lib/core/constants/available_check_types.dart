@@ -1,6 +1,5 @@
-import 'package:flutter_app/core/constants/app_icons.dart';
 import 'package:flutter_app/core/enums/check.dart';
-import 'package:flutter_app/core/models/check_type_model.dart';
+import 'package:flutter_app/core/models/check_type_info.dart';
 
 class AvailableCheckTypes {
   static const List<CheckTypeInfo> checkTypes = [
@@ -8,7 +7,13 @@ class AvailableCheckTypes {
       title: 'Шрифт',
       description: 'Назва, розмір',
       checks: [Check.fontName, Check.fontSize],
-      iconPath: AppIcons.fontCheckIcon,
+      iconPath: 'assets/images/abc.png',
     ),
+    CheckTypeInfo(
+      title: 'Інші',
+      description: 'Інші перевірки, які не входять до певних категорій',
+      checks: [],
+      iconPath: 'assets/images/other_checks.png',
+    )
   ];
 }

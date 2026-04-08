@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/core/constants/app_icons.dart';
 import 'package:flutter_app/core/theme/theme_cubit.dart';
 import 'package:flutter_app/core/widgets/page_container.dart';
 import 'package:flutter_app/features/home/bloc/file_bloc.dart';
@@ -23,8 +22,8 @@ class _HomeViewState extends State<HomeView> {
   bool themeButtonIsHovered = false;
 
   final List<Map<String, dynamic>> buttons = [
-    {'icon': AppIcons.homeIcon, 'label': 'Головна'},
-    {'icon': AppIcons.analysisIcon, 'label': 'Аналіз'},
+    {'icon': 'assets/images/house.png', 'label': 'Головна'},
+    {'icon': 'assets/images/hourglass.png', 'label': 'Аналіз'},
   ];
 
   void _onAnalysisComplete() {    
@@ -108,7 +107,7 @@ class _HomeViewState extends State<HomeView> {
                   child: Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: Image.asset(
-                      AppIcons.appIcon,
+                      'assets/images/page_facing_up.png',
                       width: 20.0,
                       height: 20.0,
                     ),
@@ -151,8 +150,8 @@ class _HomeViewState extends State<HomeView> {
                     children: [
                       Image.asset(
                         isLight
-                            ? AppIcons.lightThemeIcon
-                            : AppIcons.darkThemeIcon,
+                            ? 'assets/images/sunny.png'
+                            : 'assets/images/moon.png',
                         width: 20.0,
                         height: 20.0,
                       ),
