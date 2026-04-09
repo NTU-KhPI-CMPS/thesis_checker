@@ -12,11 +12,12 @@ sealed class FileEvent extends Equatable {
 final class FileDroppedEvent extends FileEvent {
   final String filePath;
   final String fileName;
+  final List<String> checkedOptions;
 
-  const FileDroppedEvent(this.filePath, this.fileName);
+  const FileDroppedEvent(this.filePath, this.fileName, this.checkedOptions);
 
   @override
-  List<Object> get props => [filePath, fileName];
+  List<Object> get props => [filePath, fileName, checkedOptions];
 }
 
 /// Event to reset the file state to initial

@@ -16,7 +16,10 @@ class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
   Future<void> _onStartAnalysis(StartAnalysisEvent event, Emitter<AnalysisState> emit) async {
     try {
       emit(AnalysisInProgressState());
-      await runnerJavaService.checkFile(event.filePath);
+      await runnerJavaService.checkFile(
+        event.filePath,
+        event.checkedOptions
+      );
       
       // For demonstration, we just return a success message
       emit(const AnalysisSuccessState(result: "Analysis completed successfully!"));

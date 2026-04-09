@@ -35,6 +35,29 @@ class AppTheme {
           borderSide: BorderSide(color: AppColors.border),
         ),
       ),
+      iconButtonTheme: IconButtonThemeData(
+        style: ButtonStyle(
+          foregroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.hovered)) {
+              return AppColors.error;
+            }
+            return AppColors.text2;
+          }),
+          backgroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.hovered)) {
+              return AppColors.errorLight;
+            }
+            return AppColors.surface2;
+          }),
+          overlayColor: WidgetStateProperty.all(Colors.transparent),
+          side: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.hovered)) {
+              return BorderSide(color: AppColors.error);
+            }
+            return BorderSide(color: AppColors.border);
+          }),
+        ),
+      ),
     );
   }
 
@@ -68,6 +91,29 @@ class AppTheme {
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: AppColors.borderDark),
+        ),
+      ),
+      iconButtonTheme: IconButtonThemeData(
+        style: ButtonStyle(
+          foregroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.hovered)) {
+              return AppColors.error;
+            }
+            return AppColors.text2Dark;
+          }),
+          backgroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.hovered)) {
+              return AppColors.errorDark;
+            }
+            return AppColors.surface2Dark;
+          }),
+          overlayColor: WidgetStateProperty.all(Colors.transparent),
+          side: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.hovered)) {
+              return BorderSide(color: AppColors.error);
+            }
+            return BorderSide(color: AppColors.borderDark);
+          }),
         ),
       ),
     );
