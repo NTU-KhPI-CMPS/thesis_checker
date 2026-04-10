@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/core/constants/available_check_types.dart';
 import 'package:flutter_app/core/constants/app_colors.dart';
+import 'package:flutter_app/core/utils/check_type_grouping.dart';
 import 'package:flutter_app/core/utils/ukrainian_plural.dart';
 import 'package:flutter_app/core/widgets/checkbox_container.dart';
 import 'package:flutter_app/core/widgets/hint_text.dart';
 import 'package:flutter_app/features/result/widgets/error_count_badge.dart';
 import 'package:flutter_app/features/result/widgets/error_detail_expandable_card.dart';
+import 'package:flutter_app/features/result/models/found_error.dart';
 import 'package:flutter_app/core/widgets/info_card.dart';
 import 'package:flutter_app/core/widgets/info_text.dart';
 import 'package:flutter_app/features/loading_analysis/bloc/analysis_bloc.dart';
@@ -30,18 +33,26 @@ class _ResultViewState extends State<ResultView> {
     return BlocBuilder<AnalysisBloc, AnalysisState>(
       builder: (context, state) {
         if (state is AnalysisSuccessState) {
-          final hasCategories = state.result.errorsByCategory.isNotEmpty;
+          final checkTypes = AvailableCheckTypes.checkTypes;
+          final countsByType = <String, int> {
+            for (final item in state.result.errorsByCategory)
+              item.category: item.count,
+          };
+
+          final hasCategories = checkTypes.isNotEmpty;
           final safeActiveCategoryIndex = hasCategories
-              ? (activeCategoryIndex < state.result.errorsByCategory.length
-                  ? activeCategoryIndex
-                  : 0)
-              : 0;
-          final selectedCategory = hasCategories
-              ? state.result.errorsByCategory[safeActiveCategoryIndex].category
-              : '';
-          final filteredErrors = state.result.foundErrors
-              .where((error) => error.category == selectedCategory)
-              .toList();
+            ? (activeCategoryIndex < checkTypes.length ? activeCategoryIndex : 0)
+            : 0;
+          final selectedType = hasCategories
+            ? checkTypes[safeActiveCategoryIndex]
+            : null;
+
+          final selectedCategoryTitle = selectedType?.title ?? '';
+          final List<FoundError> filteredErrors = selectedType == null ? <FoundError>[]
+            : CheckTypeGrouping.filterErrorsByType(
+              state.result.foundErrors,
+              selectedType,
+            );
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,34 +98,59 @@ class _ResultViewState extends State<ResultView> {
               const SizedBox(height: 24.0),
               InfoText(text: 'Категорії',),
               const SizedBox(height: 12.0),
-              GridView.builder(
-                itemCount: state.result.errorsByCategory.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16.0,
-                  mainAxisSpacing: 16.0,
-                  mainAxisExtent: 76.0,
-                ),
-                itemBuilder: (context, index) => CheckboxContainer(
-                  isSelected: safeActiveCategoryIndex == index,
-                  onTap: () => setState(() => activeCategoryIndex = index),
-                  rightWidget: ErrorCountBadge(
-                    count: state.result.errorsByCategory[index].count,
-                  ),
-                  children: [
-                    Text(
-                      state.result.errorsByCategory[index].category,
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'FunnelSans',
-                        color: activeCategoryIndex == index ? activeTextColor : fileNameTextColor,
-                      ),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final crossAxisCount = constraints.maxWidth < 500 ? 1 : 2;
+
+                  return GridView.builder(
+                    itemCount: checkTypes.length,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      crossAxisSpacing: 16.0,
+                      mainAxisSpacing: 16.0,
+                      mainAxisExtent: 76.0,
                     ),
-                  ],
-                )
+                    itemBuilder: (context, index) {
+                      final type = checkTypes[index];
+                      final count = countsByType[type.title] ?? 0;
+
+                      return CheckboxContainer(
+                        isSelected: safeActiveCategoryIndex == index,
+                        onTap: () => setState(() => activeCategoryIndex = index),
+                        bottomStripeColor: count > 0 ? AppColors.error : AppColors.ok,
+                        rightWidget: ErrorCountBadge(
+                          count: count,
+                        ),
+                        children: [
+                          Text(
+                            type.title,
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'FunnelSans',
+                              color: safeActiveCategoryIndex == index
+                                  ? activeTextColor
+                                  : fileNameTextColor,
+                            ),
+                          ),
+                          Text(
+                            type.description,
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              fontFamily: 'FunnelSans',
+                              fontWeight: FontWeight.w600,
+                              color: subTextColor,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          )
+                        ],
+                      );
+                    },
+                  );
+                },
               ),
               const SizedBox(height: 24.0),
               InfoText(text: 'Деталі помилок',),
@@ -131,7 +167,7 @@ class _ResultViewState extends State<ResultView> {
                 )
               else if (filteredErrors.isEmpty)
                 Text(
-                  'Для категорії "$selectedCategory" помилки відсутні.',
+                  'Для категорії "$selectedCategoryTitle" помилки відсутні.',
                   style: TextStyle(
                     fontSize: 14.0,
                     fontWeight: FontWeight.w600,
@@ -151,17 +187,11 @@ class _ResultViewState extends State<ResultView> {
 
                     return ErrorDetailExpandableCard(
                       title: error.title,
-                      subtitle: error.paragraphIndex == null
-                          ? 'Параграф не вказано'
-                          : 'Параграф ${error.paragraphIndex}',
                       quote: (paragraphText == null || paragraphText.isEmpty)
                           ? 'Фрагмент тексту відсутній.'
                           : paragraphText,
-                      highlightStart: error.highlightError?.start,
-                      highlightEnd: error.highlightError?.end,
                       foundValue: error.found,
                       expectedValue: error.expected,
-                      tags: [error.category, ...error.suggestions],
                     );
                   },
                 ),

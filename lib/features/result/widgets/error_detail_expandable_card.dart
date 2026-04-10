@@ -4,26 +4,18 @@ import 'package:flutter_app/core/constants/app_colors.dart';
 /// Expandable card that displays a summary row and detailed error information.
 class ErrorDetailExpandableCard extends StatefulWidget {
   final String title;
-  final String subtitle;
   final String quote;
-  final int? highlightStart;
-  final int? highlightEnd;
   final String foundValue;
   final String expectedValue;
-  final List<String> tags;
   final String iconAsset;
 
   const ErrorDetailExpandableCard({
     super.key,
     required this.title,
-    required this.subtitle,
     required this.quote,
-    this.highlightStart,
-    this.highlightEnd,
     required this.foundValue,
     required this.expectedValue,
-    required this.tags,
-    this.iconAsset = 'assets/images/abc.png',
+    this.iconAsset = 'assets/images/abc.png', // replace with some universal image
   });
 
   @override
@@ -52,7 +44,6 @@ class _ErrorDetailExpandableCardState extends State<ErrorDetailExpandableCard> {
     final quoteColor = theme.textTheme.bodyLarge?.color;
     final chipTextColor = isLightTheme ? AppColors.error : AppColors.errorLight;
     final expectedChipTextColor = AppColors.ok;
-    final highlightTextColor = isLightTheme ? AppColors.error : AppColors.errorLight;
     final highlightBackgroundColor = theme.colorScheme.errorContainer;
 
     return MouseRegion(
@@ -107,17 +98,6 @@ class _ErrorDetailExpandableCardState extends State<ErrorDetailExpandableCard> {
                                 color: titleColor,
                               ),
                             ),
-                            Text(
-                              widget.subtitle,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontFamily: 'FunnelSans',
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14.0,
-                                color: subtitleColor,
-                              ),
-                            ),
                           ],
                         ),
                       ),
@@ -159,10 +139,15 @@ class _ErrorDetailExpandableCardState extends State<ErrorDetailExpandableCard> {
                                   color: sectionBackground,
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                child: _buildQuoteText(
-                                  quoteColor: quoteColor,
-                                  highlightTextColor: highlightTextColor,
-                                  highlightBackgroundColor: highlightBackgroundColor,
+                                child: Text(
+                                  widget.quote,
+                                  style: TextStyle(
+                                    fontFamily: 'FunnelSans',
+                                    fontSize: 14.0,
+                                    height: 1.4,
+                                    fontWeight: FontWeight.w600,
+                                    color: quoteColor,
+                                  ),
                                 ),
                               ),
                               const SizedBox(height: 10.0),
@@ -193,21 +178,6 @@ class _ErrorDetailExpandableCardState extends State<ErrorDetailExpandableCard> {
                                     textColor: expectedChipTextColor,
                                   ),
                                 ],
-                              ),
-                              const SizedBox(height: 10.0),
-                              Wrap(
-                                spacing: 8.0,
-                                runSpacing: 8.0,
-                                children: widget.tags
-                                    .map(
-                                      (tag) => _pill(
-                                        context: context,
-                                        text: tag,
-                                        background: theme.dividerColor.withAlpha(isLightTheme ? 85 : 110),
-                                        textColor: subtitleColor,
-                                      ),
-                                    )
-                                    .toList(),
                               ),
                             ],
                           ),
@@ -242,57 +212,6 @@ class _ErrorDetailExpandableCardState extends State<ErrorDetailExpandableCard> {
           fontSize: 13.0,
           color: textColor,
         ),
-      ),
-    );
-  }
-
-  Widget _buildQuoteText({
-    required Color? quoteColor,
-    required Color highlightTextColor,
-    required Color highlightBackgroundColor,
-  }) {
-    final baseStyle = TextStyle(
-      fontFamily: 'FunnelSans',
-      fontSize: 14.0,
-      height: 1.4,
-      fontWeight: FontWeight.w600,
-      color: quoteColor,
-    );
-
-    final rawStart = widget.highlightStart;
-    final rawEnd = widget.highlightEnd;
-
-    if (rawStart == null || rawEnd == null || widget.quote.isEmpty) {
-      return Text(widget.quote, style: baseStyle);
-    }
-
-    final quoteLength = widget.quote.length;
-    final start = rawStart.clamp(0, quoteLength);
-    final end = rawEnd.clamp(0, quoteLength);
-
-    if (start >= end) {
-      return Text(widget.quote, style: baseStyle);
-    }
-
-    final before = widget.quote.substring(0, start);
-    final highlighted = widget.quote.substring(start, end);
-    final after = widget.quote.substring(end);
-
-    return Text.rich(
-      TextSpan(
-        style: baseStyle,
-        children: [
-          TextSpan(text: before),
-          TextSpan(
-            text: highlighted,
-            style: baseStyle.copyWith(
-              color: highlightTextColor,
-              backgroundColor: highlightBackgroundColor,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          TextSpan(text: after),
-        ],
       ),
     );
   }
