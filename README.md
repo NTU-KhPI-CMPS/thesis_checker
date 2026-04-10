@@ -2,5 +2,4 @@
 A project to automatically verify thesis formatting.
 
 ## Requirements
-- Python 3.11 or later
-- Installed dependencies (see `requirements.txt`)
+- Java 25 ([GraalVM](https://www.graalvm.org/downloads/))
