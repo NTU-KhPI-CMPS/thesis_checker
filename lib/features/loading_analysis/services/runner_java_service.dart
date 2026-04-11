@@ -10,7 +10,7 @@ class RunnerJavaService {
   static final RunnerJavaService _instance = RunnerJavaService._internal();
   factory RunnerJavaService() => _instance;
 
-  final _javaThesisChecker = 'java-thesis-checker';
+  final _javaThesisChecker = 'java-thesis-checker.exe';
 
   Future<void> checkFile(String filePath) async {
     try {
@@ -32,7 +32,7 @@ class RunnerJavaService {
 
       print('Execute process to check file.');
       // Mark java-thesis-checker binary as executable
-      await Process.start('chmod', ['+x', jarFile.path]);
+      // await Process.start('chmod', ['+x', jarFile.path]);
       // Execute binary with args
       final process = await Process.start(jarFile.path, ['-filePath', filePath, '-checks', '["FONT", "PARAGRAPH"]']);
 
