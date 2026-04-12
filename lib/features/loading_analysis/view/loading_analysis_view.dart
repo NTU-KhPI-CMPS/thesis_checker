@@ -6,9 +6,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Displays the analysis progress with animated loading indicator and progress bar.
 class LoadingAnalysisView extends StatefulWidget {
-  const LoadingAnalysisView({super.key, this.onAnalysisComplete});
+  const LoadingAnalysisView({
+    super.key,
+    this.onAnalysisComplete,
+    this.onAnalysisFailed,
+  });
 
   final VoidCallback? onAnalysisComplete;
+  final ValueChanged<String>? onAnalysisFailed;
 
   @override
   State<LoadingAnalysisView> createState() => _LoadingAnalysisViewState();
@@ -63,60 +68,42 @@ class _LoadingAnalysisViewState extends State<LoadingAnalysisView> with SingleTi
 
     return BlocListener<AnalysisBloc, AnalysisState>(
       listener: (context, state) async {
-        if (state is AnalysisSuccessState || state is AnalysisFailureState) {
+        if (state is AnalysisDoneState) {
           await _completeAnimation();
           widget.onAnalysisComplete?.call();
+        }
+
+        if (state is AnalysisFailureState) {
+          await _completeAnimation();
+          widget.onAnalysisFailed?.call(state.error);
         }
       },
       child: BlocBuilder<FileBloc, FileState>(
         builder: (context, state) {
+          if (state is! FileUploadedState) {
+            return Center(
+              child: Text(
+                'Завантажте, будь ласка, документ для аналізу',
+                style: TextStyle(
+                  color: textColor,
+                  fontFamily: 'FunnelSans',
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            );
+          }
+
           return Center(
-            child: state is FileUploadedState
-                ? SizedBox(
-                    width: 260.0,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        DualRingIndicator(),
-                        SizedBox(height: 24.0),
-                        Text(
-                          'Аналізую документ...',
-                          style: TextStyle(
-                            color: textColor,
-                            fontFamily: 'FunnelSans',
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        SizedBox(height: 8.0),
-                        Text(
-                          state.fileName,
-                          style: TextStyle(
-                            fontFamily: 'FunnelSans',
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w600,
-                            color: additiontalTextColor,
-                          ),
-                        ),
-                        SizedBox(height: 16.0),
-                        AnimatedBuilder(
-                          animation: _animation,
-                          builder: (context, child) {
-                            return LinearProgressIndicator(
-                              borderRadius: BorderRadius.circular(4.0),
-                              value: _animation.value,
-                              backgroundColor: progressBarBgColor,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                prograssBarValueColor,
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  )
-                : Text(
-                    'Завантажте, будь ласка, документ для аналізу',
+            child: SizedBox(
+              width: 260.0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  DualRingIndicator(),
+                  SizedBox(height: 24.0),
+                  Text(
+                    'Аналізую документ...',
                     style: TextStyle(
                       color: textColor,
                       fontFamily: 'FunnelSans',
@@ -124,6 +111,33 @@ class _LoadingAnalysisViewState extends State<LoadingAnalysisView> with SingleTi
                       fontWeight: FontWeight.w600,
                     ),
                   ),
+                  SizedBox(height: 8.0),
+                  Text(
+                    state.fileName,
+                    style: TextStyle(
+                      fontFamily: 'FunnelSans',
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w600,
+                      color: additiontalTextColor,
+                    ),
+                  ),
+                  SizedBox(height: 16.0),
+                  AnimatedBuilder(
+                    animation: _animation,
+                    builder: (context, child) {
+                      return LinearProgressIndicator(
+                        borderRadius: BorderRadius.circular(4.0),
+                        value: _animation.value,
+                        backgroundColor: progressBarBgColor,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          prograssBarValueColor,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
           );
         },
       ),

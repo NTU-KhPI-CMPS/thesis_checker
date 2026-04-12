@@ -14,6 +14,9 @@ class AppTheme {
         primary: AppColors.accent,
         secondary: AppColors.accent2,
         surface: AppColors.surface2,
+        error: AppColors.error,
+        errorContainer: AppColors.errorLight,
+        onErrorContainer: AppColors.error,
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.surface,
@@ -49,6 +52,9 @@ class AppTheme {
         primary: AppColors.accentDark,
         secondary: AppColors.accent2Dark,
         surface: AppColors.surface2Dark,
+        error: AppColors.error,
+        errorContainer: AppColors.errorDark,
+        onErrorContainer: AppColors.textDark,
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.surfaceDark,

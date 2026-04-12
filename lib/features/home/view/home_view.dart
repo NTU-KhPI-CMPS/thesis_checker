@@ -6,6 +6,7 @@ import 'package:flutter_app/features/home/widgets/app_bar_button.dart';
 import 'package:flutter_app/features/home/widgets/home_content.dart';
 import 'package:flutter_app/features/loading_analysis/bloc/analysis_bloc.dart';
 import 'package:flutter_app/features/loading_analysis/view/loading_analysis_view.dart';
+import 'package:flutter_app/features/result/view/result_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Main screen that renders navigation, page content, and upload feedback.
@@ -24,12 +25,23 @@ class _HomeViewState extends State<HomeView> {
   final List<Map<String, dynamic>> buttons = [
     {'icon': 'assets/images/house.png', 'label': 'Головна'},
     {'icon': 'assets/images/hourglass.png', 'label': 'Аналіз'},
+    {'icon': 'assets/images/bar_chart.png', 'label': 'Результати'},
   ];
 
   void _onAnalysisComplete() {    
+    context.read<FileBloc>().add(ResetFileEvent());
+    setState(() => selectedIndex = 2);
+  }
+
+  void _onAnalysisFailed(String error) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Аналіз завершено!')));
+    ).showSnackBar(
+      SnackBar(
+        content: Text(error),
+        duration: const Duration(seconds: 10),
+      ),
+    );
 
     context.read<FileBloc>().add(ResetFileEvent());
     setState(() => selectedIndex = 0);
@@ -47,7 +59,12 @@ class _HomeViewState extends State<HomeView> {
           contentAlignment: Alignment.center,
           child: LoadingAnalysisView(
             onAnalysisComplete: _onAnalysisComplete,
+            onAnalysisFailed: _onAnalysisFailed,
           ),
+        ),
+        PageContainer(
+          contentAlignment: Alignment.topCenter,
+          child: ResultView(),
         ),
       ],
     );
@@ -67,7 +84,7 @@ class _HomeViewState extends State<HomeView> {
         }
         if (state is FileUploadErrorState) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Виникла помилка: //${state.error}')),
+            SnackBar(content: Text('Виникла помилка: ${state.error}')),
           );
         }
       },
