@@ -14,15 +14,8 @@ final class AnalysisInitial extends AnalysisState {}
 /// State emitted when analysis is currently processing.
 final class AnalysisInProgressState extends AnalysisState {}
 
-/// State emitted when analysis completes successfully with a result.
-final class AnalysisSuccessState extends AnalysisState {
-  final AnalysisResult result;
-  
-  const AnalysisSuccessState({required this.result});
-  
-  @override
-  List<Object> get props => [result];
-}
+/// State emitted when analysis is completed successfully.
+final class AnalysisDoneState extends AnalysisState {}
 
 /// State emitted when analysis fails with an error message.
 final class AnalysisFailureState extends AnalysisState {
