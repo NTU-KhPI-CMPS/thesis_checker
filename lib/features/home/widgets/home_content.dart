@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/core/constants/available_check_types.dart';
-import 'package:flutter_app/features/home/widgets/info_card.dart';
+import 'package:flutter_app/core/widgets/info_card.dart';
+import 'package:flutter_app/core/widgets/info_text.dart';
 import 'package:flutter_app/features/home/widgets/upload_zone.dart';
 
 /// Primary content area of the home screen.
@@ -17,16 +18,7 @@ class HomeContent extends StatelessWidget {
       children: [
         const UploadZone(),
         const SizedBox(height: 28.0,),
-        Text(
-          'Що перевіряємо'.toUpperCase(),
-          style: TextStyle(
-            fontFamily: 'FunnelSans',
-            fontSize: 13.0,
-            fontWeight: FontWeight.w600,
-            color: textColor2,
-            letterSpacing: 0.5,
-          ),
-        ),
+        InfoText(text: 'Що перевіряємо'),
         const SizedBox(height: 28.0,),
         LayoutBuilder(
           builder: (context, constraints) {
