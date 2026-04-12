@@ -1,6 +1,6 @@
 import 'package:flutter_app/core/constants/available_check_types.dart';
 import 'package:flutter_app/core/enums/check.dart';
-import 'package:flutter_app/core/models/check_type_info.dart';
+import 'package:flutter_app/models/check_type_info.dart';
 import 'package:flutter_app/data/models/found_error.dart';
 
 /// Resolves check type groups for errors by parsing check codes from 'category'.

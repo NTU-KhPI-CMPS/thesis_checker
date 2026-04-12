@@ -1,5 +1,5 @@
 import 'package:flutter_app/core/enums/check.dart';
-import 'package:flutter_app/core/models/check_type_info.dart';
+import 'package:flutter_app/models/check_type_info.dart';
 
 class AvailableCheckTypes {
   static const List<CheckTypeInfo> checkTypes = [
