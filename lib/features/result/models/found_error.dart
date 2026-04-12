@@ -18,12 +18,17 @@ class FoundError {
   });
 
   factory FoundError.fromJson(Map<String, dynamic> json) {
+    final rawFound = json['found'];
+    final foundValue = rawFound is List<dynamic>
+        ? rawFound.map((value) => value.toString()).join(', ')
+        : rawFound?.toString() ?? '';
+
     return FoundError(
       id: json['id']?.toString() ?? '',
       category: json['category']?.toString() ?? '',
       expected: json['expected']?.toString() ?? '',
-      found: json['found']?.toString() ?? '',
-      paragraphText: json['paragraphText'] as String?,
+      found: foundValue,
+      paragraphText: json['paragraphText']?.toString(),
       severity: json['severity']?.toString() ?? '',
       title: json['title']?.toString() ?? '',
     );
