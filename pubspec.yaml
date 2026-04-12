@@ -68,8 +68,6 @@ flutter:
   assets:
   - assets/images/
   - assets/java-thesis-checker
-  # temporarily added test json validation result
-  - assets/test_json_result/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
