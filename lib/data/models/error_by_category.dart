@@ -1,4 +1,4 @@
-import 'package:flutter_app/features/result/models/found_error.dart';
+import 'package:flutter_app/data/models/found_error.dart';
 
 class ErrorsByCategory {
   final String category;
