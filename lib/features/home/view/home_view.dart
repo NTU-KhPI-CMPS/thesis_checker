@@ -29,12 +29,22 @@ class _HomeViewState extends State<HomeView> {
   ];
 
   void _onAnalysisComplete() {    
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Аналіз завершено!')));
-
     context.read<FileBloc>().add(ResetFileEvent());
     setState(() => selectedIndex = 2);
+  }
+
+  void _onAnalysisFailed(String error) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(
+      SnackBar(
+        content: Text(error),
+        duration: const Duration(seconds: 10),
+      ),
+    );
+
+    context.read<FileBloc>().add(ResetFileEvent());
+    setState(() => selectedIndex = 0);
   }
 
   Widget _buildBodyContent(int index) {
@@ -49,6 +59,7 @@ class _HomeViewState extends State<HomeView> {
           contentAlignment: Alignment.center,
           child: LoadingAnalysisView(
             onAnalysisComplete: _onAnalysisComplete,
+            onAnalysisFailed: _onAnalysisFailed,
           ),
         ),
         PageContainer(
@@ -73,7 +84,7 @@ class _HomeViewState extends State<HomeView> {
         }
         if (state is FileUploadErrorState) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Виникла помилка: //${state.error}')),
+            SnackBar(content: Text('Виникла помилка: ${state.error}')),
           );
         }
       },
