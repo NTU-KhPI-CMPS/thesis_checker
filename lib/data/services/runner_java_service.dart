@@ -2,11 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_app/core/constants/available_check_types.dart';
-import 'package:flutter_app/core/utils/check_type_grouping.dart';
-import 'package:flutter_app/features/result/models/analysis_result.dart';
-import 'package:flutter_app/features/result/models/error_by_category.dart';
-import 'package:flutter_app/features/result/models/found_error.dart';
+import 'package:flutter_app/data/models/analysis_report.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -17,7 +13,7 @@ class RunnerJavaService {
 
   final _javaThesisChecker = 'java-thesis-checker';
 
-  Future<AnalysisResult> checkFile(String filePath) async {
+  Future<AnalysisReport> checkFile(String filePath) async {
     try {
       // 1. Find a safe directory on the user's computer to store the file
       final directory = await getApplicationSupportDirectory();
@@ -67,42 +63,10 @@ class RunnerJavaService {
       }
 
       final file = File('./reports/result.json');
-      final resultFileName = filePath.split(Platform.pathSeparator).last;
 
       final rawJson = await file.readAsString();
-        final decodedReport = jsonDecode(rawJson) as Map<String, dynamic>;
-        final rawErrors = decodedReport['errors'] as List<dynamic>;
-
-      final foundErrors = rawErrors
-          .map(
-            (item) => FoundError.fromJson(
-              Map<String, dynamic>.from(item as Map)
-              )
-          ).toList();
-
-      final groupedErrorsByType = <String, List<FoundError>>{
-        for (final type in AvailableCheckTypes.checkTypes) type.title: <FoundError>[],
-      };
-
-      for (final error in foundErrors) {
-        final type = CheckTypeGrouping.resolveTypeByError(error);
-        groupedErrorsByType[type.title]?.add(error);
-      }
-
-      final errorsByCategory = AvailableCheckTypes.checkTypes
-          .map(
-            (type) => ErrorsByCategory(
-              category: type.title,
-              errors: groupedErrorsByType[type.title] ?? const <FoundError>[],
-            ),
-          ).toList();
-
-      return AnalysisResult(
-        fileName: resultFileName,
-        analyzedAt: DateTime.now(),
-        errorsByCategory: errorsByCategory,
-        foundErrors: foundErrors,
-      );
+      final decodedReport = jsonDecode(rawJson) as Map<String, dynamic>;
+      return AnalysisReport.fromJson(decodedReport);
     } catch (e) {
       debugPrint('Failed to execute analysis flow: $e');
       throw Exception('Не вдалося виконати аналіз. Спробуйте ще раз.');
