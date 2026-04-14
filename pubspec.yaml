@@ -66,9 +66,13 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-  - assets/images/
-  - assets/java-thesis-checker
-
+  - path: assets/images/
+    platforms:
+      - windows
+      - macos
+  - path: assets/java-thesis-checker
+    platforms:
+      - macos
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
