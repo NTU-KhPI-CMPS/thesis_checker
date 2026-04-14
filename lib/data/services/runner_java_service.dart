@@ -25,15 +25,15 @@ class RunnerJavaService {
     try {
       // 1. Find a safe directory on the user's computer to store the file
       final directory = await getApplicationSupportDirectory();
-      debugPrint("Tmp directory to put jar: ${directory.path}");
-      final jarFile = File('${directory.path}/$_javaThesisCheckerFileName');
+      debugPrint("Tmp directory to put executable file: ${directory.path}");
+      final javaThesisCheckerExecutable = File('${directory.path}/$_javaThesisCheckerFileName');
 
-      if (!await jarFile.exists() || kDebugMode) {
-        debugPrint('Extracting .jar file for the first time...');
+      if (!await javaThesisCheckerExecutable.exists() || kDebugMode) {
+        debugPrint('Extracting executable file for the first time...');
         final byteData = await rootBundle.load('assets/$_javaThesisCheckerFileName');
 
         // Write the bytes to the physical file
-        await jarFile.writeAsBytes(byteData.buffer.asUint8List(
+        await javaThesisCheckerExecutable.writeAsBytes(byteData.buffer.asUint8List(
             byteData.offsetInBytes,
             byteData.lengthInBytes
         ));
@@ -42,10 +42,10 @@ class RunnerJavaService {
       debugPrint('Execute process to check file.');
       // Mark binary as executable only on Unix-like platforms.
       if (!_isWindows) {
-        await Process.start('chmod', ['+x', jarFile.path]);
+        await Process.start('chmod', ['+x', javaThesisCheckerExecutable.path]);
       }
       // Execute binary with args
-      final process = await Process.start(jarFile.path, ['-filePath', filePath, '-checks', '["FONT", "PARAGRAPH"]']);
+      final process = await Process.start(javaThesisCheckerExecutable.path, ['-filePath', filePath, '-checks', '["FONT", "PARAGRAPH"]']);
       final stderrBuffer = StringBuffer();
 
       // Listen to standard output in real-time
