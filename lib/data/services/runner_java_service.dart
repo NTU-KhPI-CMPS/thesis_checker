@@ -73,9 +73,9 @@ class RunnerJavaService {
       }
 
       final file = File('./reports/result.json');
-
       final rawJson = await file.readAsString();
       final decodedReport = jsonDecode(rawJson) as Map<String, dynamic>;
+      
       return AnalysisReport.fromJson(decodedReport);
     } catch (e) {
       debugPrint('Failed to execute analysis flow: $e');
