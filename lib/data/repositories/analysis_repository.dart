@@ -39,7 +39,6 @@ class AnalysisRepository {
       fileName: filePath.split(Platform.pathSeparator).last,
       analyzedAt: DateTime.now(),
       errorsByCategory: errorsByCategory,
-      foundErrors: foundErrors,
     );
   }
 }
