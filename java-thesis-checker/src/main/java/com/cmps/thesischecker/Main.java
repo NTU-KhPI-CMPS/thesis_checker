@@ -11,6 +11,7 @@ import tools.jackson.databind.SerializationFeature;
 import java.io.File;
 import java.nio.file.*;
 import java.util.*;
+import java.util.Set;
 
 public class Main {
 
@@ -57,7 +58,9 @@ public class Main {
             System.out.println("Помилок немає, всі шрифти правильні");
         } else {
             for (FormatError error : errors) {
-                String foundStr = String.join(", ", error.getFound());
+                Set<String> found = error.getFound();
+                if (found == null) found = Set.of();
+                String foundStr = String.join(", ", found);
                 System.out.println("Тут шрифт не правильний (використані шрифти: " + foundStr + ")");
             }
         }
