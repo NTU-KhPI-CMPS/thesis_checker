@@ -55,7 +55,7 @@ class _ResultViewState extends State<ResultView> {
               borderRadius: BorderRadius.circular(16.0),
               children: [
                 Image.asset(
-                  result.foundErrors.isNotEmpty
+                  result.totalErrors > 0
                       ? 'assets/images/found_errors.png'
                       : 'assets/images/no_errors.png',
                   width: 24.0,
