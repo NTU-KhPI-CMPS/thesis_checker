@@ -1,5 +1,6 @@
 package com.cmps.thesischecker.checker;
 
+import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.requirements.RequirementsHolder;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -18,7 +19,6 @@ public class FontChecker implements Checker {
 
     @Override
     public List<FormatError> check(String filePath) {
-        String expectedFont = RequirementsHolder.getFont();
         List<FormatError> allErrors = new ArrayList<>();
 
         try (FileInputStream fis = new FileInputStream(filePath);
@@ -30,7 +30,7 @@ public class FontChecker implements Checker {
                 if (!incorrectFonts.isEmpty()) {
                     FormatError err = new FormatError();
                     err.setId("err_font");
-                    err.setCategory("font");
+                    err.setCategory(ErrorCategory.FONT_NAME);
                     err.setSeverity("error");
                     err.setTitle("Невірні шрифти у параграфі");
                     err.setParagraphText(paraText);
@@ -42,7 +42,7 @@ public class FontChecker implements Checker {
         } catch (Exception e) {
             FormatError err = new FormatError();
             err.setId("err_000");
-            err.setCategory("file");
+            err.setCategory(ErrorCategory.FILE);
             err.setSeverity("error");
             err.setTitle("Помилка відкриття файлу: " + e.getMessage());
             err.setParagraphText("");
