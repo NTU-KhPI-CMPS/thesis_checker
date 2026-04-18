@@ -3,11 +3,12 @@ package com.cmps.thesischecker.argparser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FilePathParser {
+public class FilePathParser implements Parser {
 
     private static final String FILE_PATH_ARG = "-filePath";
 
-    public static List<String> parse(String[] args) {
+    @Override
+    public List<String> parse(String[] args) {
         List<String> filePaths = new ArrayList<>();
 
         for (int i = 0; i < args.length; i++) {
