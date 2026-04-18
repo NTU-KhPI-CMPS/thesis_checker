@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/core/constants/available_check_types.dart';
-import 'package:flutter_app/core/widgets/info_card.dart';
-import 'package:flutter_app/core/widgets/info_text.dart';
-import 'package:flutter_app/features/home/widgets/upload_zone.dart';
+import 'package:thesis_checker/core/constants/available_check_types.dart';
+import 'package:thesis_checker/core/widgets/info_card.dart';
+import 'package:thesis_checker/core/widgets/info_text.dart';
+import 'package:thesis_checker/features/home/widgets/upload_zone.dart';
 
 /// Primary content area of the home screen.
 class HomeContent extends StatelessWidget {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/core/constants/app_colors.dart';
+import 'package:thesis_checker/core/constants/app_colors.dart';
 
 /// Expandable card that displays a summary row and detailed error information.
 class ErrorDetailExpandableCard extends StatefulWidget {

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/core/theme/theme_cubit.dart';
-import 'package:flutter_app/core/widgets/page_container.dart';
-import 'package:flutter_app/features/home/bloc/file_bloc.dart';
-import 'package:flutter_app/features/home/widgets/app_bar_button.dart';
-import 'package:flutter_app/features/home/widgets/home_content.dart';
-import 'package:flutter_app/features/loading_analysis/bloc/analysis_bloc.dart';
-import 'package:flutter_app/features/loading_analysis/view/loading_analysis_view.dart';
-import 'package:flutter_app/features/result/view/result_view.dart';
+import 'package:thesis_checker/core/theme/theme_cubit.dart';
+import 'package:thesis_checker/core/widgets/page_container.dart';
+import 'package:thesis_checker/features/home/bloc/file_bloc.dart';
+import 'package:thesis_checker/features/home/widgets/app_bar_button.dart';
+import 'package:thesis_checker/features/home/widgets/home_content.dart';
+import 'package:thesis_checker/features/loading_analysis/bloc/analysis_bloc.dart';
+import 'package:thesis_checker/features/loading_analysis/view/loading_analysis_view.dart';
+import 'package:thesis_checker/features/result/view/result_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Main screen that renders navigation, page content, and upload feedback.

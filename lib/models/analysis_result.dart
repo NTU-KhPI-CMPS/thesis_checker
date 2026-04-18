@@ -1,4 +1,4 @@
-import 'package:flutter_app/data/models/error_by_category.dart';
+import 'package:thesis_checker/data/models/error_by_category.dart';
 
 class AnalysisResult {
   final String fileName;

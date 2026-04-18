@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/features/home/bloc/file_bloc.dart';
-import 'package:flutter_app/features/loading_analysis/bloc/analysis_bloc.dart';
-import 'package:flutter_app/features/loading_analysis/widgets/dual_ring_indicator.dart';
+import 'package:thesis_checker/features/home/bloc/file_bloc.dart';
+import 'package:thesis_checker/features/loading_analysis/bloc/analysis_bloc.dart';
+import 'package:thesis_checker/features/loading_analysis/widgets/dual_ring_indicator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Displays the analysis progress with animated loading indicator and progress bar.

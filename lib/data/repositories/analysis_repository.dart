@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:flutter_app/core/constants/available_check_types.dart';
-import 'package:flutter_app/core/utils/check_type_grouping.dart';
-import 'package:flutter_app/data/services/runner_java_service.dart';
-import 'package:flutter_app/models/analysis_result.dart';
-import 'package:flutter_app/data/models/error_by_category.dart';
-import 'package:flutter_app/data/models/found_error.dart';
+import 'package:thesis_checker/core/constants/available_check_types.dart';
+import 'package:thesis_checker/core/utils/check_type_grouping.dart';
+import 'package:thesis_checker/data/services/runner_java_service.dart';
+import 'package:thesis_checker/models/analysis_result.dart';
+import 'package:thesis_checker/data/models/error_by_category.dart';
+import 'package:thesis_checker/data/models/found_error.dart';
 
 class AnalysisRepository {
   AnalysisRepository._internal();

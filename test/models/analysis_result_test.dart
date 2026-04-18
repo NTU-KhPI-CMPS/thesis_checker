@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_app/core/enums/check.dart';
-import 'package:flutter_app/models/analysis_result.dart';
+import 'package:thesis_checker/core/enums/check.dart';
+import 'package:thesis_checker/models/analysis_result.dart';
 
 void main() {
   group('AnalysisResult.fromJson', () {
