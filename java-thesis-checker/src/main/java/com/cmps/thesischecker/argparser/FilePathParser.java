@@ -3,7 +3,7 @@ package com.cmps.thesischecker.argparser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FilePathParser implements Parser {
+public class FilePathParser implements Parser<List<String>> {
 
     private static final String FILE_PATH_ARG = "-filePath";
 

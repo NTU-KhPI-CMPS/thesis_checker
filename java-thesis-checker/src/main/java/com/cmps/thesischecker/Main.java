@@ -19,17 +19,11 @@ public class Main {
 
     public static void main(String[] args) {
 
-        if (ResultDirectoryParser.hasInvalidResultDirectory(args)) {
-            error("Incorrect directory specified for the result.");
-            return;
-        }
-
-        Parser filePathParser = new FilePathParser();
+        Parser<List<String>> filePathParser = new FilePathParser();
         List<String> files = filePathParser.parse(args);
 
-        Parser resultDirectoryParser = new ResultDirectoryParser();
-        List<String> parsedResultDirectories = resultDirectoryParser.parse(args);
-        String outputDir = parsedResultDirectories.get(0);
+        Parser<String> resultDirectoryParser = new ResultDirectoryParser();
+        String outputDir = resultDirectoryParser.parse(args);
 
         if (files.isEmpty()) {
             error("No input files specified.");

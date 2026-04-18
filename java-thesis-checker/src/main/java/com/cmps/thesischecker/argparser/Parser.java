@@ -1,8 +1,6 @@
 package com.cmps.thesischecker.argparser;
 
-import java.util.List;
-
-public interface Parser {
+public interface Parser<VALUE_TYPE> {
     
-    List<String> parse(String[] args);
+    VALUE_TYPE parse(String[] args);
 }
