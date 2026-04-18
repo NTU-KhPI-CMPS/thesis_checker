@@ -1,6 +1,8 @@
 package com.cmps.thesischecker;
 
 import com.cmps.thesischecker.argparser.FilePathParser;
+import com.cmps.thesischecker.argparser.Parser;
+import com.cmps.thesischecker.argparser.ResultDirectoryParser;
 import com.cmps.thesischecker.checker.Checker;
 import com.cmps.thesischecker.checker.FontChecker;
 import com.cmps.thesischecker.model.FormatError;
@@ -15,12 +17,19 @@ import java.util.Set;
 
 public class Main {
 
-    private static final String DEFAULT_OUTPUT_DIR = "reports";
-
     public static void main(String[] args) {
 
-        List<String> files = FilePathParser.parse(args);
-        String outputDir = DEFAULT_OUTPUT_DIR;
+        if (ResultDirectoryParser.hasInvalidResultDirectory(args)) {
+            error("Incorrect directory specified for the result.");
+            return;
+        }
+
+        Parser filePathParser = new FilePathParser();
+        List<String> files = filePathParser.parse(args);
+
+        Parser resultDirectoryParser = new ResultDirectoryParser();
+        List<String> parsedResultDirectories = resultDirectoryParser.parse(args);
+        String outputDir = parsedResultDirectories.get(0);
 
         if (files.isEmpty()) {
             error("No input files specified.");
