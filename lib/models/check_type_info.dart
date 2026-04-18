@@ -1,4 +1,4 @@
-import 'package:flutter_app/core/enums/check.dart';
+import 'package:thesis_checker/core/enums/check.dart';
 
 /// UI model for cards describing available check types.
 class CheckTypeInfo {
