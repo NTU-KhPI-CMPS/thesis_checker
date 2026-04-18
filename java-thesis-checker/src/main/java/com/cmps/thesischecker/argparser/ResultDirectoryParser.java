@@ -42,5 +42,4 @@ public class ResultDirectoryParser implements Parser {
         return !hasResultDirectoryArg;
     }
 
-
 }
