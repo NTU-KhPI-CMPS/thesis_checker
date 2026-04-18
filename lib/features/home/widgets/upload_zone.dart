@@ -2,7 +2,7 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/features/home/bloc/file_bloc.dart';
+import 'package:thesis_checker/features/home/bloc/file_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Interactive drop area for uploading thesis files.

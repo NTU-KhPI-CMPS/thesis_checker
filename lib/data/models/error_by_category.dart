@@ -1,4 +1,4 @@
-import 'package:flutter_app/data/models/found_error.dart';
+import 'package:thesis_checker/data/models/found_error.dart';
 
 class ErrorsByCategory {
   final String category;

@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_app/core/constants/available_check_types.dart';
-import 'package:flutter_app/core/enums/check.dart';
-import 'package:flutter_app/core/utils/check_type_grouping.dart';
-import 'package:flutter_app/data/models/found_error.dart';
+import 'package:thesis_checker/core/constants/available_check_types.dart';
+import 'package:thesis_checker/core/enums/check.dart';
+import 'package:thesis_checker/core/utils/check_type_grouping.dart';
+import 'package:thesis_checker/data/models/found_error.dart';
 
 FoundError makeError(String category) {
   return FoundError(

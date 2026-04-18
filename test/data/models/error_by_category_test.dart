@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_app/core/enums/check.dart';
-import 'package:flutter_app/data/models/error_by_category.dart';
+import 'package:thesis_checker/core/enums/check.dart';
+import 'package:thesis_checker/data/models/error_by_category.dart';
 
 void main() {
   group('ErrorsByCategory.fromJson', () {

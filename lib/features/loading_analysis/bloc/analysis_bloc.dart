@@ -1,6 +1,6 @@
-import 'package:flutter_app/data/repositories/analysis_repository.dart';
-import 'package:flutter_app/models/analysis_result.dart';
-import 'package:flutter_app/features/result/cubit/result_cubit.dart';
+import 'package:thesis_checker/data/repositories/analysis_repository.dart';
+import 'package:thesis_checker/models/analysis_result.dart';
+import 'package:thesis_checker/features/result/cubit/result_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 

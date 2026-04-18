@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_app/core/enums/check.dart';
-import 'package:flutter_app/data/models/found_error.dart';
+import 'package:thesis_checker/core/enums/check.dart';
+import 'package:thesis_checker/data/models/found_error.dart';
 
 void main() {
   group('FoundError.fromJson', () {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/core/utils/ukrainian_plural.dart';
+import 'package:thesis_checker/core/utils/ukrainian_plural.dart';
 
 /// Compact badge that displays error count with theme-aware error container color.
 class ErrorCountBadge extends StatelessWidget {

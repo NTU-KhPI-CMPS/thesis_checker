@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_app/models/analysis_result.dart';
+import 'package:thesis_checker/models/analysis_result.dart';
 
 sealed class ResultState extends Equatable {
   const ResultState();
