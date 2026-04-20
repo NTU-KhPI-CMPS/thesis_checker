@@ -45,7 +45,7 @@ class RunnerJavaService {
         await Process.start('chmod', ['+x', javaThesisCheckerExecutable.path]);
       }
       // Execute binary with args
-      final process = await Process.start(javaThesisCheckerExecutable.path, ['-filePath', filePath, '-checks', '["FONT", "PARAGRAPH"]']);
+      final process = await Process.start(javaThesisCheckerExecutable.path, ['-filePath', filePath, '-checks', '["FONT", "PARAGRAPH"]', '-resultDirectory', directory.path]);
       final stderrBuffer = StringBuffer();
 
       // Listen to standard output in real-time
@@ -72,7 +72,7 @@ class RunnerJavaService {
         );
       }
 
-      final file = File('./reports/result.json');
+      final file = File('${directory.path}/result.json');
       final rawJson = await file.readAsString();
       final decodedReport = jsonDecode(rawJson) as Map<String, dynamic>;
       
