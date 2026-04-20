@@ -25,6 +25,9 @@ class RunnerJavaService {
     try {
       // 1. Find a safe directory on the user's computer to store the file
       final directory = await getApplicationSupportDirectory();
+      final resultsRoot = Directory('${directory.path}/results');
+      await resultsRoot.create(recursive: true);
+
       debugPrint("Tmp directory to put executable file: ${directory.path}");
       final javaThesisCheckerExecutable = File('${directory.path}/$_javaThesisCheckerFileName');
 
@@ -45,7 +48,7 @@ class RunnerJavaService {
         await Process.start('chmod', ['+x', javaThesisCheckerExecutable.path]);
       }
       // Execute binary with args
-      final process = await Process.start(javaThesisCheckerExecutable.path, ['-filePath', filePath, '-checks', '["FONT", "PARAGRAPH"]', '-resultDirectory', directory.path]);
+      final process = await Process.start(javaThesisCheckerExecutable.path, ['-filePath', filePath, '-checks', '["FONT", "PARAGRAPH"]', '-resultDirectory', resultsRoot.path]);
       final stderrBuffer = StringBuffer();
 
       // Listen to standard output in real-time
@@ -72,7 +75,7 @@ class RunnerJavaService {
         );
       }
 
-      final file = File('${directory.path}/result.json');
+      final file = File('${resultsRoot.path}/result.json');
       final rawJson = await file.readAsString();
       final decodedReport = jsonDecode(rawJson) as Map<String, dynamic>;
       
