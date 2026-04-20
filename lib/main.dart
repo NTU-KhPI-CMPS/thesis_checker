@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/app.dart';
+import 'package:thesis_checker/app.dart';
 import 'package:window_manager/window_manager.dart';
 
 /// Entry point of the application.

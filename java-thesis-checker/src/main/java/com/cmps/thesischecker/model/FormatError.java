@@ -18,7 +18,7 @@ import java.util.Set;
 public class FormatError {
 
     private String id;
-    private String category;
+    private ErrorCategory category;
     private String severity;
     private String title;
     private String paragraphText;

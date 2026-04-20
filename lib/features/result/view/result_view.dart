@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/core/constants/available_check_types.dart';
-import 'package:flutter_app/core/constants/app_colors.dart';
-import 'package:flutter_app/core/utils/ukrainian_plural.dart';
-import 'package:flutter_app/core/widgets/checkbox_container.dart';
-import 'package:flutter_app/core/widgets/hint_text.dart';
-import 'package:flutter_app/features/result/widgets/error_count_badge.dart';
-import 'package:flutter_app/features/result/widgets/error_detail_expandable_card.dart';
-import 'package:flutter_app/core/widgets/info_card.dart';
-import 'package:flutter_app/core/widgets/info_text.dart';
-import 'package:flutter_app/features/result/cubit/result_cubit.dart';
-import 'package:flutter_app/features/result/cubit/result_state.dart';
+import 'package:thesis_checker/core/constants/available_check_types.dart';
+import 'package:thesis_checker/core/constants/app_colors.dart';
+import 'package:thesis_checker/core/utils/ukrainian_plural.dart';
+import 'package:thesis_checker/core/widgets/checkbox_container.dart';
+import 'package:thesis_checker/core/widgets/hint_text.dart';
+import 'package:thesis_checker/features/result/widgets/error_count_badge.dart';
+import 'package:thesis_checker/features/result/widgets/error_detail_expandable_card.dart';
+import 'package:thesis_checker/core/widgets/info_card.dart';
+import 'package:thesis_checker/core/widgets/info_text.dart';
+import 'package:thesis_checker/features/result/cubit/result_cubit.dart';
+import 'package:thesis_checker/features/result/cubit/result_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ResultView extends StatefulWidget {
@@ -55,7 +55,7 @@ class _ResultViewState extends State<ResultView> {
               borderRadius: BorderRadius.circular(16.0),
               children: [
                 Image.asset(
-                  result.foundErrors.isNotEmpty
+                  result.totalErrors > 0
                       ? 'assets/images/found_errors.png'
                       : 'assets/images/no_errors.png',
                   width: 24.0,
