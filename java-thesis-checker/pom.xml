@@ -127,6 +127,37 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.graalvm.buildtools</groupId>
+                <artifactId>native-maven-plugin</artifactId>
+                <version>${native-maven-plugin.version}</version>
+                <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <id>build-native</id>
+                        <goals>
+                            <goal>compile-no-fork</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <agent>
+                        <enabled>true</enabled>
+                    </agent>
+                    <buildArgs>
+                        <arg>-H:+AddAllCharsets</arg>
+                    </buildArgs>
+                    <skip>false</skip>
+                    <useArgFile>false</useArgFile>
+                    <imageName>java-thesis-checker</imageName>
+                    <fallback>false</fallback>
+                    <classpath>
+                        <param>${project.build.directory}/java-thesis-checker.jar</param>
+                    </classpath>
+                    <outputDirectory>${project.basedir}/../assets</outputDirectory>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
