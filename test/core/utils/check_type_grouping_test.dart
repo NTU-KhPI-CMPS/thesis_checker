@@ -2,10 +2,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:thesis_checker/core/constants/available_check_types.dart';
 import 'package:thesis_checker/core/enums/check.dart';
 import 'package:thesis_checker/core/utils/check_type_grouping.dart';
-import 'package:thesis_checker/data/models/found_error.dart';
+import 'package:thesis_checker/data/models/format_error_api.dart';
 
-FoundError makeError(String category) {
-  return FoundError(
+FormatErrorApi makeError(String category) {
+  return FormatErrorApi(
     id: 'id-$category',
     category: category,
     expected: 'expected',

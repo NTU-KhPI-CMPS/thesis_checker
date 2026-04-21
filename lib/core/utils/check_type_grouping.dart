@@ -1,7 +1,7 @@
 import 'package:thesis_checker/core/constants/available_check_types.dart';
 import 'package:thesis_checker/core/enums/check.dart';
 import 'package:thesis_checker/models/check_type_info.dart';
-import 'package:thesis_checker/data/models/found_error.dart';
+import 'package:thesis_checker/data/models/format_error_api.dart';
 
 /// Resolves check type groups for errors by parsing check codes from 'category'.
 class CheckTypeGrouping {
@@ -21,11 +21,11 @@ class CheckTypeGrouping {
     return null;
   }
 
-  static Check? parseCheckFromError(FoundError error) {
+  static Check? parseCheckFromError(FormatErrorApi error) {
     return parseCheckFromCode(error.category);
   }
 
-  static CheckTypeInfo resolveTypeByError(FoundError error) {
+  static CheckTypeInfo resolveTypeByError(FormatErrorApi error) {
     final parsedCheck = parseCheckFromError(error);
 
     if (parsedCheck != null) {
@@ -46,7 +46,7 @@ class CheckTypeGrouping {
     return AvailableCheckTypes.checkTypes.first;
   }
 
-  static Map<String, int> countErrorsByType(List<FoundError> errors) {
+  static Map<String, int> countErrorsByType(List<FormatErrorApi> errors) {
     final result = <String, int> {
       for (final type in AvailableCheckTypes.checkTypes) type.title: 0,
     };
@@ -59,7 +59,7 @@ class CheckTypeGrouping {
     return result;
   }
 
-  static List<FoundError> filterErrorsByType(List<FoundError> errors, CheckTypeInfo selectedType) {
+  static List<FormatErrorApi> filterErrorsByType(List<FormatErrorApi> errors, CheckTypeInfo selectedType) {
     return errors
         .where((error) => resolveTypeByError(error).title == selectedType.title)
         .toList();

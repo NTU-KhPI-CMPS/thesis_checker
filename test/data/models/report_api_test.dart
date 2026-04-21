@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:thesis_checker/core/enums/check.dart';
-import 'package:thesis_checker/data/models/analysis_report.dart';
+import 'package:thesis_checker/data/models/report_api.dart';
 
 void main() {
-  group('AnalysisReport.fromJson', () {
+  group('ReportApi.fromJson', () {
     test('parses flat errors array from API payload', () {
-      final report = AnalysisReport.fromJson({
+      final report = ReportApi.fromJson({
         'errors': [
           {
             'category': Check.fontName.name,
@@ -44,7 +44,7 @@ void main() {
     });
 
     test('returns empty list when errors are missing', () {
-      final report = AnalysisReport.fromJson({});
+      final report = ReportApi.fromJson({});
 
       expect(report.errors, isEmpty);
     });

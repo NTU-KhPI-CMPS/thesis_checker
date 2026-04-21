@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:thesis_checker/core/enums/check.dart';
-import 'package:thesis_checker/data/models/found_error.dart';
+import 'package:thesis_checker/data/models/format_error_api.dart';
 
 void main() {
-  group('FoundError.fromJson', () {
+  group('FormatErrorApi.fromJson', () {
     test('casts scalar found value to string', () {
-      final error = FoundError.fromJson({
+      final error = FormatErrorApi.fromJson({
         'found': 12,
       });
 
@@ -13,7 +13,7 @@ void main() {
     });
 
     test('joins list values in found field from API payload', () {
-      final error = FoundError.fromJson({
+      final error = FormatErrorApi.fromJson({
         'id': 'err_font',
         'category': Check.fontName.name,
         'expected': 'Times New Roman',
@@ -33,7 +33,7 @@ void main() {
     });
 
     test('uses defaults when fields are missing', () {
-      final error = FoundError.fromJson({
+      final error = FormatErrorApi.fromJson({
         'found': null,
       });
 

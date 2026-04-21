@@ -1,16 +1,16 @@
-import 'package:thesis_checker/data/models/found_error.dart';
+import 'package:thesis_checker/data/models/format_error_api.dart';
 
 class ErrorsByCategory {
   final String category;
   final int count;
-  final List<FoundError> errors;
+  final List<FormatErrorApi> errors;
 
   const ErrorsByCategory({required this.category, required this.errors, int? count})
       : count = count ?? errors.length;
 
   factory ErrorsByCategory.fromJson(Map<String, dynamic> json) {
     final parsedErrors = (json['errors'] as List<dynamic>? ?? const [])
-        .map((item) => FoundError.fromJson(Map<String, dynamic>.from(item as Map)))
+        .map((item) => FormatErrorApi.fromJson(Map<String, dynamic>.from(item as Map)))
         .toList();
 
     return ErrorsByCategory(

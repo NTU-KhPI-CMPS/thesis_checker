@@ -1,4 +1,4 @@
-class FoundError {
+class FormatErrorApi {
   final String id;
   final String category;
   final String expected;
@@ -7,7 +7,7 @@ class FoundError {
   final String severity;
   final String title;
 
-  const FoundError({
+  const FormatErrorApi({
     required this.id,
     required this.category,
     required this.expected,
@@ -17,13 +17,13 @@ class FoundError {
     required this.title,
   });
 
-  factory FoundError.fromJson(Map<String, dynamic> json) {
+  factory FormatErrorApi.fromJson(Map<String, dynamic> json) {
     final rawFound = json['found'];
     final foundValue = rawFound is List<dynamic>
         ? rawFound.map((value) => value.toString()).join(', ')
         : rawFound?.toString() ?? '';
 
-    return FoundError(
+    return FormatErrorApi(
       id: json['id']?.toString() ?? '',
       category: json['category']?.toString() ?? '',
       expected: json['expected']?.toString() ?? '',

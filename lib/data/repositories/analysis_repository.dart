@@ -5,7 +5,7 @@ import 'package:thesis_checker/core/utils/check_type_grouping.dart';
 import 'package:thesis_checker/data/services/runner_java_service.dart';
 import 'package:thesis_checker/models/analysis_result.dart';
 import 'package:thesis_checker/data/models/error_by_category.dart';
-import 'package:thesis_checker/data/models/found_error.dart';
+import 'package:thesis_checker/data/models/format_error_api.dart';
 
 class AnalysisRepository {
   AnalysisRepository._internal();
@@ -18,8 +18,8 @@ class AnalysisRepository {
     final report = await _runnerJavaService.checkFile(filePath);
     final foundErrors = report.errors;
 
-    final groupedErrorsByType = <String, List<FoundError>> {
-      for (final type in AvailableCheckTypes.checkTypes) type.title: <FoundError>[],
+    final groupedErrorsByType = <String, List<FormatErrorApi>> {
+      for (final type in AvailableCheckTypes.checkTypes) type.title: <FormatErrorApi>[],
     };
 
     for (final error in foundErrors) {
@@ -31,7 +31,7 @@ class AnalysisRepository {
         .map(
           (type) => ErrorsByCategory(
             category: type.title,
-            errors: groupedErrorsByType[type.title] ?? const <FoundError>[],
+            errors: groupedErrorsByType[type.title] ?? const <FormatErrorApi>[],
           ),
         ).toList();
 
