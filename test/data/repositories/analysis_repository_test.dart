@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:thesis_checker/core/constants/available_check_types.dart';
 import 'package:thesis_checker/core/enums/check.dart';
-import 'package:thesis_checker/core/utils/check_type_grouping.dart';
 import 'package:thesis_checker/data/models/format_error_api.dart';
+import 'package:thesis_checker/data/repositories/analysis_repository.dart';
 
 FormatErrorApi makeError(String category) {
   return FormatErrorApi(
@@ -16,33 +16,33 @@ FormatErrorApi makeError(String category) {
 }
 
 void main() {
-  group('CheckTypeGrouping parsing', () {
+  group('AnalysisRepository parsing', () {
     test('parseCheckFromCode returns null for null input', () {
-      final parsed = CheckTypeGrouping.parseCheckFromCode(null);
+      final parsed = AnalysisRepository.parseCheckFromCode(null);
 
       expect(parsed, isNull);
     });
 
     test('parseCheckFromCode parses known code case-insensitively', () {
-      final parsed = CheckTypeGrouping.parseCheckFromCode('  font_name  ');
+      final parsed = AnalysisRepository.parseCheckFromCode('  font_name  ');
 
       expect(parsed, isNotNull);
       expect(parsed!.name, 'FONT_NAME');
     });
 
     test('parseCheckFromCode returns null for unknown code', () {
-      final parsed = CheckTypeGrouping.parseCheckFromCode('UNKNOWN_CHECK');
+      final parsed = AnalysisRepository.parseCheckFromCode('UNKNOWN_CHECK');
 
       expect(parsed, isNull);
     });
   });
 
-  group('CheckTypeGrouping aggregation', () {
+  group('AnalysisRepository aggregation', () {
     test('resolveTypeByError maps known checks to font group', () {
-      final fontNameType = CheckTypeGrouping.resolveTypeByError(
+      final fontNameType = AnalysisRepository.resolveTypeByError(
         makeError(Check.fontName.name),
       );
-      final fontSizeType = CheckTypeGrouping.resolveTypeByError(
+      final fontSizeType = AnalysisRepository.resolveTypeByError(
         makeError(Check.fontSize.name),
       );
 
@@ -51,7 +51,7 @@ void main() {
     });
 
     test('resolveTypeByError maps unknown checks to other group', () {
-      final type = CheckTypeGrouping.resolveTypeByError(
+      final type = AnalysisRepository.resolveTypeByError(
         makeError('SOMETHING_ELSE'),
       );
 
@@ -59,7 +59,7 @@ void main() {
     });
 
     test('countErrorsByType returns full map with counts', () {
-      final counts = CheckTypeGrouping.countErrorsByType([
+      final counts = AnalysisRepository.countErrorsByType([
         makeError(Check.fontName.name),
         makeError(Check.fontSize.name),
         makeError('SOMETHING_ELSE'),
@@ -74,7 +74,7 @@ void main() {
     });
 
     test('countErrorsByType returns zeros for empty list', () {
-      final counts = CheckTypeGrouping.countErrorsByType(const []);
+      final counts = AnalysisRepository.countErrorsByType(const []);
 
       expect(counts['Шрифт'], 0);
       expect(counts['Інші'], 0);
@@ -90,7 +90,7 @@ void main() {
         (type) => type.title == 'Шрифт',
       );
 
-      final filtered = CheckTypeGrouping.filterErrorsByType(errors, fontType);
+      final filtered = AnalysisRepository.filterErrorsByType(errors, fontType);
 
       expect(filtered.length, 2);
       expect(filtered.every((error) => error.category.startsWith('FONT_')), true);
@@ -105,7 +105,7 @@ void main() {
         (type) => type.title == 'Інші',
       );
 
-      final filtered = CheckTypeGrouping.filterErrorsByType(errors, otherType);
+      final filtered = AnalysisRepository.filterErrorsByType(errors, otherType);
 
       expect(filtered.length, 1);
       expect(filtered.first.category, 'SOMETHING_ELSE');
