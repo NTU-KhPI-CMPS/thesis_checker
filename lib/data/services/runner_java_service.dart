@@ -45,8 +45,12 @@ class RunnerJavaService {
       debugPrint('Execute process to check file.');
       // Mark binary as executable only on Unix-like platforms.
       if (!_isWindows) {
-        await Process.start('chmod', ['+x', javaThesisCheckerExecutable.path]);
+        final process = await Process.start('chmod', ['+x', javaThesisCheckerExecutable.path]);
+        if (await process.exitCode != 0) {
+          throw Exception('Failed to set executable permissions for the Java checker.');
+        }
       }
+      
       // Execute binary with args
       final process = await Process.start(javaThesisCheckerExecutable.path, ['-filePath', filePath, '-checks', '["FONT", "PARAGRAPH"]', '-resultDirectory', resultsRoot.path]);
       final stderrBuffer = StringBuffer();
