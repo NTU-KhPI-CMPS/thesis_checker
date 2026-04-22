@@ -147,14 +147,15 @@
                     </agent>
                     <buildArgs>
                         <arg>-H:+AddAllCharsets</arg>
+                        <arg>--allow-incomplete-classpath</arg>
+                        <arg>--report-unsupported-elements-at-runtime</arg>
+                        <arg>--initialize-at-run-time=org.apache.poi.*</arg>
                     </buildArgs>
                     <skip>false</skip>
                     <useArgFile>false</useArgFile>
                     <imageName>java-thesis-checker</imageName>
                     <fallback>false</fallback>
-                    <classpath>
-                        <param>${project.build.directory}/java-thesis-checker.jar</param>
-                    </classpath>
+                    <mainClass>com.cmps.thesischecker.Main</mainClass>
                     <outputDirectory>${project.basedir}/../assets</outputDirectory>
                 </configuration>
             </plugin>

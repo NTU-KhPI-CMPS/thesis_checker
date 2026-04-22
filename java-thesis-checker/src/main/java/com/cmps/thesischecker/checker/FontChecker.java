@@ -23,80 +23,45 @@ public class FontChecker implements Checker {
         try (FileInputStream fis = new FileInputStream(filePath);
              XWPFDocument doc = new XWPFDocument(fis)) {
             for (XWPFParagraph paragraph : doc.getParagraphs()) {
-                String paraText = paragraph.getText().trim();
-                if (paraText.isEmpty()) continue;
+                String paragraphText = paragraph.getText().trim();
+                if (paragraphText.isEmpty()) continue;
                 Set<String> incorrectFonts = validate(paragraph);
                 if (!incorrectFonts.isEmpty()) {
-                    FormatError err = new FormatError();
-                    err.setId("err_font");
-                    err.setCategory(ErrorCategory.FONT_NAME);
-                    err.setSeverity("error");
-                    err.setTitle("Невірні шрифти у параграфі");
-                    err.setParagraphText(paraText);
-                    err.setFound(incorrectFonts);
-                    err.setExpected(RequirementsHolder.getFont());
-                    allErrors.add(err);
+                    allErrors.add(buildFontNameFormatError("err_font", "Невірні шрифти у параграфі", paragraphText, incorrectFonts));
                 }
             }
 
-            // Check headers
             for (XWPFHeader header : doc.getHeaderList()) {
                 for (XWPFParagraph paragraph : header.getParagraphs()) {
-                    String paraText = paragraph.getText().trim();
-                    if (paraText.isEmpty()) continue;
+                    String paragraphText = paragraph.getText().trim();
+                    if (paragraphText.isEmpty()) continue;
                     Set<String> incorrectFonts = validate(paragraph);
                     if (!incorrectFonts.isEmpty()) {
-                        FormatError err = new FormatError();
-                        err.setId("err_font_header");
-                        err.setCategory(ErrorCategory.FONT_NAME);
-                        err.setSeverity("error");
-                        err.setTitle("Невірні шрифти у заголовку");
-                        err.setParagraphText(paraText);
-                        err.setFound(incorrectFonts);
-                        err.setExpected(RequirementsHolder.getFont());
-                        allErrors.add(err);
+                        allErrors.add(buildFontNameFormatError("err_font_header", "Невірні шрифти у заголовку", paragraphText, incorrectFonts));
                     }
                 }
             }
 
-            // Check footers
             for (XWPFFooter footer : doc.getFooterList()) {
                 for (XWPFParagraph paragraph : footer.getParagraphs()) {
-                    String paraText = paragraph.getText().trim();
-                    if (paraText.isEmpty()) continue;
+                    String paragraphText = paragraph.getText().trim();
+                    if (paragraphText.isEmpty()) continue;
                     Set<String> incorrectFonts = validate(paragraph);
                     if (!incorrectFonts.isEmpty()) {
-                        FormatError err = new FormatError();
-                        err.setId("err_font_footer");
-                        err.setCategory(ErrorCategory.FONT_NAME);
-                        err.setSeverity("error");
-                        err.setTitle("Невірні шрифти у підвалі");
-                        err.setParagraphText(paraText);
-                        err.setFound(incorrectFonts);
-                        err.setExpected(RequirementsHolder.getFont());
-                        allErrors.add(err);
+                        allErrors.add(buildFontNameFormatError("err_font_footer", "Невірні шрифти у підвалі", paragraphText, incorrectFonts));
                     }
                 }
             }
 
-            // Check tables
             for (XWPFTable table : doc.getTables()) {
                 for (XWPFTableRow row : table.getRows()) {
                     for (XWPFTableCell cell : row.getTableCells()) {
                         for (XWPFParagraph paragraph : cell.getParagraphs()) {
-                            String paraText = paragraph.getText().trim();
-                            if (paraText.isEmpty()) continue;
+                            String paragraphText = paragraph.getText().trim();
+                            if (paragraphText.isEmpty()) continue;
                             Set<String> incorrectFonts = validate(paragraph);
                             if (!incorrectFonts.isEmpty()) {
-                                FormatError err = new FormatError();
-                                err.setId("err_font_table");
-                                err.setCategory(ErrorCategory.FONT_NAME);
-                                err.setSeverity("error");
-                                err.setTitle("Невірні шрифти у таблиці");
-                                err.setParagraphText(paraText);
-                                err.setFound(incorrectFonts);
-                                err.setExpected(RequirementsHolder.getFont());
-                                allErrors.add(err);
+                                allErrors.add(buildFontNameFormatError("err_font_table", "Невірні шрифти у таблиці", paragraphText, incorrectFonts));
                             }
                         }
                     }
@@ -112,6 +77,19 @@ public class FontChecker implements Checker {
             allErrors.add(err);
         }
         return allErrors;
+    }
+
+    private static FormatError buildFontNameFormatError(String id, String title, String text, Set<String> incorrectFonts) {
+        FormatError err = new FormatError();
+        err.setId(id);
+        err.setCategory(ErrorCategory.FONT_NAME);
+        err.setSeverity("error");
+        err.setTitle(title);
+        err.setParagraphText(text);
+        err.setFound(incorrectFonts);
+        err.setExpected(RequirementsHolder.getFont());
+
+        return err;
     }
 
     private Set<String> validate(XWPFParagraph paragraph) {
@@ -134,88 +112,50 @@ public class FontChecker implements Checker {
     }
 
     private String getEffectiveFont(XWPFRun run, XWPFParagraph paragraph, XWPFDocument document) {
-        // Алгоритм отримання шрифту з об'єкту run
-        // Дістаємо шрифт з run
         String font = run.getFontFamily();
-        
-        // Перевіряємо: шрифт == null?
+
         if (font != null) {
-            // Ні → Зберігаємо назву шрифту. Кінець.
             return font;
         }
-        // Так → Продовжуємо.
-        // Дістаємо з об'єкту run параграф, використовуючи getParent()
+
         Object parent = run.getParent();
         if (!(parent instanceof XWPFParagraph)) {
-            // Перевіряємо: стиль == null?
-            // Так → Зберігаємо назву шрифту за замовчуванням ("Normal"). Кінець.
-            return RequirementsHolder.getFont();
+            return getFontFromParagraphStyle(document, "Normal");
         }
-        XWPFParagraph para = (XWPFParagraph) parent;
-        // Дістаємо стиль з параграфа
-        String styleId = para.getStyleID();
-        System.out.println("PARAGRAPH STYLE ID: " + styleId);
-        
+        XWPFParagraph paragraphFromParent = (XWPFParagraph) parent;
+
+        String styleId = paragraphFromParent.getStyleID();
+
         if (styleId == null) {
-            // Перевіряємо: стиль == null?
-            // Так → Зберігаємо назву шрифту за замовчуванням ("Normal"). Кінець.
-            return RequirementsHolder.getFont();
+            return getFontFromParagraphStyle(document, "Normal");
         }
-        // Ні → Зберігаємо назву шрифту, отриману зі стилю (згідно з алгоритмом з попередньої діаграми). Кінець.
-        return getFontFromParagraphStyle(para);
+        return getFontFromParagraphStyle(document, styleId);
     }
 
-    private String getFontFromParagraphStyle(XWPFParagraph paragraph) {
-        // Алгоритм отримання шрифту з урахуванням стилю параграфа
-        // Перевіряємо: стиль == null?
-        String styleId = paragraph.getStyleID();
-        if (styleId == null) {
-            // Так → Зберігаємо назву шрифту за замовчуванням ("Normal"). Кінець.
-            return RequirementsHolder.getFont();
-        }
-        // Ні → Продовжуємо.
-        // Отримуємо документ з об'єкта параграфа
-        XWPFDocument document = paragraph.getDocument();
-        // За назвою стилю шукаємо його шрифт у документі.
-        // Перевіряємо: шрифт == null?
+    private String getFontFromParagraphStyle(XWPFDocument document, String styleId) {
         XWPFStyle style = document.getStyles().getStyle(styleId);
-        
+
         if (style == null) {
-            // Так → Повертаємо шрифт за замовчуванням ("Normal"). Кінець.
             return RequirementsHolder.getFont();
         }
-        
-        // Отримуємо реальний шрифт із стилю
-        try {
-            Object ctStyle = style.getCTStyle();
-            java.lang.reflect.Method getRPrMethod = ctStyle.getClass().getMethod("getRPr");
-            Object rPr = getRPrMethod.invoke(ctStyle);
-            
-            if (rPr != null) {
-                try {
-                    java.lang.reflect.Method getRFontsMethod = rPr.getClass().getMethod("getRFontsList");
-                    java.util.List<?> rFontsList = (java.util.List<?>) getRFontsMethod.invoke(rPr);
-                    
-                    if (!rFontsList.isEmpty()) {
-                        Object rFonts = rFontsList.get(0);
-                        java.lang.reflect.Method getAsciiMethod = rFonts.getClass().getMethod("getAscii");
-                        String fontName = (String) getAsciiMethod.invoke(rFonts);
-                        
-                        if (fontName != null) {
-                            // Ні → Повертаємо знайдений шрифт. Кінець.
-                            return fontName;
-                        }
-                    }
-                } catch (Exception e) {
-                    // Проблема з читанням шрифту зі стилю
-                }
+
+        var ctStyle = style.getCTStyle();
+        var rPr = ctStyle.getRPr();
+
+        if (rPr == null) {
+            return RequirementsHolder.getFont();
+        }
+
+        var rFontsList = rPr.getRFontsList();
+        if (!rFontsList.isEmpty()) {
+            var rFonts = rFontsList.getFirst();
+            String fontName = rFonts.getAscii();
+
+            if (fontName != null) {
+                return fontName;
             }
-        } catch (Exception e) {
-            // Зовсім не можемо отримати шрифт зі стилю
-            return RequirementsHolder.getFont();
         }
-        
-        // Так → Повертаємо шрифт за замовчуванням ("Normal"). Кінець.
+
         return RequirementsHolder.getFont();
     }
 }
