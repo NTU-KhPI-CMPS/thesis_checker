@@ -1,41 +1,37 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:thesis_checker/core/enums/check.dart';
+import 'package:thesis_checker/data/models/error_by_category.dart';
+import 'package:thesis_checker/data/models/format_error_api.dart';
 import 'package:thesis_checker/models/analysis_result.dart';
 
+FormatErrorApi _makeError(String id, String category) {
+  return FormatErrorApi(
+    id: id,
+    category: category,
+    expected: 'expected',
+    found: 'found',
+    severity: 'error',
+    title: 'title',
+  );
+}
+
 void main() {
-  group('AnalysisResult.fromJson', () {
-    test('parses categorized errors and computes totalErrors', () {
-      final result = AnalysisResult.fromJson({
-        'fileName': 'thesis.docx',
-        'analyzedAt': '2026-04-16T12:00:00.000Z',
-        'errorsByCategory': [
-          {
-            'category': 'Шрифт',
-            'errors': [
-              {
-                'id': 'e-1',
-                'category': Check.fontName.name,
-                'expected': 'Times New Roman',
-                'found': 'Arial',
-                'severity': 'error',
-                'title': 'Невірні шрифти у параграфі',
-              },
-              {
-                'id': 'e-2',
-                'category': Check.fontSize.name,
-                'expected': '14',
-                'found': '12',
-                'severity': 'error',
-                'title': 'Невірний розмір шрифту',
-              },
+  group('AnalysisResult', () {
+    test('computes totalErrors based on category counts', () {
+      final result = AnalysisResult(
+        fileName: 'thesis.docx',
+        analyzedAt: DateTime.parse('2026-04-16T12:00:00.000Z'),
+        errorsByCategory: [
+          ErrorsByCategory(
+            category: 'Шрифт',
+            errors: [
+              _makeError('e-1', Check.fontName.name),
+              _makeError('e-2', Check.fontSize.name),
             ],
-          },
-          {
-            'category': 'Інші',
-            'errors': const [],
-          },
+          ),
+          ErrorsByCategory(category: 'Інші', errors: const []),
         ],
-      });
+      );
 
       expect(result.fileName, 'thesis.docx');
       expect(result.analyzedAt.toUtc().toIso8601String(), '2026-04-16T12:00:00.000Z');
@@ -45,10 +41,12 @@ void main() {
       expect(result.errorsByCategory.first.errors.first.category, Check.fontName.name);
     });
 
-    test('uses defaults for missing fields and invalid date', () {
-      final result = AnalysisResult.fromJson({
-        'analyzedAt': 'invalid-date',
-      });
+    test('returns zero totalErrors when no categories are present', () {
+      final result = AnalysisResult(
+        fileName: '',
+        analyzedAt: DateTime.fromMillisecondsSinceEpoch(0),
+        errorsByCategory: const [],
+      );
 
       expect(result.fileName, '');
       expect(result.analyzedAt, DateTime.fromMillisecondsSinceEpoch(0));

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:thesis_checker/data/models/analysis_report.dart';
+import 'package:thesis_checker/data/models/report_api.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -21,7 +21,7 @@ class RunnerJavaService {
         _javaThesisCheckerBaseName;
   }
 
-  Future<AnalysisReport> checkFile(String filePath) async {
+  Future<ReportApi> checkFile(String filePath) async {
     try {
       // 1. Find a safe directory on the user's computer to store the file
       final directory = await getApplicationSupportDirectory();
@@ -45,8 +45,12 @@ class RunnerJavaService {
       debugPrint('Execute process to check file.');
       // Mark binary as executable only on Unix-like platforms.
       if (!_isWindows) {
-        await Process.start('chmod', ['+x', javaThesisCheckerExecutable.path]);
+        final chmodProcess = await Process.start('chmod', ['+x', javaThesisCheckerExecutable.path]);
+        if (await chmodProcess.exitCode != 0) {
+          throw Exception('Failed to set executable permissions for the Java checker.');
+        }
       }
+      
       // Execute binary with args
       final process = await Process.start(javaThesisCheckerExecutable.path, ['-filePath', filePath, '-checks', '["FONT", "PARAGRAPH"]', '-resultDirectory', resultsRoot.path]);
       final stderrBuffer = StringBuffer();
@@ -79,7 +83,7 @@ class RunnerJavaService {
       final rawJson = await file.readAsString();
       final decodedReport = jsonDecode(rawJson) as Map<String, dynamic>;
       
-      return AnalysisReport.fromJson(decodedReport);
+      return ReportApi.fromJson(decodedReport);
     } catch (e) {
       debugPrint('Failed to execute analysis flow: $e');
       throw Exception('Не вдалося виконати аналіз. Спробуйте ще раз.');
