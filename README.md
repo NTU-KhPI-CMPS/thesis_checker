@@ -8,9 +8,11 @@ A project to automatically verify thesis formatting.
 
 ## Building an OS bundle/Installer
 ### Prerequisites
-Only for Windows: (TODO: update)
-- Install WiX 3.
-- Add it to the PATH. Path example: "C:\Program Files (x86)\WiX Toolset v3.14\bin"
+On Windows:
+- Install Visual Studio with "Desktop development with C++" workload.
+
+On macOS:
+- Install Xcode
 
 ### How to build
 1. Build java app executing `mvn install`
