@@ -21,8 +21,9 @@ import java.util.Set;
 
 public class Main {
 
-    public static void main(String[] args) {
+    private static final List<Checker> CHECKERS = List.of(new FontChecker());
 
+    static void main(String[] args) {
         Parser<List<String>> filePathParser = new FilePathParser();
         List<String> files = filePathParser.parse(args);
 
@@ -30,47 +31,38 @@ public class Main {
         String outputDir = resultDirectoryParser.parse(args);
 
         if (files.isEmpty()) {
-            error("No input files specified.");
-            return;
+            System.err.println("No input files specified.");
+            System.exit(1);
         }
 
-        List<Checker> checkers = new ArrayList<>();
-        checkers.add(new FontChecker());
-
-        for (String filePath : files) {
-            List<FormatError> allErrors = new ArrayList<>();
-
-            for (Checker checker : checkers) {
-                List<FormatError> errors = checker.check(filePath);
-                allErrors.addAll(errors);
-            }
-
-            printReport(filePath, allErrors);
-            Report report = new Report();
-            report.setErrors(allErrors);
-            saveJsonReport(report, outputDir);
-        }
+        processFiles(files, outputDir);
     }
 
     @CEntryPoint(name = "run_thesis_checks")
     @SuppressWarnings("unused")
-    public static int runThesisChecks(
-            IsolateThread thread,
-            CCharPointer filePathPtr,
-            CCharPointer checksPtr,
-            CCharPointer resultDirPtr) {
-
+    public static int runThesisChecks(IsolateThread thread,
+                                      CCharPointer filePathPtr,
+                                      CCharPointer resultDirPtr) {
         String inputFiles = CTypeConversion.toJavaString(filePathPtr);
+        List<String> files = List.of(inputFiles.split(","));
+
         String outputDir = CTypeConversion.toJavaString(resultDirPtr);
 
-        List<Checker> checkers = new ArrayList<>();
-        checkers.add(new FontChecker());
+        if (files.isEmpty()) {
+            System.err.println("No input files specified.");
+            return 1;
+        }
 
-        String[] files = inputFiles.split(",");
+        processFiles(files, outputDir);
+
+        return 0;
+    }
+
+    private static void processFiles(List<String> files, String outputDir) {
         for (String filePath : files) {
             List<FormatError> allErrors = new ArrayList<>();
 
-            for (Checker checker : checkers) {
+            for (Checker checker : CHECKERS) {
                 List<FormatError> errors = checker.check(filePath);
                 allErrors.addAll(errors);
             }
@@ -80,13 +72,6 @@ public class Main {
             report.setErrors(allErrors);
             saveJsonReport(report, outputDir);
         }
-
-        return 0;
-    }
-
-    private static void error(String msg) {
-        System.err.println(msg);
-        System.exit(1);
     }
 
     private static void printReport(String filePath, List<FormatError> errors) {

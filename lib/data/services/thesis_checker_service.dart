@@ -22,13 +22,11 @@ typedef CreateIsolateDart = int Function(
 typedef RunChecksC = ffi.Int32 Function(
   ffi.Pointer<GraalIsolateThread> thread,
   ffi.Pointer<Utf8> filePath,
-  ffi.Pointer<Utf8> checks,
   ffi.Pointer<Utf8> resultDirectory,
 );
 typedef RunChecksDart = int Function(
   ffi.Pointer<GraalIsolateThread> thread,
   ffi.Pointer<Utf8> filePath,
-  ffi.Pointer<Utf8> checks,
   ffi.Pointer<Utf8> resultDirectory,
 );
 
@@ -40,7 +38,6 @@ class ThesisCheckerService {
 
   Future<int> runThesisChecks({
     required String filePath,
-    required String checks,
     required String resultDirectory,
   }) async {
     if (!isInitialized) {
@@ -48,14 +45,12 @@ class ThesisCheckerService {
     }
 
     final filePathC = filePath.toNativeUtf8();
-    final checksC = checks.toNativeUtf8();
     final resultDirC = resultDirectory.toNativeUtf8();
 
     try {
-      return _runChecksFunc(_threadPtr!, filePathC, checksC, resultDirC);
+      return _runChecksFunc(_threadPtr!, filePathC, resultDirC);
     } finally {
       calloc.free(filePathC);
-      calloc.free(checksC);
       calloc.free(resultDirC);
     }
   }
@@ -82,35 +77,36 @@ class ThesisCheckerService {
   String _getLibPath() {
     final executableDir = p.dirname(Platform.resolvedExecutable);
 
-    if (Platform.isMacOS) {
-      return p.join(
-        executableDir,
-        '..',
-        'Frameworks',
-        'App.framework',
-        'Resources',
-        'flutter_assets',
-        'assets',
-        'java-thesis-checker.dylib',
-      );
-    } else if (Platform.isWindows) {
-      return p.join(
-        executableDir,
-        'data',
-        'flutter_assets',
-        'assets',
-        'java-thesis-checker.dll',
-      );
-    } else if (Platform.isLinux) {
-      return p.join(
-        executableDir,
-        'data',
-        'flutter_assets',
-        'assets',
-        'libjava-thesis-checker.so',
-      );
-    } else {
-      throw UnsupportedError('Unsupported platform for FFI.');
+    switch (Platform.operatingSystem) {
+      case "macos":
+        return p.join(
+          executableDir,
+          '..',
+          'Frameworks',
+          'App.framework',
+          'Resources',
+          'flutter_assets',
+          'assets',
+          'java-thesis-checker.dylib',
+        );
+      case "windows":
+        return p.join(
+          executableDir,
+          'data',
+          'flutter_assets',
+          'assets',
+          'java-thesis-checker.dll',
+        );
+      case "linux":
+        return p.join(
+          executableDir,
+          'data',
+          'flutter_assets',
+          'assets',
+          'libjava-thesis-checker.so',
+        );
+      default:
+        throw UnsupportedError('Unsupported platform for FFI.');
     }
   }
 }

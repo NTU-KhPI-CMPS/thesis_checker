@@ -20,7 +20,6 @@ class RunnerJavaService {
 
       final returnCode = await checkerService.runThesisChecks(
         filePath: filePath,
-        checks: "FONT,PARAGRAPH",
         resultDirectory: resultsRoot.path,
       );
 

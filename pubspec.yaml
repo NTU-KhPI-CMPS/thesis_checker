@@ -89,6 +89,9 @@ flutter:
   - path: assets/java-thesis-checker.dll
     platforms:
       - windows
+  - path: assets/libjava-thesis-checker.so
+    platforms:
+      - linux
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

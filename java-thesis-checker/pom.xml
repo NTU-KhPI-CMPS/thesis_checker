@@ -171,9 +171,9 @@
                                 <resource>
                                     <directory>${project.build.directory}</directory>
                                     <includes>
-                                        <include>*.so</include>
                                         <include>*.dylib</include>
                                         <include>*.dll</include>
+                                        <include>*.so</include>
                                     </includes>
                                 </resource>
                             </resources>
