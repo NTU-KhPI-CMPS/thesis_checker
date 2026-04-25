@@ -17,8 +17,8 @@ On macOS:
 ### How to build
 1. Build java app executing `mvn install`
 2. Build flutter app executing a command for your platform
-   - `flutter build macos`
-   - `flutter build windows`
+   - macOS: `flutter build macos`
+   - Windows: `dart run msix:create`
 
 ## Signing/Notarizing
 
@@ -34,3 +34,7 @@ On macOS:
 - Xcode Command Line Tools installed
 - Developer ID certificate added to your Keychain
 - `notarytool` authenticated with App Store Connect
+
+### Signing Windows Installer
+- In [signing.json](tools/signing.json) set `CodeSigningAccountName` and `CertificateProfileName`
+- Run: [sign.bat](tools/sign.bat)
