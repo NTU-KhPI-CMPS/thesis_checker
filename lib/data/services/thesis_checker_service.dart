@@ -9,25 +9,27 @@ final class GraalIsolateThread extends ffi.Opaque {}
 final class GraalCreateIsolateParams extends ffi.Opaque {}
 
 typedef CreateIsolateC = ffi.Int32 Function(
-  ffi.Pointer<GraalCreateIsolateParams> params,
-  ffi.Pointer<ffi.Pointer<GraalIsolate>> isolate,
-  ffi.Pointer<ffi.Pointer<GraalIsolateThread>> thread,
+    ffi.Pointer<GraalCreateIsolateParams> params,
+    ffi.Pointer<ffi.Pointer<GraalIsolate>> isolate,
+    ffi.Pointer<ffi.Pointer<GraalIsolateThread>> thread,
 );
 typedef CreateIsolateDart = int Function(
-  ffi.Pointer<GraalCreateIsolateParams> params,
-  ffi.Pointer<ffi.Pointer<GraalIsolate>> isolate,
-  ffi.Pointer<ffi.Pointer<GraalIsolateThread>> thread,
+    ffi.Pointer<GraalCreateIsolateParams> params,
+    ffi.Pointer<ffi.Pointer<GraalIsolate>> isolate,
+    ffi.Pointer<ffi.Pointer<GraalIsolateThread>> thread,
 );
 
 typedef RunChecksC = ffi.Int32 Function(
-  ffi.Pointer<GraalIsolateThread> thread,
-  ffi.Pointer<Utf8> filePath,
-  ffi.Pointer<Utf8> resultDirectory,
+    ffi.Pointer<GraalIsolateThread> thread,
+    ffi.Int32 numberOfFiles,
+    ffi.Pointer<ffi.Pointer<Utf8>> filePaths,
+    ffi.Pointer<Utf8> resultDirectory,
 );
 typedef RunChecksDart = int Function(
-  ffi.Pointer<GraalIsolateThread> thread,
-  ffi.Pointer<Utf8> filePath,
-  ffi.Pointer<Utf8> resultDirectory,
+    ffi.Pointer<GraalIsolateThread> thread,
+    int numberOfFiles,
+    ffi.Pointer<ffi.Pointer<Utf8>> filePaths,
+    ffi.Pointer<Utf8> resultDirectory,
 );
 
 class ThesisCheckerService {
@@ -37,20 +39,29 @@ class ThesisCheckerService {
   bool get isInitialized => _threadPtr != null;
 
   Future<int> runThesisChecks({
-    required String filePath,
+    required List<String> files,
     required String resultDirectory,
   }) async {
     if (!isInitialized) {
         _init();
     }
 
-    final filePathC = filePath.toNativeUtf8();
+    int length = files.length;
+    final pointerArray = calloc<ffi.Pointer<Utf8>>(length);
+    for (int i = 0; i < length; i++) {
+      pointerArray[i] = files[i].toNativeUtf8();
+    }
+
     final resultDirC = resultDirectory.toNativeUtf8();
 
     try {
-      return _runChecksFunc(_threadPtr!, filePathC, resultDirC);
+      return _runChecksFunc(_threadPtr!, length, pointerArray, resultDirC);
     } finally {
-      calloc.free(filePathC);
+      for (int i = 0; i < length; i++) {
+        calloc.free(pointerArray[i]);
+      }
+      calloc.free(pointerArray);
+
       calloc.free(resultDirC);
     }
   }

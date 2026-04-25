@@ -19,7 +19,7 @@ class RunnerJavaService {
       final resultsRoot = Directory('${directory.path}/results');
 
       final returnCode = await checkerService.runThesisChecks(
-        filePath: filePath,
+        files: [filePath],
         resultDirectory: resultsRoot.path,
       );
 

@@ -3,6 +3,7 @@ package com.cmps.thesischecker;
 import org.graalvm.nativeimage.IsolateThread;
 import org.graalvm.nativeimage.c.function.CEntryPoint;
 import org.graalvm.nativeimage.c.type.CCharPointer;
+import org.graalvm.nativeimage.c.type.CCharPointerPointer;
 import org.graalvm.nativeimage.c.type.CTypeConversion;
 import com.cmps.thesischecker.argparser.FilePathParser;
 import com.cmps.thesischecker.argparser.Parser;
@@ -41,11 +42,10 @@ public class Main {
     @CEntryPoint(name = "run_thesis_checks")
     @SuppressWarnings("unused")
     public static int runThesisChecks(IsolateThread thread,
-                                      CCharPointer filePathPtr,
+                                      int numberOfFiles,
+                                      CCharPointerPointer filePathsPtr,
                                       CCharPointer resultDirPtr) {
-        String inputFiles = CTypeConversion.toJavaString(filePathPtr);
-        List<String> files = List.of(inputFiles.split(","));
-
+        List<String> files = parseCArray(filePathsPtr, numberOfFiles);
         String outputDir = CTypeConversion.toJavaString(resultDirPtr);
 
         if (files.isEmpty()) {
@@ -56,6 +56,19 @@ public class Main {
         processFiles(files, outputDir);
 
         return 0;
+    }
+
+    private static List<String> parseCArray(CCharPointerPointer fileNamesPtr, int length) {
+        List<String> result = new ArrayList<>();
+
+        for (int i = 0; i < length; i++) {
+            CCharPointer cString = fileNamesPtr.read(i);
+            String javaString = CTypeConversion.toJavaString(cString);
+
+            result.add(javaString);
+        }
+
+        return result;
     }
 
     private static void processFiles(List<String> files, String outputDir) {
