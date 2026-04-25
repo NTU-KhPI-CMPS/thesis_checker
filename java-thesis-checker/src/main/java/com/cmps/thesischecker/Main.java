@@ -1,5 +1,9 @@
 package com.cmps.thesischecker;
 
+import org.graalvm.nativeimage.IsolateThread;
+import org.graalvm.nativeimage.c.function.CEntryPoint;
+import org.graalvm.nativeimage.c.type.CCharPointer;
+import org.graalvm.nativeimage.c.type.CTypeConversion;
 import com.cmps.thesischecker.argparser.FilePathParser;
 import com.cmps.thesischecker.argparser.Parser;
 import com.cmps.thesischecker.argparser.ResultDirectoryParser;
@@ -46,6 +50,38 @@ public class Main {
             report.setErrors(allErrors);
             saveJsonReport(report, outputDir);
         }
+    }
+
+    @CEntryPoint(name = "run_thesis_checks")
+    @SuppressWarnings("unused")
+    public static int runThesisChecks(
+            IsolateThread thread,
+            CCharPointer filePathPtr,
+            CCharPointer checksPtr,
+            CCharPointer resultDirPtr) {
+
+        String inputFiles = CTypeConversion.toJavaString(filePathPtr);
+        String outputDir = CTypeConversion.toJavaString(resultDirPtr);
+
+        List<Checker> checkers = new ArrayList<>();
+        checkers.add(new FontChecker());
+
+        String[] files = inputFiles.split(",");
+        for (String filePath : files) {
+            List<FormatError> allErrors = new ArrayList<>();
+
+            for (Checker checker : checkers) {
+                List<FormatError> errors = checker.check(filePath);
+                allErrors.addAll(errors);
+            }
+
+            printReport(filePath, allErrors);
+            Report report = new Report();
+            report.setErrors(allErrors);
+            saveJsonReport(report, outputDir);
+        }
+
+        return 0;
     }
 
     private static void error(String msg) {

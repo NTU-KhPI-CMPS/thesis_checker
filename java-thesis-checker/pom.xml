@@ -13,6 +13,7 @@
         <maven.compiler.target>25</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <graal-sdk.version>25.0.3</graal-sdk.version>
         <poi.version>5.5.1</poi.version>
         <jackson.version>3.1.1</jackson.version>
         <junit.version>6.0.3</junit.version>
@@ -47,6 +48,12 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.graalvm.sdk</groupId>
+            <artifactId>graal-sdk</artifactId>
+            <version>${graal-sdk.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -136,6 +143,7 @@
                     </agent>
                     <buildArgs>
                         <arg>-H:+AddAllCharsets</arg>
+                        <arg>--shared</arg>
                     </buildArgs>
                     <skip>false</skip>
                     <useArgFile>false</useArgFile>
@@ -144,8 +152,34 @@
                     <classpath>
                         <param>${project.build.directory}/java-thesis-checker.jar</param>
                     </classpath>
-                    <outputDirectory>${project.basedir}/../assets</outputDirectory>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-native-library</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/../assets</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}</directory>
+                                    <includes>
+                                        <include>*.so</include>
+                                        <include>*.dylib</include>
+                                        <include>*.dll</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -41,6 +41,8 @@ dependencies:
   file_picker: ^10.3.10
   window_manager: ^0.5.1
   path_provider: ^2.1.2
+  ffi: ^2.2.0
+  path: ^1.9.1
 
 dev_dependencies:
   flutter_test:
@@ -72,7 +74,7 @@ flutter:
     platforms:
       - windows
       - macos
-  - path: assets/java-thesis-checker
+  - path: assets/java-thesis-checker.dylib
     platforms:
       - macos
   # An image asset can refer to one or more resolution-specific "variants", see
