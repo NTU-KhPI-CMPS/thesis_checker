@@ -64,9 +64,12 @@ public class Main {
         } else {
             for (FormatError error : errors) {
                 Set<String> found = error.getFound();
+                String title = error.getTitle();
+
                 if (found == null) found = Set.of();
+
                 String foundStr = String.join(", ", found);
-                System.out.println("Тут шрифт не правильний (використані шрифти: " + foundStr + ")");
+                System.out.println("Помилка: " + title + ". Знайдено -> " + foundStr);
             }
         }
         System.out.println();
