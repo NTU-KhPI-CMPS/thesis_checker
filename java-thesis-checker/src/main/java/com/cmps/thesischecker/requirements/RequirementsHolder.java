@@ -6,4 +6,7 @@ public class RequirementsHolder {
 
     @Getter
     private static String font = "Times New Roman";
+
+    @Getter
+    private static String lineSpacing = "1.5";
 }
