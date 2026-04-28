@@ -76,7 +76,7 @@ public class LineSpaceChecker implements Checker {
         error.setId("err_linespace");
         error.setCategory(ErrorCategory.LINE_SPACING);
         error.setSeverity("error");
-        error.setTitle("Невірні інтервали між рядками у параграфі");
+        error.setTitle("Неправильні інтервали між рядками у параграфі");
         error.setParagraphText(paragraphText);
         error.setFound(incorrectLineSpacings);
         error.setExpected(RequirementsHolder.getLineSpacing());
@@ -205,21 +205,17 @@ public class LineSpaceChecker implements Checker {
             return null;
         }
 
-        try {
-            double lineVal = ((BigInteger) spacing.getLine()).doubleValue();
-            if (lineVal <= 0) {
-                return null;
-            }
-
-            STLineSpacingRule.Enum rule = spacing.getLineRule();
-
-            if (rule == null || rule.equals(STLineSpacingRule.AUTO)) {
-                return lineVal / 240.0;
-            } else {
-                return lineVal / 20.0;
-            }
-        } catch (NumberFormatException e) {
+        double lineVal = ((BigInteger) spacing.getLine()).doubleValue();
+        if (lineVal <= 0) {
             return null;
+        }
+
+        STLineSpacingRule.Enum rule = spacing.getLineRule();
+
+        if (rule == null || rule.equals(STLineSpacingRule.AUTO)) {
+            return lineVal / 240.0;
+        } else {
+            return lineVal / 20.0;
         }
     }
 }
