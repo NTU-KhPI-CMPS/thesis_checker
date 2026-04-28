@@ -28,7 +28,7 @@ class _HomeViewState extends State<HomeView> {
     {'icon': 'assets/images/bar_chart.png', 'label': 'Результати'},
   ];
 
-  void _onAnalysisComplete() {    
+  void _onAnalysisComplete() {
     context.read<FileBloc>().add(ResetFileEvent());
     setState(() => selectedIndex = 2);
   }
@@ -121,14 +121,7 @@ class _HomeViewState extends State<HomeView> {
                     color: accentColor,
                     borderRadius: BorderRadius.circular(8.0),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Image.asset(
-                      'assets/images/page_facing_up.png',
-                      width: 20.0,
-                      height: 20.0,
-                    ),
-                  ),
+                  child: Image.asset('assets/images/app_icon.png'),
                 ),
                 const SizedBox(width: 12.0),
                 Text(
