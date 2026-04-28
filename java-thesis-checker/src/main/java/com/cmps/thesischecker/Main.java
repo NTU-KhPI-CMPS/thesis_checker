@@ -1,10 +1,5 @@
 package com.cmps.thesischecker;
 
-import org.graalvm.nativeimage.IsolateThread;
-import org.graalvm.nativeimage.c.function.CEntryPoint;
-import org.graalvm.nativeimage.c.type.CCharPointer;
-import org.graalvm.nativeimage.c.type.CCharPointerPointer;
-import org.graalvm.nativeimage.c.type.CTypeConversion;
 import com.cmps.thesischecker.argparser.FilePathParser;
 import com.cmps.thesischecker.argparser.Parser;
 import com.cmps.thesischecker.argparser.ResultDirectoryParser;
@@ -13,17 +8,25 @@ import com.cmps.thesischecker.checker.FontChecker;
 import com.cmps.thesischecker.checker.LineSpaceChecker;
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.model.Report;
+import org.graalvm.nativeimage.IsolateThread;
+import org.graalvm.nativeimage.c.function.CEntryPoint;
+import org.graalvm.nativeimage.c.type.CCharPointer;
+import org.graalvm.nativeimage.c.type.CCharPointerPointer;
+import org.graalvm.nativeimage.c.type.CTypeConversion;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.SerializationFeature;
 
 import java.io.File;
-import java.nio.file.*;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class Main {
 
-    private static final List<Checker> CHECKERS = List.of(new FontChecker());
+    private static final List<Checker> CHECKERS = List.of(new FontChecker(), new LineSpaceChecker());
 
     static void main(String[] args) {
         Parser<List<String>> filePathParser = new FilePathParser();
@@ -117,8 +120,8 @@ public class Main {
 
             ObjectMapper mapper = new ObjectMapper();
             mapper.writer()
-                    .with(SerializationFeature.INDENT_OUTPUT)
-                    .writeValue(outPath.toFile(), report);
+                  .with(SerializationFeature.INDENT_OUTPUT)
+                  .writeValue(outPath.toFile(), report);
         } catch (Exception e) {
             System.err.println("Помилка збереження JSON-звіту: " + e.getMessage());
         }

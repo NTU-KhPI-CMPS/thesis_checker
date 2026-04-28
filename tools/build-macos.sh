@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TEAM_ID="CGBRB86RM7"
+TEAM_ID=""
 KEYCHAIN_PROFILE="notarytool-password"
 
 APP_NAME="Thesis Checker"
