@@ -8,18 +8,27 @@ import com.cmps.thesischecker.checker.FontChecker;
 import com.cmps.thesischecker.checker.LineSpaceChecker;
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.model.Report;
+import org.graalvm.nativeimage.IsolateThread;
+import org.graalvm.nativeimage.c.function.CEntryPoint;
+import org.graalvm.nativeimage.c.type.CCharPointer;
+import org.graalvm.nativeimage.c.type.CCharPointerPointer;
+import org.graalvm.nativeimage.c.type.CTypeConversion;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.SerializationFeature;
 
 import java.io.File;
-import java.nio.file.*;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class Main {
 
-    public static void main(String[] args) {
+    private static final List<Checker> CHECKERS = List.of(new FontChecker(), new LineSpaceChecker());
 
+    static void main(String[] args) {
         Parser<List<String>> filePathParser = new FilePathParser();
         List<String> files = filePathParser.parse(args);
 
@@ -27,18 +36,50 @@ public class Main {
         String outputDir = resultDirectoryParser.parse(args);
 
         if (files.isEmpty()) {
-            error("No input files specified.");
-            return;
+            System.err.println("No input files specified.");
+            System.exit(1);
         }
 
-        List<Checker> checkers = new ArrayList<>();
-        checkers.add(new FontChecker());
-        checkers.add(new LineSpaceChecker());
+        processFiles(files, outputDir);
+    }
 
+    @CEntryPoint(name = "run_thesis_checks")
+    @SuppressWarnings("unused")
+    public static int runThesisChecks(IsolateThread thread,
+                                      int numberOfFiles,
+                                      CCharPointerPointer filePathsPtr,
+                                      CCharPointer resultDirPtr) {
+        List<String> files = parseCArray(filePathsPtr, numberOfFiles);
+        String outputDir = CTypeConversion.toJavaString(resultDirPtr);
+
+        if (files.isEmpty()) {
+            System.err.println("No input files specified.");
+            return 1;
+        }
+
+        processFiles(files, outputDir);
+
+        return 0;
+    }
+
+    private static List<String> parseCArray(CCharPointerPointer fileNamesPtr, int length) {
+        List<String> result = new ArrayList<>();
+
+        for (int i = 0; i < length; i++) {
+            CCharPointer cString = fileNamesPtr.read(i);
+            String javaString = CTypeConversion.toJavaString(cString);
+
+            result.add(javaString);
+        }
+
+        return result;
+    }
+
+    private static void processFiles(List<String> files, String outputDir) {
         for (String filePath : files) {
             List<FormatError> allErrors = new ArrayList<>();
 
-            for (Checker checker : checkers) {
+            for (Checker checker : CHECKERS) {
                 List<FormatError> errors = checker.check(filePath);
                 allErrors.addAll(errors);
             }
@@ -48,11 +89,6 @@ public class Main {
             report.setErrors(allErrors);
             saveJsonReport(report, outputDir);
         }
-    }
-
-    private static void error(String msg) {
-        System.err.println(msg);
-        System.exit(1);
     }
 
     private static void printReport(String filePath, List<FormatError> errors) {
@@ -84,8 +120,8 @@ public class Main {
 
             ObjectMapper mapper = new ObjectMapper();
             mapper.writer()
-                    .with(SerializationFeature.INDENT_OUTPUT)
-                    .writeValue(outPath.toFile(), report);
+                  .with(SerializationFeature.INDENT_OUTPUT)
+                  .writeValue(outPath.toFile(), report);
         } catch (Exception e) {
             System.err.println("Помилка збереження JSON-звіту: " + e.getMessage());
         }

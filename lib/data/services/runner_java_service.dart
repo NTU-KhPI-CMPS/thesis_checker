@@ -3,80 +3,28 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:thesis_checker/data/models/report_api.dart';
-import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:thesis_checker/data/services/thesis_checker_service.dart';
 
 class RunnerJavaService {
   RunnerJavaService._internal();
   static final RunnerJavaService _instance = RunnerJavaService._internal();
   factory RunnerJavaService() => _instance;
 
-  static const _javaThesisCheckerBaseName = 'java-thesis-checker';
-
-  bool get _isWindows => Platform.isWindows;
-
-  String get _javaThesisCheckerFileName {
-    return _isWindows ? 
-        '$_javaThesisCheckerBaseName.exe': 
-        _javaThesisCheckerBaseName;
-  }
+  final checkerService = ThesisCheckerService();
 
   Future<ReportApi> checkFile(String filePath) async {
     try {
-      // 1. Find a safe directory on the user's computer to store the file
       final directory = await getApplicationSupportDirectory();
       final resultsRoot = Directory('${directory.path}/results');
-      await resultsRoot.create(recursive: true);
 
-      debugPrint("Tmp directory to put executable file: ${directory.path}");
-      final javaThesisCheckerExecutable = File('${directory.path}/$_javaThesisCheckerFileName');
+      final returnCode = await checkerService.runThesisChecks(
+        files: [filePath],
+        resultDirectory: resultsRoot.path,
+      );
 
-      if (!await javaThesisCheckerExecutable.exists() || kDebugMode) {
-        debugPrint('Extracting executable file for the first time...');
-        final byteData = await rootBundle.load('assets/$_javaThesisCheckerFileName');
-
-        // Write the bytes to the physical file
-        await javaThesisCheckerExecutable.writeAsBytes(byteData.buffer.asUint8List(
-            byteData.offsetInBytes,
-            byteData.lengthInBytes
-        ));
-      }
-
-      debugPrint('Execute process to check file.');
-      // Mark binary as executable only on Unix-like platforms.
-      if (!_isWindows) {
-        final chmodProcess = await Process.start('chmod', ['+x', javaThesisCheckerExecutable.path]);
-        if (await chmodProcess.exitCode != 0) {
-          throw Exception('Failed to set executable permissions for the Java checker.');
-        }
-      }
-      
-      // Execute binary with args
-      final process = await Process.start(javaThesisCheckerExecutable.path, ['-filePath', filePath, '-checks', '["FONT", "PARAGRAPH"]', '-resultDirectory', resultsRoot.path]);
-      final stderrBuffer = StringBuffer();
-
-      // Listen to standard output in real-time
-      process.stdout.transform(utf8.decoder).listen((data) {
-        debugPrint('STDOUT: $data');
-      });
-
-      // Listen to standard error in real-time
-      process.stderr.transform(utf8.decoder).listen((data) {
-        // debugPrint('STDERR: $data');
-        stderrBuffer.write(data);
-      });
-
-      // Check when it exits
-      final exitCode = await process.exitCode;
-      debugPrint('Process exited with code $exitCode');
-
-      if (exitCode != 0) {
-        final stderrOutput = stderrBuffer.toString().trim();
-        throw Exception(
-          stderrOutput.isNotEmpty
-              ? 'Аналіз завершився з помилкою: $stderrOutput'
-              : 'Аналіз завершився з кодом $exitCode.',
-        );
+      if (returnCode != 0) {
+        throw Exception('Аналіз завершився з помилкою');
       }
 
       final file = File('${resultsRoot.path}/result.json');
