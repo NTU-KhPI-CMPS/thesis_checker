@@ -5,6 +5,7 @@ import com.cmps.thesischecker.argparser.Parser;
 import com.cmps.thesischecker.argparser.ResultDirectoryParser;
 import com.cmps.thesischecker.checker.Checker;
 import com.cmps.thesischecker.checker.FontChecker;
+import com.cmps.thesischecker.checker.LineSpaceChecker;
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.model.Report;
 import tools.jackson.databind.ObjectMapper;
@@ -32,6 +33,7 @@ public class Main {
 
         List<Checker> checkers = new ArrayList<>();
         checkers.add(new FontChecker());
+        checkers.add(new LineSpaceChecker());
 
         for (String filePath : files) {
             List<FormatError> allErrors = new ArrayList<>();
@@ -62,9 +64,12 @@ public class Main {
         } else {
             for (FormatError error : errors) {
                 Set<String> found = error.getFound();
+                String title = error.getTitle();
+
                 if (found == null) found = Set.of();
+
                 String foundStr = String.join(", ", found);
-                System.out.println("Тут шрифт не правильний (використані шрифти: " + foundStr + ")");
+                System.out.println("Помилка: " + title + ". Знайдено -> " + foundStr);
             }
         }
         System.out.println();
