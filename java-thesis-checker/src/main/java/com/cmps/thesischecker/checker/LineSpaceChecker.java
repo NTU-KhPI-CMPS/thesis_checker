@@ -1,10 +1,7 @@
 package com.cmps.thesischecker.checker;
 
 import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
@@ -79,7 +76,7 @@ public class LineSpaceChecker implements Checker {
         double finalValue = (spacing == -1.0) ? 1.0 : spacing;
 
         if (Math.abs(finalValue - Double.parseDouble(expectedLineSpacing)) > 0.01) {
-            incorrectLineSpacings.add(String.format("%.2f", finalValue));
+            incorrectLineSpacings.add(String.format(Locale.US, "%.2f", finalValue));
         }
 
         return incorrectLineSpacings;
