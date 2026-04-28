@@ -166,7 +166,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.basedir}/../assets</outputDirectory>
+                            <outputDirectory>${project.basedir}/../assets/checker</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${project.build.directory}</directory>

@@ -98,6 +98,7 @@ class ThesisCheckerService {
           'Resources',
           'flutter_assets',
           'assets',
+          'checker',
           'java-thesis-checker.dylib',
         );
       case "windows":
@@ -106,6 +107,7 @@ class ThesisCheckerService {
           'data',
           'flutter_assets',
           'assets',
+          'checker',
           'java-thesis-checker.dll',
         );
       case "linux":
@@ -114,6 +116,7 @@ class ThesisCheckerService {
           'data',
           'flutter_assets',
           'assets',
+          'checker',
           'libjava-thesis-checker.so',
         );
       default:
