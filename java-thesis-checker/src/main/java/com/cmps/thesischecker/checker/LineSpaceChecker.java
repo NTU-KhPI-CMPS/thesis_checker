@@ -35,28 +35,40 @@ public class LineSpaceChecker implements Checker {
                 if (paragraphText.isEmpty()) continue;
                 Set<String> incorrectLineSpacings = validate(paragraph);
                 if (!incorrectLineSpacings.isEmpty()) {
-                    FormatError error = new FormatError();
-                    error.setId("err_linespace");
-                    error.setCategory(ErrorCategory.LINE_SPACING);
-                    error.setSeverity("error");
-                    error.setTitle("Невірні інтервали між рядками у параграфі");
-                    error.setParagraphText(paragraphText);
-                    error.setFound(incorrectLineSpacings);
-                    error.setExpected(RequirementsHolder.getLineSpacing());
-                    allErrors.add(error);
+                    buildLineSpaceError(paragraphText, incorrectLineSpacings, allErrors);
                 }
             }
         } catch (Exception e) {
-            FormatError error = new FormatError();
-            error.setId("err_000");
-            error.setCategory(ErrorCategory.FILE);
-            error.setSeverity("error");
-            error.setTitle("Помилка відкриття файлу: " + e.getMessage());
-            error.setParagraphText("");
-            allErrors.add(error);
+            buildLineSpaceException(e, allErrors);
         }
 
         return allErrors;
+    }
+
+    private static void buildLineSpaceException(Exception e, List<FormatError> allErrors) {
+        FormatError error = new FormatError();
+        error.setId("err_000");
+        error.setCategory(ErrorCategory.FILE);
+        error.setSeverity("error");
+        error.setTitle("Помилка відкриття файлу: " + e.getMessage());
+        error.setParagraphText("");
+        allErrors.add(error);
+    }
+
+    private static void buildLineSpaceError(
+            String paragraphText,
+            Set<String> incorrectLineSpacings,
+            List<FormatError> allErrors
+    ) {
+        FormatError error = new FormatError();
+        error.setId("err_linespace");
+        error.setCategory(ErrorCategory.LINE_SPACING);
+        error.setSeverity("error");
+        error.setTitle("Невірні інтервали між рядками у параграфі");
+        error.setParagraphText(paragraphText);
+        error.setFound(incorrectLineSpacings);
+        error.setExpected(RequirementsHolder.getLineSpacing());
+        allErrors.add(error);
     }
 
     private Set<String> validate(XWPFParagraph paragraph) {
