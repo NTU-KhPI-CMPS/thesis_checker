@@ -28,6 +28,7 @@ msix_config:
   identity_name: cmps.thesischecker
   publisher: CN=Mariia Borodin, O=Mariia Borodin, L=Warsaw, S=Mazowieckie, C=PL
   sign_msix: false
+  logo_path: assets/images/app_icon.png
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
