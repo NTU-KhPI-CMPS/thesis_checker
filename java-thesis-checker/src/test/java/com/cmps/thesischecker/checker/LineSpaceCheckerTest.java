@@ -17,7 +17,7 @@ class LineSpaceCheckerTest {
     private static final String EXPECTED_FOURTH_SPACING = "15.00";
 
     @Test
-    @DisplayName("Should find exactly 4 line spacing errors in Test(LineSpacing).docx")
+    @DisplayName("Document contains exactly 4 line spacing errors")
     void check_lineSpacing_finds4Errors() {
         LineSpaceChecker checker = new LineSpaceChecker();
         List<FormatError> result = checker.check(TEST_FILE);
@@ -31,7 +31,7 @@ class LineSpaceCheckerTest {
     }
 
     @Test
-    @DisplayName("Should find first error with spacing value 1.16")
+    @DisplayName("Plain text with default spacing auto-set to 1.16 is detected as error")
     void check_lineSpacing_firstErrorIs1Point16() {
         LineSpaceChecker checker = new LineSpaceChecker();
         List<FormatError> result = checker.check(TEST_FILE);
@@ -47,7 +47,7 @@ class LineSpaceCheckerTest {
     }
 
     @Test
-    @DisplayName("Should find second error with spacing value 1.00")
+    @DisplayName("Text with spacing set to 1.00 via toolbar is detected as error")
     void check_lineSpacing_secondErrorIs1Point0() {
         LineSpaceChecker checker = new LineSpaceChecker();
         List<FormatError> result = checker.check(TEST_FILE);
@@ -63,7 +63,7 @@ class LineSpaceCheckerTest {
     }
 
     @Test
-    @DisplayName("Should find third error with spacing value 2.00")
+    @DisplayName("Text with spacing set to 2.00 via paragraph style is detected as error")
     void check_lineSpacing_thirdErrorIs2Point0() {
         LineSpaceChecker checker = new LineSpaceChecker();
         List<FormatError> result = checker.check(TEST_FILE);
@@ -79,7 +79,7 @@ class LineSpaceCheckerTest {
     }
 
     @Test
-    @DisplayName("Should find fourth error with spacing value 15.00")
+    @DisplayName("Text with spacing set to 15pt via paragraph settings is detected as error")
     void check_lineSpacing_fourthErrorIs15() {
         LineSpaceChecker checker = new LineSpaceChecker();
         List<FormatError> result = checker.check(TEST_FILE);
@@ -95,7 +95,7 @@ class LineSpaceCheckerTest {
     }
 
     @Test
-    @DisplayName("All 4 errors should have correct expected value of 1.50")
+    @DisplayName("All errors have correct expected spacing value")
     void check_lineSpacing_allErrorsHaveCorrectExpectedValue() {
         LineSpaceChecker checker = new LineSpaceChecker();
         List<FormatError> result = checker.check(TEST_FILE);
@@ -108,11 +108,11 @@ class LineSpaceCheckerTest {
                 "Expected exactly 4 line spacing errors");
 
         lineSpacingErrors.forEach(error -> assertEquals("1.5", error.getExpected(),
-                "All errors should expect spacing of 1.50"));
+                "All errors should expect spacing of 1.5"));
     }
 
     @Test
-    @DisplayName("All 4 errors should have paragraph text preserved")
+    @DisplayName("All errors preserve paragraph text")
     void check_lineSpacing_allErrorsPreserveParagraphText() {
         LineSpaceChecker checker = new LineSpaceChecker();
         List<FormatError> result = checker.check(TEST_FILE);
@@ -133,7 +133,7 @@ class LineSpaceCheckerTest {
     }
 
     @Test
-    @DisplayName("Verify all spacing values in order: 1.16, 1.00, 2.00, 15.00")
+    @DisplayName("Errors appear in correct order: 1.16, 1.00, 2.00, 15.00")
     void check_lineSpacing_allValuesInCorrectOrder() {
         LineSpaceChecker checker = new LineSpaceChecker();
         List<FormatError> result = checker.check(TEST_FILE);
