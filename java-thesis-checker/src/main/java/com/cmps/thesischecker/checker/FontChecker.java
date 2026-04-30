@@ -127,7 +127,7 @@ public class FontChecker implements Checker {
         String styleId = paragraphFromParent.getStyleID();
 
         if (styleId == null) {
-            return "Шрифт за замовчуванням";
+            return getFontFromParagraphStyle(document, "Normal");
         }
         return getFontFromParagraphStyle(document, styleId);
     }

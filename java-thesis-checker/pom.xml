@@ -144,9 +144,9 @@
                     <agent>
                         <enabled>true</enabled>
                     </agent>
+                    <mainClass>com.cmps.thesischecker.Main</mainClass>
                     <buildArgs>
                         <arg>-H:+AddAllCharsets</arg>
-                        <arg>--allow-incomplete-classpath</arg>
                         <arg>--report-unsupported-elements-at-runtime</arg>
                     </buildArgs>
                     <skip>false</skip>
