@@ -143,6 +143,10 @@ public class LineSpaceChecker implements Checker {
         }
 
         String styleId = paragraph.getStyle();
+        // If style id not specified "Normal" is used, so we verify it.
+        if (styleId == null) {
+            styleId = "Normal";
+        }
         while (styleId != null) {
             XWPFStyle style = styles.getStyle(styleId);
             if (style == null || style.getCTStyle() == null) {
@@ -160,6 +164,7 @@ public class LineSpaceChecker implements Checker {
 
             styleId = style.getCTStyle().getBasedOn().getVal();
         }
+
 
         if (styles.getDefaultParagraphStyle() != null) {
             return getSpacingFromPPr(styles.getDefaultParagraphStyle().getPPr());
