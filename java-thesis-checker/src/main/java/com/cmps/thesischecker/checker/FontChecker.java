@@ -4,12 +4,10 @@ import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.requirements.RequirementsHolder;
 import org.apache.poi.xwpf.usermodel.*;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
+
 import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class FontChecker implements Checker {
 
@@ -27,7 +25,8 @@ public class FontChecker implements Checker {
                 if (paragraphText.isEmpty()) continue;
                 Set<String> incorrectFonts = validate(paragraph);
                 if (!incorrectFonts.isEmpty()) {
-                    allErrors.add(buildFontNameFormatError("err_font", "Невірні шрифти у параграфі", paragraphText, incorrectFonts));
+                    allErrors.add(buildFontNameFormatError("err_font", "Невірні шрифти у параграфі", paragraphText,
+                                                           incorrectFonts));
                 }
             }
 
@@ -37,7 +36,9 @@ public class FontChecker implements Checker {
                     if (paragraphText.isEmpty()) continue;
                     Set<String> incorrectFonts = validate(paragraph);
                     if (!incorrectFonts.isEmpty()) {
-                        allErrors.add(buildFontNameFormatError("err_font_header", "Неправильні шрифти в верхньому колонтитулі", paragraphText, incorrectFonts));
+                        allErrors.add(buildFontNameFormatError("err_font_header",
+                                                               "Неправильні шрифти в верхньому колонтитулі",
+                                                               paragraphText, incorrectFonts));
                     }
                 }
             }
@@ -48,7 +49,9 @@ public class FontChecker implements Checker {
                     if (paragraphText.isEmpty()) continue;
                     Set<String> incorrectFonts = validate(paragraph);
                     if (!incorrectFonts.isEmpty()) {
-                        allErrors.add(buildFontNameFormatError("err_font_footer", "Неправильні шрифти в нижньому колонтитулі", paragraphText, incorrectFonts));
+                        allErrors.add(
+                                buildFontNameFormatError("err_font_footer", "Неправильні шрифти в нижньому колонтитулі",
+                                                         paragraphText, incorrectFonts));
                     }
                 }
             }
@@ -61,7 +64,8 @@ public class FontChecker implements Checker {
                             if (paragraphText.isEmpty()) continue;
                             Set<String> incorrectFonts = validate(paragraph);
                             if (!incorrectFonts.isEmpty()) {
-                                allErrors.add(buildFontNameFormatError("err_font_table", "Невірні шрифти у таблиці", paragraphText, incorrectFonts));
+                                allErrors.add(buildFontNameFormatError("err_font_table", "Невірні шрифти у таблиці",
+                                                                       paragraphText, incorrectFonts));
                             }
                         }
                     }
@@ -79,7 +83,8 @@ public class FontChecker implements Checker {
         return allErrors;
     }
 
-    private static FormatError buildFontNameFormatError(String id, String title, String text, Set<String> incorrectFonts) {
+    private static FormatError buildFontNameFormatError(String id, String title, String text,
+                                                        Set<String> incorrectFonts) {
         FormatError err = new FormatError();
         err.setId(id);
         err.setCategory(ErrorCategory.FONT_NAME);
@@ -140,13 +145,15 @@ public class FontChecker implements Checker {
         }
 
         var ctStyle = style.getCTStyle();
-        var rPr = ctStyle.getRPr();
 
-        if (rPr == null) {
-            return "Шрифт за замовчуванням";
-        }
+        var rFontsList = Optional
+                // якщо rPr == null -> orElse, інакше -> map
+                .ofNullable(ctStyle.getRPr())
+                // якщо getRFontsList == null -> orElse, інакше -> повертаємо результат
+                .map(CTRPr::getRFontsList)
+                // повертаємо пустий список, якщо в попередніх кроках був null
+                .orElse(Collections.emptyList());
 
-        var rFontsList = rPr.getRFontsList();
         if (!rFontsList.isEmpty()) {
             var rFonts = rFontsList.getFirst();
             String fontName = rFonts.getAscii();
@@ -154,6 +161,11 @@ public class FontChecker implements Checker {
             if (fontName != null) {
                 return fontName;
             }
+        }
+
+        if (style.getCTStyle().isSetBasedOn() || style.getCTStyle().getBasedOn() != null) {
+            String baseStyle = style.getCTStyle().getBasedOn().getVal();
+            return getFontFromParagraphStyle(document, baseStyle);
         }
 
         return "Шрифт за замовчуванням";

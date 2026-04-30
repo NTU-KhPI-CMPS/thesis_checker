@@ -20,4 +20,11 @@ class FontCheckerTest {
         List<FormatError> result = checker.check("src/test/resources/correct_font.docx");
         assertTrue(result.isEmpty(), "Expected no errors in document with correct font (Times New Roman)");
     }
+
+    @Test
+    void check_fontNameInInheritedStyles_noErrors() {
+        FontChecker checker = new FontChecker();
+        List<FormatError> result = checker.check("src/test/resources/inherited_styles.docx");
+        assertTrue(result.isEmpty(), "Expected no errors in document with correct font (Times New Roman)");
+    }
 }
