@@ -37,7 +37,7 @@ public class FontChecker implements Checker {
                     if (paragraphText.isEmpty()) continue;
                     Set<String> incorrectFonts = validate(paragraph);
                     if (!incorrectFonts.isEmpty()) {
-                        allErrors.add(buildFontNameFormatError("err_font_header", "Невірні шрифти у заголовку", paragraphText, incorrectFonts));
+                        allErrors.add(buildFontNameFormatError("err_font_header", "Неправильні шрифти в верхньому колонтитулі", paragraphText, incorrectFonts));
                     }
                 }
             }
@@ -48,7 +48,7 @@ public class FontChecker implements Checker {
                     if (paragraphText.isEmpty()) continue;
                     Set<String> incorrectFonts = validate(paragraph);
                     if (!incorrectFonts.isEmpty()) {
-                        allErrors.add(buildFontNameFormatError("err_font_footer", "Невірні шрифти у підвалі", paragraphText, incorrectFonts));
+                        allErrors.add(buildFontNameFormatError("err_font_footer", "Неправильні шрифти в нижньому колонтитулі", paragraphText, incorrectFonts));
                     }
                 }
             }
@@ -120,14 +120,14 @@ public class FontChecker implements Checker {
 
         Object parent = run.getParent();
         if (!(parent instanceof XWPFParagraph)) {
-            return getFontFromParagraphStyle(document, "Normal");
+            return "Шрифт за замовчуванням";
         }
         XWPFParagraph paragraphFromParent = (XWPFParagraph) parent;
 
         String styleId = paragraphFromParent.getStyleID();
 
         if (styleId == null) {
-            return getFontFromParagraphStyle(document, "Normal");
+            return "Шрифт за замовчуванням";
         }
         return getFontFromParagraphStyle(document, styleId);
     }
@@ -136,14 +136,14 @@ public class FontChecker implements Checker {
         XWPFStyle style = document.getStyles().getStyle(styleId);
 
         if (style == null) {
-            return RequirementsHolder.getFont();
+            return "Шрифт за замовчуванням";
         }
 
         var ctStyle = style.getCTStyle();
         var rPr = ctStyle.getRPr();
 
         if (rPr == null) {
-            return RequirementsHolder.getFont();
+            return "Шрифт за замовчуванням";
         }
 
         var rFontsList = rPr.getRFontsList();
@@ -156,6 +156,6 @@ public class FontChecker implements Checker {
             }
         }
 
-        return RequirementsHolder.getFont();
+        return "Шрифт за замовчуванням";
     }
 }
