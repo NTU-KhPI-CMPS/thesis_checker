@@ -17,7 +17,7 @@ class LineSpaceCheckerTest  extends BaseTest {
     private static final String EXPECTED_FOURTH_SPACING = "15.00";
 
     protected Checker getChecker() {
-        return new FontChecker();
+        return new LineSpaceChecker();
     }
 
     @Test
