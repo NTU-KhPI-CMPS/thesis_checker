@@ -90,6 +90,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.cmps.thesischecker.Main</mainClass>
                                 </transformer>
                             </transformers>
                             <finalName>java-thesis-checker</finalName>
@@ -144,15 +145,16 @@
                     <agent>
                         <enabled>true</enabled>
                     </agent>
-                    <mainClass>com.cmps.thesischecker.Main</mainClass>
                     <buildArgs>
                         <arg>-H:+AddAllCharsets</arg>
-                        <arg>--report-unsupported-elements-at-runtime</arg>
                     </buildArgs>
                     <skip>false</skip>
                     <useArgFile>false</useArgFile>
                     <imageName>java-thesis-checker</imageName>
                     <fallback>false</fallback>
+                    <classpath>
+                        <param>${project.build.directory}/java-thesis-checker.jar</param>
+                    </classpath>
                     <outputDirectory>${project.basedir}/../assets</outputDirectory>
                 </configuration>
             </plugin>
