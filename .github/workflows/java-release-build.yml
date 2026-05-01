@@ -20,6 +20,7 @@ jobs:
         with:
           name: java-native-lib-windows
           path: assets/checker/java-thesis-checker.dll
+          retention-days: 30
   macos-apple-silicon-build:
     runs-on: macos-latest
     steps:
@@ -36,6 +37,7 @@ jobs:
         with:
           name: java-native-lib-macos-apple-silicon
           path: assets/checker/java-thesis-checker.dylib
+          retention-days: 1
   macos-intel-build:
     runs-on: macos-26-intel
     steps:
@@ -52,6 +54,7 @@ jobs:
         with:
           name: java-native-lib-macos-intel
           path: assets/checker/java-thesis-checker.dylib
+          retention-days: 1
   macos-combine-univeral-build:
     runs-on: macos-latest
     needs:
@@ -73,3 +76,4 @@ jobs:
         with:
           name: java-native-lib-macos-universal
           path: java-thesis-checker.dylib
+          retention-days: 30
