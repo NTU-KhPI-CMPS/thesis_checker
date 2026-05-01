@@ -1,0 +1,79 @@
+name: java-release-build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  windows-build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'graalvm'
+          cache: 'maven'
+      - working-directory: java-thesis-checker
+        run: mvn package
+      - name: Windows native lib
+        uses: actions/upload-artifact@v7
+        with:
+          name: java-native-lib-windows
+          path: assets/checker/java-thesis-checker.dll
+          retention-days: 30
+  macos-apple-silicon-build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'graalvm'
+          cache: 'maven'
+      - working-directory: java-thesis-checker
+        run: mvn package
+      - name: macOS native lib
+        uses: actions/upload-artifact@v7
+        with:
+          name: java-native-lib-macos-apple-silicon
+          path: assets/checker/java-thesis-checker.dylib
+          retention-days: 1
+  macos-intel-build:
+    runs-on: macos-26-intel
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'graalvm'
+          cache: 'maven'
+      - working-directory: java-thesis-checker
+        run: mvn package
+      - name: macOS intel native lib
+        uses: actions/upload-artifact@v7
+        with:
+          name: java-native-lib-macos-intel
+          path: assets/checker/java-thesis-checker.dylib
+          retention-days: 1
+  macos-combine-univeral-build:
+    runs-on: macos-latest
+    needs:
+      - macos-apple-silicon-build
+      - macos-intel-build
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: java-native-lib-macos-apple-silicon
+          path: macos-apple-silicone/
+      - uses: actions/download-artifact@v8
+        with:
+          name: java-native-lib-macos-intel
+          path: macos-intel/
+      - name: Build universal native lib for macOS
+        run: lipo -create macos-apple-silicone/java-thesis-checker.dylib macos-intel/java-thesis-checker.dylib -output java-thesis-checker.dylib
+      - name: macOS universal native lib
+        uses: actions/upload-artifact@v7
+        with:
+          name: java-native-lib-macos-universal
+          path: java-thesis-checker.dylib
+          retention-days: 30
