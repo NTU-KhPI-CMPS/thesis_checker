@@ -92,6 +92,11 @@ public class AlignmentChecker implements Checker {
         Set<String> incorrectAlignments = new HashSet<>();
         String actualAlignment = getAlignment(paragraph);
 
+        String styleId = paragraph.getStyle();
+        if (styleId != null && styleId.equals("Heading1") && actualAlignment.equals("CENTER")) {
+            return incorrectAlignments;
+        }
+
         if (!RequirementsHolder.getAlignment().containsKey(actualAlignment)) {
             incorrectAlignments.add(actualAlignment);
         }
