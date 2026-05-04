@@ -16,6 +16,15 @@ import java.util.*;
 
 public class AlignmentChecker implements Checker {
 
+    // Localized names for typical alignment formats
+    private static final Map<String, String> ALIGNMENT_NAMES = Map.of(
+            "LEFT", "По лівому краю",
+            "RIGHT", "По правому краю",
+            "CENTER", "По центру",
+            "BOTH", "По ширині",
+            "DISTRIBUTE", "По ширині"
+    );
+
     /**
      * Checks the document for text alignment violations and returns all found format errors.
      *
@@ -75,10 +84,16 @@ public class AlignmentChecker implements Checker {
         error.setSeverity("error");
         error.setTitle("Невірне вирівнювання тексту");
         error.setParagraphText(paragraphText);
-        error.setFound(incorrectAlignments);
 
-        // Return only one of the equivalent alignment names for typical UI rendering (e.g. "DISTRIBUTE")
-        error.setExpected("DISTRIBUTE");
+        // Map raw alignment strings to localized names for output
+        Set<String> localizedAlignments = new HashSet<>();
+        for (String align : incorrectAlignments) {
+            localizedAlignments.add(ALIGNMENT_NAMES.getOrDefault(align, align));
+        }
+        error.setFound(localizedAlignments);
+
+        // Return the localized expected name instead of just "DISTRIBUTE"
+        error.setExpected(ALIGNMENT_NAMES.get("DISTRIBUTE"));
         return error;
     }
 

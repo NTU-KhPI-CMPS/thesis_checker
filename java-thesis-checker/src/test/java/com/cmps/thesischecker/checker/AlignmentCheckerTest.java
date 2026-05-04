@@ -13,10 +13,10 @@ public class AlignmentCheckerTest extends BaseTest {
 
     private static final String TEST_FILE = "src/test/resources/incorrect_alignment.docx";
     private static final int EXPECTED_ERROR_COUNT = 4;
-    private static final String EXPECTED_FIRST_ALIGNMENT = "LEFT";
-    private static final String EXPECTED_SECOND_ALIGNMENT = "CENTER";
-    private static final String EXPECTED_THIRD_ALIGNMENT = "RIGHT";
-    private static final String EXPECTED_FOURTH_ALIGNMENT = "RIGHT";
+    private static final String EXPECTED_FIRST_ALIGNMENT = "По лівому краю";
+    private static final String EXPECTED_SECOND_ALIGNMENT = "По центру";
+    private static final String EXPECTED_THIRD_ALIGNMENT = "По правому краю"; // Замініть на те, що ви вказали у стилі (наприклад "RIGHT")
+    private static final String EXPECTED_FOURTH_ALIGNMENT = "По правому краю"; // Замініть на те, що ви вказали у успадкованому стилі
 
     @Override
     protected Checker getChecker() { return new AlignmentChecker(); }
@@ -133,7 +133,7 @@ public class AlignmentCheckerTest extends BaseTest {
         assertEquals(EXPECTED_ERROR_COUNT, alignmentErrors.size(),
                 "Expected exactly 4 alignment errors");
 
-        alignmentErrors.forEach(error -> assertEquals("DISTRIBUTE", error.getExpected(),
+        alignmentErrors.forEach(error -> assertEquals("По ширині", error.getExpected(),
                 "All errors should expect alignment of DISTRIBUTE"));
     }
 }
