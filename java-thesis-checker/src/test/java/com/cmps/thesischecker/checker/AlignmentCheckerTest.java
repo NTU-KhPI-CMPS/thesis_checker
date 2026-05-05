@@ -15,8 +15,8 @@ public class AlignmentCheckerTest extends BaseTest {
     private static final int EXPECTED_ERROR_COUNT = 4;
     private static final String EXPECTED_FIRST_ALIGNMENT = "По лівому краю";
     private static final String EXPECTED_SECOND_ALIGNMENT = "По центру";
-    private static final String EXPECTED_THIRD_ALIGNMENT = "По правому краю"; // Замініть на те, що ви вказали у стилі (наприклад "RIGHT")
-    private static final String EXPECTED_FOURTH_ALIGNMENT = "По правому краю"; // Замініть на те, що ви вказали у успадкованому стилі
+    private static final String EXPECTED_THIRD_ALIGNMENT = "По правому краю";
+    private static final String EXPECTED_FOURTH_ALIGNMENT = "По правому краю";
 
     @Override
     protected Checker getChecker() { return new AlignmentChecker(); }
