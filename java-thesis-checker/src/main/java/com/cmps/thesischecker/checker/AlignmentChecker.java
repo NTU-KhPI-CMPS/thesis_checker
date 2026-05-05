@@ -2,7 +2,6 @@ package com.cmps.thesischecker.checker;
 
 import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
-import com.cmps.thesischecker.requirements.RequirementsHolder;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
@@ -10,20 +9,29 @@ import org.apache.poi.xwpf.usermodel.XWPFStyles;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrGeneral;
+import com.cmps.thesischecker.requirements.RequirementsHolder;
 
 import java.io.FileInputStream;
 import java.util.*;
 
 public class AlignmentChecker implements Checker {
 
-    // Localized names for typical alignment formats
-    private static final Map<String, String> ALIGNMENT_NAMES = Map.of(
-            "LEFT", "По лівому краю",
-            "RIGHT", "По правому краю",
-            "CENTER", "По центру",
-            "BOTH", "По ширині",
-            "DISTRIBUTE", "По ширині"
-    );
+    /**
+     * Enum containing basic paragraph text alignment values with their localized names.
+     */
+    public enum Alignment {
+
+        LEFT("По лівому краю"),
+        RIGHT("По правому краю"),
+        CENTER("По центру"),
+        BOTH("По ширині");
+
+        final String name;
+
+        Alignment(String name) {
+            this.name = name;
+        }
+    }
 
     /**
      * Checks the document for text alignment violations and returns all found format errors.
@@ -42,9 +50,14 @@ public class AlignmentChecker implements Checker {
                 if (paragraphText.isEmpty()) {
                     continue;
                 }
-                Set<String> incorrectAlignments = validate(paragraph);
-                if (!incorrectAlignments.isEmpty()) {
-                    allErrors.add(buildAlignmentError(paragraphText, incorrectAlignments));
+                Optional<String> incorrectAlignment = validate(paragraph);
+                if (incorrectAlignment.isPresent()) {
+                    String expectedRaw = isHeading(paragraph)
+                            ? RequirementsHolder.getHeadingAlignment()
+                            : RequirementsHolder.getMainTextAlignment();
+
+                    String expectedLocalized = mapToLocalized(expectedRaw);
+                    allErrors.add(buildAlignmentError(paragraphText, incorrectAlignment.get(), expectedLocalized));
                 }
             }
         } catch (Exception e) {
@@ -52,6 +65,18 @@ public class AlignmentChecker implements Checker {
         }
 
         return allErrors;
+    }
+
+    /**
+     * Determines whether the given paragraph is formatted as a heading.
+     * Validates against standard English ("Heading1") style names.
+     *
+     * @param paragraph the paragraph to inspect
+     * @return true if the paragraph is a heading, false otherwise
+     */
+    private boolean isHeading(XWPFParagraph paragraph) {
+        String styleId = paragraph.getStyle();
+        return styleId != null && styleId.equals("Heading1");
     }
 
     /**
@@ -74,10 +99,11 @@ public class AlignmentChecker implements Checker {
      * Creates and returns an alignment error for a paragraph with invalid alignment values.
      *
      * @param paragraphText the paragraph text
-     * @param incorrectAlignments the set of detected alignment values
+     * @param incorrectAlignment the detected incorrect alignment value
+     * @param expected localized string specifying the expected alignment
      * @return the created format error
      */
-    private static FormatError buildAlignmentError(String paragraphText, Set<String> incorrectAlignments) {
+    private static FormatError buildAlignmentError(String paragraphText, String incorrectAlignment, String expected) {
         FormatError error = new FormatError();
         error.setId("err_alignment");
         error.setCategory(ErrorCategory.ALIGNMENT);
@@ -85,38 +111,49 @@ public class AlignmentChecker implements Checker {
         error.setTitle("Невірне вирівнювання тексту");
         error.setParagraphText(paragraphText);
 
-        // Map raw alignment strings to localized names for output
-        Set<String> localizedAlignments = new HashSet<>();
-        for (String align : incorrectAlignments) {
-            localizedAlignments.add(ALIGNMENT_NAMES.getOrDefault(align, align));
-        }
-        error.setFound(localizedAlignments);
-
-        // Return the localized expected name instead of just "DISTRIBUTE"
-        error.setExpected(ALIGNMENT_NAMES.get("DISTRIBUTE"));
+        // Map raw alignment string to localized name for output
+        error.setFound(Set.of(mapToLocalized(incorrectAlignment)));
+        error.setExpected(expected);
         return error;
+    }
+
+    /**
+     * Maps raw POI alignment strings to readable, localized names.
+     *
+     * @param align raw alignment string (e.g., "LEFT", "CENTER")
+     * @return the localized alignment name, or the raw string if unknown
+     */
+    private static String mapToLocalized(String align) {
+        return switch (align) {
+            case "LEFT" -> Alignment.LEFT.name;
+            case "RIGHT" -> Alignment.RIGHT.name;
+            case "CENTER" -> Alignment.CENTER.name;
+            case "BOTH" -> Alignment.BOTH.name;
+            default -> align;
+        };
     }
 
     /**
      * Validates a paragraph against the expected alignment.
      *
      * @param paragraph the paragraph to validate
-     * @return a set with detected alignment values when the paragraph is invalid
+     * @return an Optional containing the detected alignment value if the paragraph is invalid, or empty otherwise
      */
-    Set<String> validate(XWPFParagraph paragraph) {
-        Set<String> incorrectAlignments = new HashSet<>();
+    Optional<String> validate(XWPFParagraph paragraph) {
         String actualAlignment = getAlignment(paragraph);
 
-        String styleId = paragraph.getStyle();
-        if (styleId != null && styleId.equals("Heading1") && actualAlignment.equals("CENTER")) {
-            return incorrectAlignments;
+        if (isHeading(paragraph)) {
+            if (!actualAlignment.equals(RequirementsHolder.getHeadingAlignment())) {
+                return Optional.of(actualAlignment);
+            }
+            return Optional.empty();
         }
 
-        if (!RequirementsHolder.getAlignment().containsKey(actualAlignment)) {
-            incorrectAlignments.add(actualAlignment);
+        if (!actualAlignment.equals(RequirementsHolder.getMainTextAlignment())) {
+            return Optional.of(actualAlignment);
         }
 
-        return incorrectAlignments;
+        return Optional.empty();
     }
 
     /**
