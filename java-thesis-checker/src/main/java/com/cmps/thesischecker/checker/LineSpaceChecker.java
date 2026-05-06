@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.math.BigInteger;
 import java.util.*;
 
+import com.cmps.thesischecker.utils.StyleUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
 import org.apache.poi.xwpf.usermodel.XWPFStyles;
@@ -15,7 +16,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STLineSpacingRule;
 
 import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
-import com.cmps.thesischecker.model.KnownStyle;
 import com.cmps.thesischecker.requirements.RequirementsHolder;
 
 public class LineSpaceChecker implements Checker {
@@ -145,10 +145,7 @@ public class LineSpaceChecker implements Checker {
 
         String styleId = paragraph.getStyle();
         if (styleId == null) {
-            styleId = KnownStyle.NORMAL.getAliases().stream()
-                    .filter(alias -> styles.getStyle(alias) != null)
-                    .findFirst()
-                    .orElse("Normal");
+            styleId = StyleUtils.getNormalStyleId(styles, "Normal");
         }
         while (styleId != null) {
             XWPFStyle style = styles.getStyle(styleId);

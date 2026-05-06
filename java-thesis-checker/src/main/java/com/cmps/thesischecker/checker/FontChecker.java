@@ -2,8 +2,8 @@ package com.cmps.thesischecker.checker;
 
 import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
-import com.cmps.thesischecker.model.KnownStyle;
 import com.cmps.thesischecker.requirements.RequirementsHolder;
+import com.cmps.thesischecker.utils.StyleUtils;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 
@@ -131,12 +131,10 @@ public class FontChecker implements Checker {
         XWPFParagraph paragraphFromParent = (XWPFParagraph) parent;
 
         String styleId = paragraphFromParent.getStyleID();
+        XWPFStyles styles = document.getStyles();
 
         if (styleId == null) {
-            styleId = KnownStyle.NORMAL.getAliases().stream()
-                    .filter(alias -> document.getStyles().getStyle(alias) != null)
-                    .findFirst()
-                    .orElse("Normal");
+            styleId = StyleUtils.getNormalStyleId(styles, "Normal");
             return getFontFromParagraphStyle(document, styleId);
         }
         return getFontFromParagraphStyle(document, styleId);
