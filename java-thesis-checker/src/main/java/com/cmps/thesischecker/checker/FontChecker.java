@@ -2,6 +2,7 @@ package com.cmps.thesischecker.checker;
 
 import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
+import com.cmps.thesischecker.model.KnownStyle;
 import com.cmps.thesischecker.requirements.RequirementsHolder;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
@@ -132,7 +133,11 @@ public class FontChecker implements Checker {
         String styleId = paragraphFromParent.getStyleID();
 
         if (styleId == null) {
-            return getFontFromParagraphStyle(document, "Normal");
+            styleId = KnownStyle.NORMAL.getAliases().stream()
+                    .filter(alias -> document.getStyles().getStyle(alias) != null)
+                    .findFirst()
+                    .orElse("Normal");
+            return getFontFromParagraphStyle(document, styleId);
         }
         return getFontFromParagraphStyle(document, styleId);
     }

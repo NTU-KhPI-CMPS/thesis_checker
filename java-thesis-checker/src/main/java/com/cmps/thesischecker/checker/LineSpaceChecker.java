@@ -15,6 +15,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STLineSpacingRule;
 
 import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
+import com.cmps.thesischecker.model.KnownStyle;
 import com.cmps.thesischecker.requirements.RequirementsHolder;
 
 public class LineSpaceChecker implements Checker {
@@ -143,9 +144,11 @@ public class LineSpaceChecker implements Checker {
         }
 
         String styleId = paragraph.getStyle();
-        // If style id not specified "Normal" is used, so we verify it.
         if (styleId == null) {
-            styleId = "Normal";
+            styleId = KnownStyle.NORMAL.getAliases().stream()
+                    .filter(alias -> styles.getStyle(alias) != null)
+                    .findFirst()
+                    .orElse("Normal");
         }
         while (styleId != null) {
             XWPFStyle style = styles.getStyle(styleId);
