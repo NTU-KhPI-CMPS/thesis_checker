@@ -2,6 +2,8 @@ package com.cmps.thesischecker.checker;
 
 import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
+import com.cmps.thesischecker.model.Style;
+import com.cmps.thesischecker.utils.StyleUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
@@ -76,7 +78,7 @@ public class AlignmentChecker implements Checker {
      */
     private boolean isHeading(XWPFParagraph paragraph) {
         String styleId = paragraph.getStyle();
-        return styleId != null && styleId.equals("Heading1");
+        return Style.HEADING_1.matches(styleId);
     }
 
     /**
@@ -192,7 +194,7 @@ public class AlignmentChecker implements Checker {
 
         String styleId = paragraph.getStyle();
         if (styleId == null) {
-            styleId = "Normal";
+            styleId = StyleUtils.getNormalStyleId(styles, "Normal");
         }
         while (styleId != null) {
             XWPFStyle style = styles.getStyle(styleId);

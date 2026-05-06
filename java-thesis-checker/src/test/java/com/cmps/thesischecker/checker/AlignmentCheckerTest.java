@@ -88,12 +88,20 @@ public class AlignmentCheckerTest extends BaseTest {
     }
 
     @Test
-    @DisplayName("All errors have correct expected alignment value (DISTRIBUTE)")
+    @DisplayName("All errors have correct expected alignment value (BOTH and CENTER)")
     void check_alignment_allErrorsHaveCorrectExpectedValue() {
         assertEquals(EXPECTED_ERROR_COUNT, cachedErrors.size(),
                 "Expected exactly 4 alignment errors");
 
-        cachedErrors.forEach(error -> assertEquals("По ширині", error.getExpected(),
-                "All errors should expect alignment of DISTRIBUTE"));
+        for (int i = 0; i < cachedErrors.size(); i++) {
+            FormatError error = cachedErrors.get(i);
+            if (i < 3) {
+                assertEquals("По ширині", error.getExpected(),
+                        "The first 3 errors should expect alignment of Both (По ширині)");
+            } else {
+                assertEquals("По центру", error.getExpected(),
+                        "The last error should expect alignment of Center (По центру)");
+            }
+        }
     }
 }

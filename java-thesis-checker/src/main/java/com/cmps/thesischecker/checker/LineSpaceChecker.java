@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.math.BigInteger;
 import java.util.*;
 
+import com.cmps.thesischecker.utils.StyleUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
 import org.apache.poi.xwpf.usermodel.XWPFStyles;
@@ -143,9 +144,8 @@ public class LineSpaceChecker implements Checker {
         }
 
         String styleId = paragraph.getStyle();
-        // If style id not specified "Normal" is used, so we verify it.
         if (styleId == null) {
-            styleId = "Normal";
+            styleId = StyleUtils.getNormalStyleId(styles, "Normal");
         }
         while (styleId != null) {
             XWPFStyle style = styles.getStyle(styleId);
