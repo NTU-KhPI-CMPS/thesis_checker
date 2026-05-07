@@ -134,7 +134,7 @@ public class FontChecker implements Checker {
         XWPFStyles styles = document.getStyles();
 
         if (styleId == null) {
-            styleId = StyleUtils.getNormalStyleId(styles, "Normal");
+            styleId = StyleUtils.getNormalStyleId(styles);
             return getFontFromParagraphStyle(document, styleId);
         }
         return getFontFromParagraphStyle(document, styleId);

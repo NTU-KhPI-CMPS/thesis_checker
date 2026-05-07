@@ -194,7 +194,7 @@ public class AlignmentChecker implements Checker {
 
         String styleId = paragraph.getStyle();
         if (styleId == null) {
-            styleId = StyleUtils.getNormalStyleId(styles, "Normal");
+            styleId = StyleUtils.getNormalStyleId(styles);
         }
         while (styleId != null) {
             XWPFStyle style = styles.getStyle(styleId);

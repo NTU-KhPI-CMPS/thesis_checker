@@ -19,6 +19,9 @@ public class AlignmentCheckerTest extends BaseTest {
     private static final String EXPECTED_THIRD_ALIGNMENT = "По правому краю";
     private static final String EXPECTED_FOURTH_ALIGNMENT = "По правому краю";
 
+    private static final String MAIN_TEXT_ALIGNMENT = "По ширині";
+    private static final String HEADING_ALIGNMENT = "По центру";
+
     private static List<FormatError> cachedErrors;
 
     @Override
@@ -88,20 +91,42 @@ public class AlignmentCheckerTest extends BaseTest {
     }
 
     @Test
-    @DisplayName("All errors have correct expected alignment value (BOTH and CENTER)")
+    @DisplayName("Alignment errors should correctly identify expected values for both 'Justified' and 'Centered' styles")
     void check_alignment_allErrorsHaveCorrectExpectedValue() {
-        assertEquals(EXPECTED_ERROR_COUNT, cachedErrors.size(),
-                "Expected exactly 4 alignment errors");
+        assertEquals(4,
+                cachedErrors.size(),
+                "Should have detected 4 specific alignment violations"
+        );
 
-        for (int i = 0; i < cachedErrors.size(); i++) {
-            FormatError error = cachedErrors.get(i);
-            if (i < 3) {
-                assertEquals("По ширині", error.getExpected(),
-                        "The first 3 errors should expect alignment of Both (По ширині)");
-            } else {
-                assertEquals("По центру", error.getExpected(),
-                        "The last error should expect alignment of Center (По центру)");
-            }
-        }
+        // The first three errors occur in paragraphs where the style guide requires 'Justified' alignment.
+        assertAlignmentError(cachedErrors.get(0),
+                MAIN_TEXT_ALIGNMENT,
+                "First paragraph (Heading level 1) must be justified"
+        );
+        assertAlignmentError(cachedErrors.get(1),
+                MAIN_TEXT_ALIGNMENT,
+                "Body text paragraphs must be justified by default"
+        );
+        assertAlignmentError(cachedErrors.get(2),
+                MAIN_TEXT_ALIGNMENT,
+                "Block quotes must maintain justified alignment"
+        );
+
+        // The final error occurs in a context where 'Centered' is the required standard (e.g., a Title or Table Caption).
+        assertAlignmentError(cachedErrors.get(3),
+                HEADING_ALIGNMENT,
+                "Document title must be centered"
+        );
+    }
+
+    private void assertAlignmentError(FormatError error, String expected, String ruleDescription) {
+        assertEquals(expected,
+                error.getExpected(),
+                String.format("Rule Violated: %s. Expected: %s, but found: %s",
+                        ruleDescription,
+                        expected,
+                        error.getFound()
+                )
+        );
     }
 }
