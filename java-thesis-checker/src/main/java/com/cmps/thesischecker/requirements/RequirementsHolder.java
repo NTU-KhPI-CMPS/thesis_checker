@@ -9,4 +9,10 @@ public class RequirementsHolder {
 
     @Getter
     private static String lineSpacing = "1.5";
+
+    @Getter
+    private static String mainTextAlignment = "BOTH";
+
+    @Getter
+    private static String headingAlignment = "CENTER";
 }

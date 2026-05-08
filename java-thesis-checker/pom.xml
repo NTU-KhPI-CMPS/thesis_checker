@@ -135,6 +135,8 @@
                                 <argument>${project.basedir}/agent/file2.docx</argument>
                                 <argument>-filePath</argument>
                                 <argument>${project.basedir}/agent/file3.docx</argument>
+                                <argument>-filePath</argument>
+                                <argument>${project.basedir}/agent/file4.docx</argument>
                             </arguments>
                         </configuration>
                     </execution>

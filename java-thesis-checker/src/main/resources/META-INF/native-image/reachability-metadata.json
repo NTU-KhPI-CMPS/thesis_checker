@@ -1,0 +1,10 @@
+{
+  "resources": [
+    {
+      "glob": "org/apache/poi/schemas/ooxml/system/ooxml/**"
+    },
+    {
+      "glob": "org/apache/xmlbeans/metadata/system/**"
+    }
+  ]
+}

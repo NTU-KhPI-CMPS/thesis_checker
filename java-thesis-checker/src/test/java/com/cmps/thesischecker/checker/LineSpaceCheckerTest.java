@@ -16,9 +16,7 @@ class LineSpaceCheckerTest  extends BaseTest {
     private static final String EXPECTED_THIRD_SPACING = "2.00";
     private static final String EXPECTED_FOURTH_SPACING = "15.00";
 
-    protected Checker getChecker() {
-        return new LineSpaceChecker();
-    }
+    protected Checker getChecker() { return new LineSpaceChecker(); }
 
     @Test
     @DisplayName("Document contains exactly 4 line spacing errors")
