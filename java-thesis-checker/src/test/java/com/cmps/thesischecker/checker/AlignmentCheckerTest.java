@@ -101,7 +101,7 @@ public class AlignmentCheckerTest extends BaseTest {
         // The first three errors occur in paragraphs where the style guide requires 'Justified' alignment.
         assertAlignmentError(cachedErrors.get(0),
                 MAIN_TEXT_ALIGNMENT,
-                "First paragraph (Heading level 1) must be justified"
+                "First paragraph must be justified"
         );
         assertAlignmentError(cachedErrors.get(1),
                 MAIN_TEXT_ALIGNMENT,
@@ -115,7 +115,7 @@ public class AlignmentCheckerTest extends BaseTest {
         // The final error occurs in a context where 'Centered' is the required standard (e.g., a Title or Table Caption).
         assertAlignmentError(cachedErrors.get(3),
                 HEADING_ALIGNMENT,
-                "Document title must be centered"
+                "Heading level 1 must be centered"
         );
     }
 
