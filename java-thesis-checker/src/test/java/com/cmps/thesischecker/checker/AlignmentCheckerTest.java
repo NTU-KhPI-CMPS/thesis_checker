@@ -19,6 +19,9 @@ public class AlignmentCheckerTest extends BaseTest {
     private static final String EXPECTED_THIRD_ALIGNMENT = "По правому краю";
     private static final String EXPECTED_FOURTH_ALIGNMENT = "По правому краю";
 
+    private static final String MAIN_TEXT_ALIGNMENT = "По ширині";
+    private static final String HEADING_ALIGNMENT = "По центру";
+
     private static List<FormatError> cachedErrors;
 
     @Override
@@ -88,12 +91,42 @@ public class AlignmentCheckerTest extends BaseTest {
     }
 
     @Test
-    @DisplayName("All errors have correct expected alignment value (DISTRIBUTE)")
+    @DisplayName("Alignment errors should correctly identify expected values for both 'Justified' and 'Centered' styles")
     void check_alignment_allErrorsHaveCorrectExpectedValue() {
-        assertEquals(EXPECTED_ERROR_COUNT, cachedErrors.size(),
-                "Expected exactly 4 alignment errors");
+        assertEquals(4,
+                cachedErrors.size(),
+                "Should have detected 4 specific alignment violations"
+        );
 
-        cachedErrors.forEach(error -> assertEquals("По ширині", error.getExpected(),
-                "All errors should expect alignment of DISTRIBUTE"));
+        // The first three errors occur in paragraphs where the style guide requires 'Justified' alignment.
+        assertAlignmentError(cachedErrors.get(0),
+                MAIN_TEXT_ALIGNMENT,
+                "First paragraph must be justified"
+        );
+        assertAlignmentError(cachedErrors.get(1),
+                MAIN_TEXT_ALIGNMENT,
+                "Body text paragraphs must be justified by default"
+        );
+        assertAlignmentError(cachedErrors.get(2),
+                MAIN_TEXT_ALIGNMENT,
+                "Block quotes must maintain justified alignment"
+        );
+
+        // The final error occurs in a context where 'Centered' is the required standard (e.g., a Title or Table Caption).
+        assertAlignmentError(cachedErrors.get(3),
+                HEADING_ALIGNMENT,
+                "Heading level 1 must be centered"
+        );
+    }
+
+    private void assertAlignmentError(FormatError error, String expected, String ruleDescription) {
+        assertEquals(expected,
+                error.getExpected(),
+                String.format("Rule Violated: %s. Expected: %s, but found: %s",
+                        ruleDescription,
+                        expected,
+                        error.getFound()
+                )
+        );
     }
 }
