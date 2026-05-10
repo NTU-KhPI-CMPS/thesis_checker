@@ -17,5 +17,5 @@ public class RequirementsHolder {
     private static String headingAlignment = "CENTER";
 
     @Getter
-    private static String ParagraphSpacing = "0";
+    private static String paragraphSpacing = "0";
 }

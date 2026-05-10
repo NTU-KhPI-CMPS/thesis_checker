@@ -48,7 +48,7 @@ public class ParagraphSpacingChecker implements Checker {
      * @param paragraph the paragraph to validate
      * @return list of errors, empty if spacing is correct
      */
-    List<FormatError> validate(XWPFParagraph paragraph) {
+    private List<FormatError> validate(XWPFParagraph paragraph) {
         List<FormatError> errors = new ArrayList<>();
         ParagraphSpacing spacing = getSpacing(paragraph);
 
@@ -57,8 +57,8 @@ public class ParagraphSpacingChecker implements Checker {
 
             double expectedParagraphSpacing = Double.parseDouble(RequirementsHolder.getParagraphSpacing());
 
-            if (spacing.getUpSpacing() != null && spacing.getUpSpacing() > expectedParagraphSpacing) {
-                errors.add(buildSpacingBeforeError(text, spacing.getUpSpacing()));
+            if (spacing.getTopSpacing() != null && spacing.getTopSpacing() > expectedParagraphSpacing) {
+                errors.add(buildSpacingBeforeError(text, spacing.getTopSpacing()));
             }
             if (spacing.getBottomSpacing() != null && spacing.getBottomSpacing() > expectedParagraphSpacing) {
                 errors.add(buildSpacingAfterError(text, spacing.getBottomSpacing()));
@@ -74,7 +74,7 @@ public class ParagraphSpacingChecker implements Checker {
      * @param paragraph the paragraph to inspect
      * @return resolved spacing, fields are null if not set
      */
-    ParagraphSpacing getSpacing(XWPFParagraph paragraph) {
+    private ParagraphSpacing getSpacing(XWPFParagraph paragraph) {
         ParagraphSpacing spacing = getSpacingFromPPr(paragraph.getCTP().getPPr());
         if (spacing != null) {
             return spacing;
@@ -94,7 +94,7 @@ public class ParagraphSpacingChecker implements Checker {
      * @param paragraph the paragraph to inspect
      * @return the resolved spacing, or {@code null} if none is available
      */
-    ParagraphSpacing getSpacingFromStyles(XWPFParagraph paragraph) {
+    private ParagraphSpacing getSpacingFromStyles(XWPFParagraph paragraph) {
         XWPFStyles styles = paragraph.getDocument().getStyles();
         if (styles == null) {
             return null;
@@ -136,7 +136,7 @@ public class ParagraphSpacingChecker implements Checker {
      * @param pPr the paragraph properties
      * @return the resolved spacing, or {@code null} if not present
      */
-    ParagraphSpacing getSpacingFromPPr(CTPPr pPr) {
+    private ParagraphSpacing getSpacingFromPPr(CTPPr pPr) {
         if (pPr == null) {
             return null;
         }
@@ -149,7 +149,7 @@ public class ParagraphSpacingChecker implements Checker {
      * @param pPr the general paragraph properties
      * @return the resolved spacing, or {@code null} if not present
      */
-    ParagraphSpacing getSpacingFromPPr(CTPPrGeneral pPr) {
+    private ParagraphSpacing getSpacingFromPPr(CTPPrGeneral pPr) {
         if (pPr == null) {
             return null;
         }
@@ -162,7 +162,7 @@ public class ParagraphSpacingChecker implements Checker {
      * @param spacing the raw spacing definition from Word
      * @return ParagraphSpacing with values in points, or null if spacing is absent
      */
-    ParagraphSpacing getSpacingFromCTSpacing(CTSpacing spacing) {
+    private ParagraphSpacing getSpacingFromCTSpacing(CTSpacing spacing) {
         if (spacing == null) {
             return null;
         }
