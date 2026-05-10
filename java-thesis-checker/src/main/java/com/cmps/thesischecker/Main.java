@@ -7,6 +7,7 @@ import com.cmps.thesischecker.checker.AlignmentChecker;
 import com.cmps.thesischecker.checker.Checker;
 import com.cmps.thesischecker.checker.FontChecker;
 import com.cmps.thesischecker.checker.LineSpaceChecker;
+import com.cmps.thesischecker.checker.ParagraphSpacingChecker;
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.model.Report;
 import org.graalvm.nativeimage.IsolateThread;
@@ -30,7 +31,8 @@ public class Main {
     private static final List<Checker> CHECKERS = List.of(
             new FontChecker(),
             new LineSpaceChecker(),
-            new AlignmentChecker()
+            new AlignmentChecker(),
+            new ParagraphSpacingChecker()
     );
 
     static void main(String[] args) {
