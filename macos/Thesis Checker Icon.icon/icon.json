@@ -1,0 +1,38 @@
+{
+  "fill" : {
+    "automatic-gradient" : "display-p3:0.32116,0.33451,0.68035,1.00000"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "blend-mode" : "normal",
+          "fill" : "automatic",
+          "glass" : true,
+          "image-name" : "quick_reference_all_512dp_E3E3E3_FILL0_wght400_GRAD0_opsz48.svg",
+          "name" : "quick_reference_all_512dp_E3E3E3_FILL0_wght400_GRAD0_opsz48",
+          "position" : {
+            "scale" : 16,
+            "translation-in-points" : [
+              21.046704357984254,
+              -4.21944721055479
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "squares" : [
+      "macOS"
+    ]
+  }
+}

@@ -1,4 +1,4 @@
-import 'package:flutter_app/core/utils/file_extensions.dart';
+import 'package:thesis_checker/core/utils/file_extensions.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 

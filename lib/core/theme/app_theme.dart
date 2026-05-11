@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/core/constants/app_colors.dart';
+import 'package:thesis_checker/core/constants/app_colors.dart';
 
 /// Application theme definitions for light and dark modes.
 class AppTheme {
@@ -14,6 +14,9 @@ class AppTheme {
         primary: AppColors.accent,
         secondary: AppColors.accent2,
         surface: AppColors.surface2,
+        error: AppColors.error,
+        errorContainer: AppColors.errorLight,
+        onErrorContainer: AppColors.error,
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.surface,
@@ -72,6 +75,9 @@ class AppTheme {
         primary: AppColors.accentDark,
         secondary: AppColors.accent2Dark,
         surface: AppColors.surface2Dark,
+        error: AppColors.error,
+        errorContainer: AppColors.errorDark,
+        onErrorContainer: AppColors.textDark,
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.surfaceDark,

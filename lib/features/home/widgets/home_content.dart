@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/features/home/widgets/info_card.dart';
-import 'package:flutter_app/features/home/widgets/upload_zone.dart';
+import 'package:thesis_checker/core/constants/available_check_types.dart';
+import 'package:thesis_checker/core/widgets/info_card.dart';
+import 'package:thesis_checker/core/widgets/info_text.dart';
+import 'package:thesis_checker/features/home/widgets/upload_zone.dart';
 
 /// Primary content area of the home screen.
 class HomeContent extends StatelessWidget {
-  HomeContent({super.key});
-
-  final List<Map<String, String>> infoCards = [
-    {'icon': 'assets/images/abc.png', 'title': 'Шрифт', 'subtitle': 'Назва'},
-  ];
+  const HomeContent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,16 +18,7 @@ class HomeContent extends StatelessWidget {
       children: [
         const UploadZone(),
         const SizedBox(height: 28.0,),
-        Text(
-          'Що перевіряємо'.toUpperCase(),
-          style: TextStyle(
-            fontFamily: 'FunnelSans',
-            fontSize: 13.0,
-            fontWeight: FontWeight.w600,
-            color: textColor2,
-            letterSpacing: 0.5,
-          ),
-        ),
+        InfoText(text: 'Що перевіряємо'),
         const SizedBox(height: 28.0,),
         LayoutBuilder(
           builder: (context, constraints) {
@@ -44,11 +33,11 @@ class HomeContent extends StatelessWidget {
                 mainAxisExtent: 76.0,
               ),
               children: List.generate(
-                infoCards.length,
+                AvailableCheckTypes.checkTypes.length,
                 (index) => InfoCard(
                    children: [
                     Image.asset(
-                      infoCards[index]['icon']!,
+                      AvailableCheckTypes.checkTypes[index].iconPath,
                       width: 20.0,
                       height: 20.0,
                     ),
@@ -59,7 +48,7 @@ class HomeContent extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            infoCards[index]['title']!,
+                            AvailableCheckTypes.checkTypes[index].title,
                             style: TextStyle(
                               fontSize: 14.0,
                               fontFamily: 'FunnelSans',
@@ -70,7 +59,7 @@ class HomeContent extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            infoCards[index]['subtitle']!,
+                            AvailableCheckTypes.checkTypes[index].description,
                             style: TextStyle(
                               fontSize: 14.0,
                               fontFamily: 'FunnelSans',

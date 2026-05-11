@@ -18,6 +18,3 @@ final class StartAnalysisEvent extends AnalysisEvent {
   @override
   List<Object> get props => [filePath, checkedOptions];
 }
-
-/// Event to reset the analysis state to initial.
-final class ResetAnalysisEvent extends AnalysisEvent {}

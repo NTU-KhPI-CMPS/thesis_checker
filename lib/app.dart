@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/app_view.dart';
-import 'package:flutter_app/core/theme/theme_cubit.dart';
-import 'package:flutter_app/features/home/bloc/file_bloc.dart';
-import 'package:flutter_app/features/loading_analysis/bloc/analysis_bloc.dart';
-import 'package:flutter_app/features/loading_analysis/services/runner_java_service.dart';
+import 'package:thesis_checker/app_view.dart';
+import 'package:thesis_checker/core/theme/theme_cubit.dart';
+import 'package:thesis_checker/features/home/bloc/file_bloc.dart';
+import 'package:thesis_checker/features/loading_analysis/bloc/analysis_bloc.dart';
+import 'package:thesis_checker/data/repositories/analysis_repository.dart';
+import 'package:thesis_checker/features/result/cubit/result_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Top-level app widget that injects global dependencies.
@@ -21,8 +22,12 @@ class App extends StatelessWidget {
           create: (_) => FileBloc(),
         ),
         BlocProvider(
-          create: (_) => AnalysisBloc(
-            runnerJavaService: RunnerJavaService(),
+          create: (_) => ResultCubit(),
+        ),
+        BlocProvider(
+          create: (context) => AnalysisBloc(
+            analysisRepository: AnalysisRepository(),
+            resultCubit: context.read<ResultCubit>(),
           )
         ),
       ],

@@ -2,7 +2,8 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/features/home/widgets/custom_dialog.dart';
+import 'package:thesis_checker/features/home/bloc/file_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Interactive drop area for uploading thesis files.
 class UploadZone extends StatefulWidget {
@@ -55,10 +56,7 @@ class _UploadZoneState extends State<UploadZone> {
             final file = details.files.first;
             final filePath = file.path;
             final fileName = file.name;
-            showDialog(
-              context: context, 
-              builder: (context) => CustomDialog(filePath: filePath, fileName: fileName)
-            );
+            context.read<FileBloc>().add(FileDroppedEvent(filePath, fileName));
           },
           child: AnimatedContainer(
             duration: Duration(milliseconds: 200),
@@ -104,21 +102,15 @@ class _UploadZoneState extends State<UploadZone> {
                   onExit: (event) => setState(() => buttonIsHovered = false),
                   child: GestureDetector(
                     onTap: () async {
+                      final bloc = context.read<FileBloc>();
                       final file = await FilePicker.platform.pickFiles(
                         type: FileType.custom,
                         allowedExtensions: ['docx'],
                       );
-
                       if (file != null) {
                         final filePath = file.files.first.path!;
                         final fileName = file.files.first.name;
-
-                        if (!context.mounted) return;
-
-                        showDialog(
-                          context: context,
-                          builder: (context) => CustomDialog(filePath: filePath, fileName: fileName),
-                        );
+                        bloc.add(FileDroppedEvent(filePath, fileName));
                       }
                     },
                     child: TweenAnimationBuilder<double>(
