@@ -20,7 +20,11 @@ class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
   Future<void> _onStartAnalysis(StartAnalysisEvent event, Emitter<AnalysisState> emit) async {
     try {
       emit(AnalysisInProgressState());
-      final AnalysisResult analysisResult = await analysisRepository.checkFile(event.filePath);
+      final AnalysisResult analysisResult = await analysisRepository.checkFile(
+        event.filePath,
+        selectedChecks: event.checkedOptions,
+        selectedCategories: event.selectedCategories,
+      );
 
       resultCubit.setResult(analysisResult);
       emit(AnalysisDoneState());

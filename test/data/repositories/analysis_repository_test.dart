@@ -31,7 +31,7 @@ void main() {
       final repository = AnalysisRepository.forTest(runnerJavaService: mockRunner);
       const filePath = 'nested/thesis.docx';
 
-      when(mockRunner.checkFile(filePath)).thenAnswer(
+      when(mockRunner.checkFile(filePath, selectedChecks: anyNamed('selectedChecks'))).thenAnswer(
         (_) async => ReportApi(
           errors: [
             makeError(Check.fontName.name),
@@ -41,7 +41,10 @@ void main() {
         ),
       );
 
-      final result = await repository.checkFile(filePath);
+      final result = await repository.checkFile(
+        filePath,
+        selectedCategories: const ['Шрифт'],
+      );
 
       final fontGroup = result.errorsByCategory.firstWhere(
         (item) => item.category == 'Шрифт',
@@ -55,7 +58,8 @@ void main() {
       expect(fontGroup.errors.length, 2);
       expect(otherGroup.errors.length, 1);
       expect(otherGroup.errors.first.category, 'SOMETHING_ELSE');
-      verify(mockRunner.checkFile(filePath)).called(1);
+      expect(result.selectedCategories, const ['Шрифт']);
+      verify(mockRunner.checkFile(filePath, selectedChecks: null)).called(1);
       verifyNoMoreInteractions(mockRunner);
     });
 
@@ -64,17 +68,21 @@ void main() {
       final repository = AnalysisRepository.forTest(runnerJavaService: mockRunner);
       final filePath = ['tmp', 'empty.docx'].join(Platform.pathSeparator);
 
-      when(mockRunner.checkFile(filePath)).thenAnswer(
+      when(mockRunner.checkFile(filePath, selectedChecks: anyNamed('selectedChecks'))).thenAnswer(
         (_) async => const ReportApi(errors: []),
       );
 
-      final result = await repository.checkFile(filePath);
+      final result = await repository.checkFile(
+        filePath,
+        selectedCategories: const ['Інші'],
+      );
 
       expect(result.fileName, 'empty.docx');
       expect(result.totalErrors, 0);
       expect(result.errorsByCategory.length, 2);
       expect(result.errorsByCategory.every((item) => item.errors.isEmpty), isTrue);
-      verify(mockRunner.checkFile(filePath)).called(1);
+      expect(result.selectedCategories, const ['Інші']);
+      verify(mockRunner.checkFile(filePath, selectedChecks: null)).called(1);
       verifyNoMoreInteractions(mockRunner);
     });
   });

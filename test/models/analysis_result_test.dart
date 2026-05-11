@@ -19,6 +19,7 @@ void main() {
   group('AnalysisResult', () {
     test('computes totalErrors based on category counts', () {
       final result = AnalysisResult(
+        filePath: '/tmp/thesis.docx',
         fileName: 'thesis.docx',
         analyzedAt: DateTime.parse('2026-04-16T12:00:00.000Z'),
         errorsByCategory: [
@@ -31,6 +32,7 @@ void main() {
           ),
           ErrorsByCategory(category: 'Інші', errors: const []),
         ],
+        selectedCategories: const ['Шрифт'],
       );
 
       expect(result.fileName, 'thesis.docx');
@@ -43,9 +45,11 @@ void main() {
 
     test('returns zero totalErrors when no categories are present', () {
       final result = AnalysisResult(
+        filePath: '',
         fileName: '',
         analyzedAt: DateTime.fromMillisecondsSinceEpoch(0),
         errorsByCategory: const [],
+        selectedCategories: const [],
       );
 
       expect(result.fileName, '');

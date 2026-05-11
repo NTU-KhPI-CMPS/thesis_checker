@@ -36,14 +36,18 @@ class DialogInfoContainer extends StatelessWidget {
             height: 20.0,
           ),
           SizedBox(width: 10.0),
-          Text(
-            infoText,
-            style: TextStyle(
-              fontSize: 14.0,
-              color: textColor,
-              overflow: TextOverflow.ellipsis,
-              fontFamily: 'FunnelSans',
-              fontWeight: FontWeight.w600,
+          Expanded(
+            child: Text(
+              infoText,
+              maxLines: 1,
+              softWrap: false,
+              style: TextStyle(
+                fontSize: 14.0,
+                color: textColor,
+                overflow: TextOverflow.ellipsis,
+                fontFamily: 'FunnelSans',
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],

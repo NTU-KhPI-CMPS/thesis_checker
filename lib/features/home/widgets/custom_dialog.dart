@@ -1,10 +1,12 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/core/constants/app_colors.dart';
-import 'package:flutter_app/features/home/bloc/file_bloc.dart';
-import 'package:flutter_app/features/home/widgets/checkbox_container.dart';
-import 'package:flutter_app/features/home/widgets/dialog_info_container.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:thesis_checker/core/constants/app_colors.dart';
+import 'package:thesis_checker/core/constants/available_check_types.dart';
+import 'package:thesis_checker/features/home/widgets/checkbox_container.dart';
+import 'package:thesis_checker/features/home/widgets/custom_animated_button.dart';
+import 'package:thesis_checker/features/home/widgets/dialog_info_container.dart';
+import 'package:thesis_checker/features/home/bloc/file_bloc.dart';
 
 /// A modal dialog that lets users configure analysis options before starting.
 class CustomDialog extends StatefulWidget {
@@ -29,11 +31,8 @@ class _CustomDialogState extends State<CustomDialog> with SingleTickerProviderSt
   late final AnimationController _animationController;
   late final Animation<double> _shakeAnim;
 
-  List<Map<String, dynamic>> checkOptions = [
-    {'icon': 'assets/images/abc.png', 'label': 'Шрифт', 'subLabel': 'Назва', 'value': 'FONT'},
-  ];
-
-  List<String> selectedChecks = [];
+  final Set<String> selectedChecks = {};
+  final Set<String> selectedCategories = {};
 
   @override
   void initState() {
@@ -67,10 +66,12 @@ class _CustomDialogState extends State<CustomDialog> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
+    final accentColor = Theme.of(context).primaryColor;
     final backgroundColor = Theme.of(context).canvasColor;
     final borderColor = Theme.of(context).inputDecorationTheme.border?.borderSide.color;
     final textColor = Theme.of(context).textTheme.bodyLarge?.color;
     final textColor2 = Theme.of(context).textTheme.bodyMedium?.color;
+    final maxDialogHeight = MediaQuery.of(context).size.height * 0.9;
 
     final (errorContainerColor, errorTextColor) = isError
         ? (Theme.of(context).brightness == Brightness.light
@@ -94,10 +95,6 @@ class _CustomDialogState extends State<CustomDialog> with SingleTickerProviderSt
     final cancelButtonTextDefault = textColor2;
     final cancelButtonTextHover = Theme.of(context).primaryColor;
 
-    final startButtonColor = Theme.of(context).primaryColor.withAlpha(
-                                      _startButtonIsHovered ? 209 : 255,
-                                    );
-
     return AnimatedBuilder(
       animation: _shakeAnim,
       builder: (context, child) {
@@ -112,11 +109,12 @@ class _CustomDialogState extends State<CustomDialog> with SingleTickerProviderSt
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(28.0),
         ),
-        child: SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: 480.0,
-            ),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: 480.0,
+            maxHeight: maxDialogHeight,
+          ),
+          child: SingleChildScrollView(
             child: Center(
               child: AnimatedScale(
                 scale: _scale,
@@ -198,7 +196,7 @@ class _CustomDialogState extends State<CustomDialog> with SingleTickerProviderSt
                       DialogInfoContainer(
                         borderColor: borderColor, 
                         textColor: textColor!, 
-                        imageAsset: 'assets/images/page_facing_up.png', 
+                        imageAsset: 'assets/images/document.png',
                         infoText: widget.fileName
                       ),
                       SizedBox(height: 12.0),
@@ -217,7 +215,7 @@ class _CustomDialogState extends State<CustomDialog> with SingleTickerProviderSt
                         builder: (context, constraints) {
                           final isNarrow = constraints.maxWidth < 400;
                           return GridView.builder(
-                            itemCount: checkOptions.length,
+                            itemCount: AvailableCheckTypes.checkTypes.length,
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -227,16 +225,16 @@ class _CustomDialogState extends State<CustomDialog> with SingleTickerProviderSt
                               childAspectRatio: 2,
                             ),
                             itemBuilder: (context, index) {
-                              final option = checkOptions[index];
+                              final option = AvailableCheckTypes.checkTypes[index];
                               return CheckboxContainer(
                                 children: [
                                   Image.asset(
-                                    option['icon'],
+                                    option.iconPath,
                                     width: 24.0,
                                     height: 24.0,
                                   ),
                                   Text(
-                                    option['label'],
+                                    option.title,
                                     maxLines: 1,
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,
@@ -247,25 +245,41 @@ class _CustomDialogState extends State<CustomDialog> with SingleTickerProviderSt
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                  Text(
-                                    option['subLabel'],
-                                    maxLines: 2,
-                                    softWrap: true,
-                                    style: TextStyle(
-                                      fontSize: 11.0,
-                                      color: textColor2,
-                                      fontFamily: 'FunnelSans',
-                                      overflow: TextOverflow.ellipsis
+                                  Expanded(
+                                    child: Text(
+                                      option.description,
+                                      maxLines: 2,
+                                      softWrap: true,
+                                      style: TextStyle(
+                                        fontSize: 11.0,
+                                        color: textColor2,
+                                        fontFamily: 'FunnelSans',
+                                        overflow: TextOverflow.ellipsis
+                                      ),
                                     ),
                                   ),
                                 ],
                                 onTap: () {
-                                  final label = option['value'] as String;
+                                  final checkCodes = option.checks
+                                      .map((check) => check.name)
+                                      .toList();
                                   setState(() {
-                                    if (selectedChecks.contains(label)) {
-                                      selectedChecks.remove(label);
+                                    if (checkCodes.isEmpty) {
+                                      if (selectedCategories.contains(option.title)) {
+                                        selectedCategories.remove(option.title);
+                                      } else {
+                                        selectedCategories.add(option.title);
+                                      }
+                                      return;
+                                    }
+
+                                    final hasAll = checkCodes.every(selectedChecks.contains);
+                                    if (hasAll) {
+                                      selectedChecks.removeAll(checkCodes);
+                                      selectedCategories.remove(option.title);
                                     } else {
-                                      selectedChecks.add(label);
+                                      selectedChecks.addAll(checkCodes);
+                                      selectedCategories.add(option.title);
                                     }
                                   });
                                 },
@@ -349,61 +363,45 @@ class _CustomDialogState extends State<CustomDialog> with SingleTickerProviderSt
                           ),
                           const SizedBox(width: 12.0),
                           Expanded(
-                            child: MouseRegion(
-                              cursor: SystemMouseCursors.click,
-                              onEnter: (_) => setState(() => _startButtonIsHovered = true),
-                              onExit: (_) => setState(() => _startButtonIsHovered = false),
-                              child: GestureDetector(
-                                onTap: () {
-                                  if (selectedChecks.isNotEmpty) {
-                                    context.read<FileBloc>().add(
-                                      FileDroppedEvent(
-                                        widget.filePath,
-                                        widget.fileName,
-                                        selectedChecks,
-                                      ),
-                                    );
-                                    Navigator.of(context).pop();
-                                  } else {
-                                    setState(() => isError = true);
-                                    shake();
-                                  }
-                                },
-                                child: TweenAnimationBuilder<double>(
-                                  tween: Tween<double>(
-                                    begin: 0.0,
-                                    end: _startButtonIsHovered ? -2.0 : 0.0,
-                                  ),
-                                  duration: const Duration(milliseconds: 150),
-                                  curve: Curves.easeOut,
-                                  builder: (context, value, child) {
-                                    return Transform.translate(
-                                      offset: Offset(0.0, value),
-                                      child: child,
-                                    );
-                                  },
-                                  child: AnimatedContainer(
-                                    duration: const Duration(milliseconds: 180),
-                                    curve: Curves.easeOut,
-                                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                                    decoration: BoxDecoration(
-                                      color: startButtonColor,
-                                      borderRadius: BorderRadius.circular(12.0),
+                            child: CustomAnimatedButton(
+                              text: '▶ Почати аналіз',
+                              buttonIsHovered: _startButtonIsHovered,
+                              accentColor: accentColor,
+                              onTap: () {
+                                if (selectedCategories.isNotEmpty) {
+                                  final categoryByTitle = {
+                                    for (final type in AvailableCheckTypes.checkTypes)
+                                      type.title: type,
+                                  };
+                                  final hasCategoryWithoutChecks = selectedCategories.any(
+                                    (title) => (categoryByTitle[title]?.checks.isEmpty ?? false),
+                                  );
+                                  // TODO: Remove this fallback once 'Інші' has explicit checks.
+                                  // When 'Інші' gets checks, delete hasCategoryWithoutChecks and use:
+                                  // final checksToRun = selectedChecks.isEmpty
+                                  //     ? null
+                                  //     : selectedChecks.toList(growable: false);
+                                  final checksToRun = hasCategoryWithoutChecks
+                                      ? null
+                                      : (selectedChecks.isEmpty
+                                          ? null
+                                          : selectedChecks.toList(growable: false));
+
+                                  context.read<FileBloc>().add(
+                                    FileDroppedEvent(
+                                      widget.filePath,
+                                      widget.fileName,
+                                      selectedChecks: checksToRun,
+                                      selectedCategories: selectedCategories.toList(growable: false),
                                     ),
-                                    child: const Center(
-                                      child: Text(
-                                        '▶ Почати аналіз',
-                                        style: TextStyle(
-                                          fontSize: 14.0,
-                                          fontWeight: FontWeight.w600,
-                                          fontFamily: 'FunnelSans',
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
+                                  );
+                                  Navigator.of(context).pop();
+                                } else {
+                                  setState(() => isError = true);
+                                  shake();
+                                }
+                              },
+                              onHover: (isHovered) => setState(() => _startButtonIsHovered = isHovered)
                             ),
                           ),
                         ],

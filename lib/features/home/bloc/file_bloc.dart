@@ -18,7 +18,8 @@ class FileBloc extends Bloc<FileEvent, FileState> {
       emit(FileUploadedState(
         filePath: e.filePath,
         fileName: e.fileName,
-        checkedOptions: e.checkedOptions,
+        selectedChecks: e.selectedChecks,
+        selectedCategories: e.selectedCategories,
       ));
     } else {
       emit(FileUploadErrorState(error: 'Файл з розширенням $fileExtension не підтримується'));

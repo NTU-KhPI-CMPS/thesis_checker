@@ -80,7 +80,8 @@ class _HomeViewState extends State<HomeView> {
             context.read<AnalysisBloc>().add(
               StartAnalysisEvent(
                 filePath: state.filePath,
-                checkedOptions: state.checkedOptions,
+                checkedOptions: state.selectedChecks,
+                selectedCategories: state.selectedCategories,
               ),
             );
           });

@@ -19,8 +19,12 @@ class AnalysisRepository {
 
   final RunnerJavaService _runnerJavaService;
 
-  Future<AnalysisResult> checkFile(String filePath) async {
-    final report = await _runnerJavaService.checkFile(filePath);
+  Future<AnalysisResult> checkFile(
+    String filePath, {
+    List<String>? selectedChecks,
+    List<String>? selectedCategories,
+  }) async {
+    final report = await _runnerJavaService.checkFile(filePath, selectedChecks: selectedChecks);
     final foundErrors = report.errors;
 
     final groupedErrorsByType = <String, List<FormatErrorApi>> {
@@ -41,9 +45,11 @@ class AnalysisRepository {
         ).toList();
 
     return AnalysisResult(
+      filePath: filePath,
       fileName: filePath.split(Platform.pathSeparator).last,
       analyzedAt: DateTime.now(),
       errorsByCategory: errorsByCategory,
+      selectedCategories: selectedCategories,
     );
   }
 

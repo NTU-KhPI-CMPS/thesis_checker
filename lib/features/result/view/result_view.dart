@@ -4,6 +4,8 @@ import 'package:thesis_checker/core/constants/app_colors.dart';
 import 'package:thesis_checker/core/utils/ukrainian_plural.dart';
 import 'package:thesis_checker/core/widgets/checkbox_container.dart';
 import 'package:thesis_checker/core/widgets/hint_text.dart';
+import 'package:thesis_checker/features/home/widgets/custom_animated_button.dart';
+import 'package:thesis_checker/features/home/widgets/custom_dialog.dart';
 import 'package:thesis_checker/features/result/widgets/error_count_badge.dart';
 import 'package:thesis_checker/features/result/widgets/error_detail_expandable_card.dart';
 import 'package:thesis_checker/core/widgets/info_card.dart';
@@ -21,9 +23,11 @@ class ResultView extends StatefulWidget {
 
 class _ResultViewState extends State<ResultView> {
   int activeCategoryIndex = 0;
+  bool buttonIsHovered = false;
 
   @override
   Widget build(BuildContext context) {
+    final accentColor = Theme.of(context).primaryColor;
     final isLightTheme = Theme.of(context).brightness == Brightness.light;
     final fileNameTextColor = Theme.of(context).textTheme.bodyLarge?.color;
     final subTextColor = Theme.of(context).textTheme.bodyMedium?.color;
@@ -37,11 +41,21 @@ class _ResultViewState extends State<ResultView> {
 
         final result = state.result;
         final checkTypes = AvailableCheckTypes.checkTypes;
+        final selectedCategories = result.selectedCategories ?? const <String>[];
+        final visibleCheckTypes = selectedCategories.isEmpty
+            ? checkTypes
+            : checkTypes.where((type) => selectedCategories.contains(type.title)).toList();
+        if (visibleCheckTypes.isEmpty) {
+          return const HintText(text: 'Немає обраних категорій для відображення');
+        }
         final categoriesByTitle = {
           for (final item in result.errorsByCategory) item.category: item,
         };
 
-        final selectedType = checkTypes[activeCategoryIndex];
+        final safeIndex = activeCategoryIndex < visibleCheckTypes.length
+            ? activeCategoryIndex
+            : 0;
+        final selectedType = visibleCheckTypes[safeIndex];
         final selectedCategory = categoriesByTitle[selectedType.title];
 
         final selectedCategoryTitle = selectedType.title;
@@ -85,6 +99,26 @@ class _ResultViewState extends State<ResultView> {
                       ),
                     )
                   ],
+                ),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      CustomAnimatedButton(
+                        text: 'Заново',
+                        buttonIsHovered: buttonIsHovered,
+                        accentColor: accentColor,
+                        onTap: () => showDialog(
+                            context: context,
+                            builder: (context) => CustomDialog(
+                                filePath: result.filePath,
+                                fileName: result.fileName
+                            )
+                        ),
+                        onHover: (isHovered) => setState(() => buttonIsHovered = isHovered),
+                      ),
+                    ],
+                  )
                 )
               ],
             ),
@@ -96,7 +130,7 @@ class _ResultViewState extends State<ResultView> {
                 final crossAxisCount = constraints.maxWidth < 500 ? 1 : 2;
 
                 return GridView.builder(
-                  itemCount: checkTypes.length,
+                  itemCount: visibleCheckTypes.length,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -106,11 +140,13 @@ class _ResultViewState extends State<ResultView> {
                     mainAxisExtent: 76.0,
                   ),
                   itemBuilder: (context, index) {
-                    final type = checkTypes[index];
+                    final type = visibleCheckTypes[index];
                     final count = categoriesByTitle[type.title]?.count ?? 0;
 
                     return CheckboxContainer(
-                      isSelected: activeCategoryIndex == index,
+                      isSelected: (activeCategoryIndex < visibleCheckTypes.length
+                              ? activeCategoryIndex
+                              : 0) == index,
                       onTap: () => setState(() => activeCategoryIndex = index),
                       bottomStripeColor: count > 0 ? AppColors.error : AppColors.ok,
                       rightWidget: ErrorCountBadge(
@@ -123,7 +159,7 @@ class _ResultViewState extends State<ResultView> {
                             fontSize: 14.0,
                             fontWeight: FontWeight.w600,
                             fontFamily: 'FunnelSans',
-                            color: activeCategoryIndex == index
+                            color: safeIndex == index
                                 ? activeTextColor
                                 : fileNameTextColor,
                           ),
