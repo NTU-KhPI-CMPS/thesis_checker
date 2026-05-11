@@ -15,4 +15,7 @@ public class RequirementsHolder {
 
     @Getter
     private static String headingAlignment = "CENTER";
+
+    @Getter
+    private static String fontSize = "14";
 }

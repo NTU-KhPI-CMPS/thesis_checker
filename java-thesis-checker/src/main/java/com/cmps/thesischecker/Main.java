@@ -3,10 +3,10 @@ package com.cmps.thesischecker;
 import com.cmps.thesischecker.argparser.FilePathParser;
 import com.cmps.thesischecker.argparser.Parser;
 import com.cmps.thesischecker.argparser.ResultDirectoryParser;
-import com.cmps.thesischecker.checker.AlignmentChecker;
 import com.cmps.thesischecker.checker.Checker;
 import com.cmps.thesischecker.checker.FontChecker;
 import com.cmps.thesischecker.checker.LineSpaceChecker;
+import com.cmps.thesischecker.checker.SizeChecker;
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.model.Report;
 import org.graalvm.nativeimage.IsolateThread;
@@ -27,11 +27,7 @@ import java.util.Set;
 
 public class Main {
 
-    private static final List<Checker> CHECKERS = List.of(
-            new FontChecker(),
-            new LineSpaceChecker(),
-            new AlignmentChecker()
-    );
+    private static final List<Checker> CHECKERS = List.of(new FontChecker(), new LineSpaceChecker(), new SizeChecker());
 
     static void main(String[] args) {
         Parser<List<String>> filePathParser = new FilePathParser();

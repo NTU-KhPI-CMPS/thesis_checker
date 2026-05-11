@@ -2,6 +2,7 @@ package com.cmps.thesischecker.checker;
 
 import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
+import com.cmps.thesischecker.requirements.RequirementsHolder;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 
@@ -11,6 +12,10 @@ import java.util.*;
 public class SizeChecker implements Checker {
 
     private final int expectedSize;
+
+    public SizeChecker() {
+        this.expectedSize = Integer.parseInt(RequirementsHolder.getFontSize());
+    }
 
     public SizeChecker(int expectedSize) {
         this.expectedSize = expectedSize;
