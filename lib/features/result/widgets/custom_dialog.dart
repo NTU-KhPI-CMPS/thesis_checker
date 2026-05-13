@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thesis_checker/core/constants/app_colors.dart';
 import 'package:thesis_checker/core/constants/available_check_types.dart';
-import 'package:thesis_checker/features/home/widgets/checkbox_container.dart';
+import 'package:thesis_checker/features/result/widgets/checkbox_container.dart';
 import 'package:thesis_checker/features/home/widgets/custom_animated_button.dart';
-import 'package:thesis_checker/features/home/widgets/dialog_info_container.dart';
+import 'package:thesis_checker/features/result/widgets/dialog_info_container.dart';
 import 'package:thesis_checker/features/home/bloc/file_bloc.dart';
 
 /// A modal dialog that lets users configure analysis options before starting.
@@ -48,7 +48,7 @@ class _CustomDialogState extends State<CustomDialog> with SingleTickerProviderSt
 
     _shakeAnim = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
-        parent: _animationController, 
+        parent: _animationController,
         curve: Curves.elasticOut
       )
     );
@@ -194,8 +194,8 @@ class _CustomDialogState extends State<CustomDialog> with SingleTickerProviderSt
                       ),
                       SizedBox(height: 10.0),
                       DialogInfoContainer(
-                        borderColor: borderColor, 
-                        textColor: textColor!, 
+                        borderColor: borderColor,
+                        textColor: textColor!,
                         imageAsset: 'assets/images/document.png',
                         infoText: widget.fileName
                       ),
@@ -314,9 +314,9 @@ class _CustomDialogState extends State<CustomDialog> with SingleTickerProviderSt
                       SizedBox(height: 15.0,),
                       if (isError) ...[
                         DialogInfoContainer(
-                          borderColor: errorContainerColor!, 
-                          textColor: errorTextColor!, 
-                          imageAsset: 'assets/images/warning.png', 
+                          borderColor: errorContainerColor!,
+                          textColor: errorTextColor!,
+                          imageAsset: 'assets/images/warning.png',
                           infoText: 'Оберіть хоча б одну перевірку'
                         ),
                         SizedBox(height: 15.0),
@@ -378,17 +378,13 @@ class _CustomDialogState extends State<CustomDialog> with SingleTickerProviderSt
                                   );
                                   // TODO: Remove this fallback once 'Інші' has explicit checks.
                                   // When 'Інші' gets checks, delete hasCategoryWithoutChecks and use:
-                                  // final checksToRun = selectedChecks.isEmpty
-                                  //     ? null
-                                  //     : selectedChecks.toList(growable: false);
-                                  final checksToRun = hasCategoryWithoutChecks
-                                      ? null
-                                      : (selectedChecks.isEmpty
-                                          ? null
-                                          : selectedChecks.toList(growable: false));
+                                  // final checksToRun = selectedChecks.toList(growable: false);
+                                  final checksToRun = hasCategoryWithoutChecks || selectedChecks.isEmpty
+                                      ? const <String>[]
+                                      : selectedChecks.toList(growable: false);
 
                                   context.read<FileBloc>().add(
-                                    FileDroppedEvent(
+                                    FileDroppedEvent.withOptions(
                                       widget.filePath,
                                       widget.fileName,
                                       selectedChecks: checksToRun,
@@ -417,3 +413,4 @@ class _CustomDialogState extends State<CustomDialog> with SingleTickerProviderSt
     );
   }
 }
+

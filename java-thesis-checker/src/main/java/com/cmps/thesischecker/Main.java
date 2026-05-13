@@ -8,6 +8,7 @@ import com.cmps.thesischecker.checker.Checker;
 import com.cmps.thesischecker.checker.FontChecker;
 import com.cmps.thesischecker.checker.LineSpaceChecker;
 import com.cmps.thesischecker.checker.ParagraphSpacingChecker;
+import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.model.Report;
 import org.graalvm.nativeimage.IsolateThread;
@@ -24,29 +25,31 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class Main {
 
-    private static final FontChecker FONT_CHECKER = new FontChecker();
-    private static final LineSpaceChecker LINE_SPACE_CHECKER = new LineSpaceChecker();
-    private static final AlignmentChecker ALIGNMENT_CHECKER = new AlignmentChecker();
-    private static final ParagraphSpacingChecker PARAGRAPH_SPACING_CHECKER = new ParagraphSpacingChecker();
+    private static final List<Checker> CHECKERS;
 
-    private static final List<Checker> CHECKERS = List.of(
-            FONT_CHECKER,
-            LINE_SPACE_CHECKER,
-            ALIGNMENT_CHECKER,
-            PARAGRAPH_SPACING_CHECKER
-    );
+    private static final Map<ErrorCategory, Checker> CHECKERS_BY_CATEGORY;
 
-    private static final java.util.Map<String, List<Checker>> CHECKERS_BY_CODE = java.util.Map.of(
-            "FONT_NAME", List.of(FONT_CHECKER),
-            "FONT_SIZE", List.of(FONT_CHECKER),
-            "LINE_SPACING", List.of(LINE_SPACE_CHECKER),
-            "ALIGNMENT", List.of(ALIGNMENT_CHECKER),
-            "INDENTATION", List.of(PARAGRAPH_SPACING_CHECKER)
-    );
+    // Initialize checker registry once when the class is loaded.
+    static {
+        FontChecker fontChecker = new FontChecker();
+        LineSpaceChecker lineSpaceChecker = new LineSpaceChecker();
+        AlignmentChecker alignmentChecker = new AlignmentChecker();
+        ParagraphSpacingChecker paragraphSpacingChecker = new ParagraphSpacingChecker();
+
+        CHECKERS_BY_CATEGORY = Map.of(
+                ErrorCategory.FONT_NAME, fontChecker,
+                ErrorCategory.LINE_SPACING, lineSpaceChecker,
+                ErrorCategory.ALIGNMENT, alignmentChecker,
+                ErrorCategory.INDENTATION, paragraphSpacingChecker
+        );
+
+        CHECKERS = new ArrayList<>(CHECKERS_BY_CATEGORY.values());
+    }
 
     static void main(String[] args) {
         Parser<List<String>> filePathParser = new FilePathParser();
@@ -60,7 +63,7 @@ public class Main {
             System.exit(1);
         }
 
-        processFiles(files, outputDir);
+        processFiles(files, outputDir, CHECKERS);
     }
 
     @CEntryPoint(name = "run_thesis_checks")
@@ -99,10 +102,6 @@ public class Main {
         return result;
     }
 
-    private static void processFiles(List<String> files, String outputDir) {
-        processFiles(files, outputDir, CHECKERS);
-    }
-
     private static void processFiles(List<String> files, String outputDir, List<Checker> checkers) {
         for (String filePath : files) {
             List<FormatError> allErrors = new ArrayList<>();
@@ -129,18 +128,27 @@ public class Main {
             if (code == null) {
                 continue;
             }
-            String normalized = code.trim().toUpperCase();
-            List<Checker> mapped = CHECKERS_BY_CODE.get(normalized);
-            if (mapped != null) {
-                for (Checker checker : mapped) {
-                    if (!resolved.contains(checker)) {
-                        resolved.add(checker);
-                    }
-                }
+            ErrorCategory category = parseCategory(code);
+            if (category == null) {
+                continue;
+            }
+            Checker mapped = CHECKERS_BY_CATEGORY.get(category);
+            if (mapped != null && !resolved.contains(mapped)) {
+                resolved.add(mapped);
             }
         }
 
         return resolved.isEmpty() ? CHECKERS : resolved;
+    }
+
+    private static ErrorCategory parseCategory(String rawCode) {
+        String normalized = rawCode.trim().toUpperCase();
+
+        try {
+            return ErrorCategory.valueOf(normalized);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     private static void printReport(String filePath, List<FormatError> errors) {

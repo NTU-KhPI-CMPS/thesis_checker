@@ -57,7 +57,12 @@ class _UploadZoneState extends State<UploadZone> {
             final file = details.files.first;
             final filePath = file.path;
             final fileName = file.name;
-            context.read<FileBloc>().add(FileDroppedEvent(filePath, fileName));
+            context.read<FileBloc>().add(
+              FileDroppedEvent.onlyPath(
+                filePath,
+                fileName,
+              ),
+            );
           },
           child: AnimatedContainer(
             duration: Duration(milliseconds: 200),
@@ -111,7 +116,12 @@ class _UploadZoneState extends State<UploadZone> {
                       if (file != null) {
                         final filePath = file.files.first.path!;
                         final fileName = file.files.first.name;
-                        bloc.add(FileDroppedEvent(filePath, fileName));
+                        bloc.add(
+                          FileDroppedEvent.onlyPath(
+                            filePath,
+                            fileName,
+                          ),
+                        );
                       }
                   },
                   onHover: (isHovered) => setState(() => buttonIsHovered = isHovered)

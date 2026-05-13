@@ -21,7 +21,7 @@ class AnalysisRepository {
 
   Future<AnalysisResult> checkFile(
     String filePath, {
-    List<String>? selectedChecks,
+    required List<String> selectedChecks,
     List<String>? selectedCategories,
   }) async {
     final report = await _runnerJavaService.checkFile(filePath, selectedChecks: selectedChecks);

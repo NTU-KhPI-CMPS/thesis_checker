@@ -15,19 +15,19 @@ final class FileInitial extends FileState {}
 final class FileUploadedState extends FileState {
   final String filePath;
   final String fileName;
-  final List<String>? selectedChecks;
+  final List<String> selectedChecks;
   final List<String>? selectedCategories;
   final DateTime _timestamp;
 
   FileUploadedState({
     required this.filePath,
     required this.fileName,
-    this.selectedChecks,
+    required this.selectedChecks,
     this.selectedCategories,
   }) : _timestamp = DateTime.now();
 
   @override
-  List<Object> get props => [filePath, fileName, selectedChecks ?? [], selectedCategories ?? [], _timestamp];
+  List<Object> get props => [filePath, fileName, selectedChecks, selectedCategories ?? [], _timestamp];
 }
 
 /// State emitted when file validation fails.

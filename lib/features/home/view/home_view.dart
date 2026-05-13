@@ -77,12 +77,15 @@ class _HomeViewState extends State<HomeView> {
         if (state is FileUploadedState) {
           setState(() {
             selectedIndex = 1;
+            final hasOptions = state.selectedChecks.isNotEmpty || state.selectedCategories != null;
             context.read<AnalysisBloc>().add(
-              StartAnalysisEvent(
-                filePath: state.filePath,
-                checkedOptions: state.selectedChecks,
-                selectedCategories: state.selectedCategories,
-              ),
+              hasOptions
+                  ? StartAnalysisEvent.withOptions(
+                      filePath: state.filePath,
+                      checkedOptions: state.selectedChecks,
+                      selectedCategories: state.selectedCategories,
+                    )
+                  : StartAnalysisEvent.onlyPath(state.filePath),
             );
           });
         }

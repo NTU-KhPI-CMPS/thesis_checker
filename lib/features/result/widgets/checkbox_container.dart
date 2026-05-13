@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:thesis_checker/features/home/widgets/custom_checkbox.dart';
+import 'package:thesis_checker/features/result/widgets/custom_checkbox.dart';
 
 /// Clickable option card with hover state and an anchored checkbox.
 class CheckboxContainer extends StatefulWidget {

@@ -5,7 +5,6 @@ import 'package:thesis_checker/core/utils/ukrainian_plural.dart';
 import 'package:thesis_checker/core/widgets/checkbox_container.dart';
 import 'package:thesis_checker/core/widgets/hint_text.dart';
 import 'package:thesis_checker/features/home/widgets/custom_animated_button.dart';
-import 'package:thesis_checker/features/home/widgets/custom_dialog.dart';
 import 'package:thesis_checker/features/result/widgets/error_count_badge.dart';
 import 'package:thesis_checker/features/result/widgets/error_detail_expandable_card.dart';
 import 'package:thesis_checker/core/widgets/info_card.dart';
@@ -13,6 +12,7 @@ import 'package:thesis_checker/core/widgets/info_text.dart';
 import 'package:thesis_checker/features/result/cubit/result_cubit.dart';
 import 'package:thesis_checker/features/result/cubit/result_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:thesis_checker/features/result/widgets/custom_dialog.dart';
 
 class ResultView extends StatefulWidget {
   const ResultView({super.key});

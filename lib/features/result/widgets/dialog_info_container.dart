@@ -8,10 +8,10 @@ class DialogInfoContainer extends StatelessWidget {
   final String infoText;
 
   const DialogInfoContainer({
-    super.key, 
-    required this.borderColor, 
+    super.key,
+    required this.borderColor,
     required this.textColor,
-    required this.imageAsset, 
+    required this.imageAsset,
     required this.infoText
   });
 
@@ -55,3 +55,4 @@ class DialogInfoContainer extends StatelessWidget {
     );
   }
 }
+

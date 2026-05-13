@@ -31,7 +31,7 @@ void main() {
       final repository = AnalysisRepository.forTest(runnerJavaService: mockRunner);
       const filePath = 'nested/thesis.docx';
 
-      when(mockRunner.checkFile(filePath, selectedChecks: anyNamed('selectedChecks'))).thenAnswer(
+      when(mockRunner.checkFile(filePath, selectedChecks: const <String>[])).thenAnswer(
         (_) async => ReportApi(
           errors: [
             makeError(Check.fontName.name),
@@ -43,6 +43,7 @@ void main() {
 
       final result = await repository.checkFile(
         filePath,
+        selectedChecks: const <String>[],
         selectedCategories: const ['Шрифт'],
       );
 
@@ -59,7 +60,7 @@ void main() {
       expect(otherGroup.errors.length, 1);
       expect(otherGroup.errors.first.category, 'SOMETHING_ELSE');
       expect(result.selectedCategories, const ['Шрифт']);
-      verify(mockRunner.checkFile(filePath, selectedChecks: null)).called(1);
+      verify(mockRunner.checkFile(filePath, selectedChecks: const <String>[])).called(1);
       verifyNoMoreInteractions(mockRunner);
     });
 
@@ -68,12 +69,13 @@ void main() {
       final repository = AnalysisRepository.forTest(runnerJavaService: mockRunner);
       final filePath = ['tmp', 'empty.docx'].join(Platform.pathSeparator);
 
-      when(mockRunner.checkFile(filePath, selectedChecks: anyNamed('selectedChecks'))).thenAnswer(
+      when(mockRunner.checkFile(filePath, selectedChecks: const <String>[])).thenAnswer(
         (_) async => const ReportApi(errors: []),
       );
 
       final result = await repository.checkFile(
         filePath,
+        selectedChecks: const <String>[],
         selectedCategories: const ['Інші'],
       );
 
@@ -82,7 +84,7 @@ void main() {
       expect(result.errorsByCategory.length, 2);
       expect(result.errorsByCategory.every((item) => item.errors.isEmpty), isTrue);
       expect(result.selectedCategories, const ['Інші']);
-      verify(mockRunner.checkFile(filePath, selectedChecks: null)).called(1);
+      verify(mockRunner.checkFile(filePath, selectedChecks: const <String>[])).called(1);
       verifyNoMoreInteractions(mockRunner);
     });
   });

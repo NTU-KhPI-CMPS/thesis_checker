@@ -11,15 +11,19 @@ sealed class AnalysisEvent extends Equatable {
 /// Event to start the analysis process with the given file path.
 final class StartAnalysisEvent extends AnalysisEvent {
   final String filePath;
-  final List<String>? checkedOptions;
+  final List<String> checkedOptions;
   final List<String>? selectedCategories;
 
-  const StartAnalysisEvent({
+  const StartAnalysisEvent.onlyPath(this.filePath)
+      : checkedOptions = const <String>[],
+        selectedCategories = null;
+
+  const StartAnalysisEvent.withOptions({
     required this.filePath,
-    this.checkedOptions,
+    required this.checkedOptions,
     this.selectedCategories,
   });
 
   @override
-  List<Object> get props => [filePath, checkedOptions ?? [], selectedCategories ?? []];
+  List<Object> get props => [filePath, checkedOptions, selectedCategories ?? []];
 }

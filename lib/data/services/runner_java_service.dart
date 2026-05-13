@@ -13,7 +13,7 @@ class RunnerJavaService {
 
   final checkerService = ThesisCheckerService();
 
-  Future<ReportApi> checkFile(String filePath, {List<String>? selectedChecks}) async {
+  Future<ReportApi> checkFile(String filePath, {required List<String> selectedChecks}) async {
     try {
       final directory = await getApplicationSupportDirectory();
       final resultsRoot = Directory('${directory.path}/results');

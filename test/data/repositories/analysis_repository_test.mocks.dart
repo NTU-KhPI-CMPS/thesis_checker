@@ -34,7 +34,7 @@ class _FakeReportApi_0 extends _i1.SmartFake implements _i2.ReportApi {
 /// See the documentation for Mockito's code generation for more information.
 class MockRunnerJavaService extends _i1.Mock implements _i3.RunnerJavaService {
   @override
-  _i4.Future<_i2.ReportApi> checkFile(String? filePath, {List<String>? selectedChecks}) =>
+  _i4.Future<_i2.ReportApi> checkFile(String filePath, {required List<String> selectedChecks}) =>
       (super.noSuchMethod(
             Invocation.method(
               #checkFile,

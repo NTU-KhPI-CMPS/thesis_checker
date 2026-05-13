@@ -45,7 +45,7 @@ class ThesisCheckerService {
   Future<int> runThesisChecks({
     required List<String> files,
     required String resultDirectory,
-    List<String>? selectedChecks,
+    required List<String> selectedChecks,
   }) async {
     if (!isInitialized) {
         _init();
@@ -57,7 +57,7 @@ class ThesisCheckerService {
       pointerArray[i] = files[i].toNativeUtf8();
     }
 
-    final checks = selectedChecks ?? const <String>[];
+    final checks = selectedChecks;
     final checkCount = checks.length;
     final checksArray = checkCount > 0
         ? calloc<ffi.Pointer<Utf8>>(checkCount)
