@@ -5,6 +5,7 @@ import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.requirements.RequirementsHolder;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
+import com.cmps.thesischecker.utils.StyleUtils;
 
 import java.io.FileInputStream;
 import java.util.*;
@@ -17,9 +18,6 @@ public class SizeChecker implements Checker {
         this.expectedSize = Integer.parseInt(RequirementsHolder.getFontSize());
     }
 
-    public SizeChecker(int expectedSize) {
-        this.expectedSize = expectedSize;
-    }
 
     @Override
     public List<FormatError> check(String filePath) {
@@ -34,7 +32,7 @@ public class SizeChecker implements Checker {
                 Set<String> incorrectSizes = validate(paragraph);
                 if (!incorrectSizes.isEmpty()) {
                     allErrors.add(buildFontSizeError("err_font_size", "Неправильний розмір шрифта у параграфі", 
-                                                     paragraphText, incorrectSizes, expectedSize));
+                                                      paragraphText, incorrectSizes, expectedSize));
                 }
             }
 
@@ -45,8 +43,8 @@ public class SizeChecker implements Checker {
                     Set<String> incorrectSizes = validate(paragraph);
                     if (!incorrectSizes.isEmpty()) {
                         allErrors.add(buildFontSizeError("err_font_size_header", 
-                                                         "Неправильний розмір шрифта в верхньому колонтитулі",
-                                                         paragraphText, incorrectSizes, expectedSize));
+                                                          "Неправильний розмір шрифта в верхньому колонтитулі",
+                                                          paragraphText, incorrectSizes, expectedSize));
                     }
                 }
             }
@@ -58,8 +56,8 @@ public class SizeChecker implements Checker {
                     Set<String> incorrectSizes = validate(paragraph);
                     if (!incorrectSizes.isEmpty()) {
                         allErrors.add(buildFontSizeError("err_font_size_footer", 
-                                                         "Неправильний розмір шрифта в нижньому колонтитулі",
-                                                         paragraphText, incorrectSizes, expectedSize));
+                                                          "Неправильний розмір шрифта в нижньому колонтитулі",
+                                                          paragraphText, incorrectSizes, expectedSize));
                     }
                 }
             }
@@ -73,8 +71,8 @@ public class SizeChecker implements Checker {
                             Set<String> incorrectSizes = validate(paragraph);
                             if (!incorrectSizes.isEmpty()) {
                                 allErrors.add(buildFontSizeError("err_font_size_table", 
-                                                                 "Неправильний розмір шрифта у таблиці",
-                                                                 paragraphText, incorrectSizes, expectedSize));
+                                                                  "Неправильний розмір шрифта у таблиці",
+                                                                  paragraphText, incorrectSizes, expectedSize));
                             }
                         }
                     }
@@ -130,17 +128,46 @@ public class SizeChecker implements Checker {
 
         Object parent = run.getParent();
         if (!(parent instanceof XWPFParagraph)) {
-            return 14;
+            return 12;
         }
         XWPFParagraph paragraphFromParent = (XWPFParagraph) parent;
         String styleId = paragraphFromParent.getStyleID();
         if (styleId == null) {
-            return getFontSizeFromParagraphStyle(document, "Normal");
+            return getFontSizeFromParagraphStyle(document, StyleUtils.getNormalStyleId(document.getStyles()));
         }
         return getFontSizeFromParagraphStyle(document, styleId);
     }
 
     private Integer getFontSizeFromParagraphStyle(XWPFDocument document, String styleId) {
-        return 14;
+        XWPFStyle style = document.getStyles().getStyle(styleId);
+
+        if (style == null) {
+            return 12; // Повертріємо 12 коли стилю нема бо це розмір за замовчуванням
+        }
+
+        var ctStyle = style.getCTStyle();
+        var sizeList = Optional
+                // якщо rPr == null -> orElse, інакше -> map
+                .ofNullable(ctStyle.getRPr())
+                // якщо getRFontsList == null -> orElse, інакше -> повертаємо результат
+                .map(CTRPr::getSzList)
+                // повертаємо пустий список, якщо в попередніх кроках був null
+                .orElse(Collections.emptyList());
+
+        if (!sizeList.isEmpty()) {
+            var rFonts = sizeList.getFirst();
+            if (rFonts.getVal() != null) {
+                int size = Integer.parseInt(rFonts.getVal().toString());
+                return size / 2; // вимірюється пів пунктрами, тобто якщо розмір 14, то поверне 28
+            }
+        }
+
+        if (style.getCTStyle().isSetBasedOn() || style.getCTStyle().getBasedOn() != null) {
+            String baseStyle = style.getCTStyle().getBasedOn().getVal();
+            // Рекурсивно дістаємо розмір з базового стилю
+            return getFontSizeFromParagraphStyle(document, baseStyle);
+        }
+
+        return 12; // Повертріємо 12 коли розмір ніде не вказаний бо це розмір за замовчуванням
     }
 }
