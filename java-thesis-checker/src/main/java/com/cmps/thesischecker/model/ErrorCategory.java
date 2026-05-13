@@ -5,5 +5,6 @@ public enum ErrorCategory {
     FONT_SIZE,
     LINE_SPACING,
     ALIGNMENT,
+    INDENTATION,
     FILE
 }

@@ -18,4 +18,7 @@ public class RequirementsHolder {
 
     @Getter
     private static String fontSize = "14";
+    
+    @Getter
+    private static String paragraphSpacing = "0";
 }

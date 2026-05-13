@@ -7,6 +7,7 @@ import com.cmps.thesischecker.checker.Checker;
 import com.cmps.thesischecker.checker.FontChecker;
 import com.cmps.thesischecker.checker.LineSpaceChecker;
 import com.cmps.thesischecker.checker.SizeChecker;
+import com.cmps.thesischecker.checker.ParagraphSpacingChecker;
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.model.Report;
 import org.graalvm.nativeimage.IsolateThread;
@@ -27,7 +28,13 @@ import java.util.Set;
 
 public class Main {
 
-    private static final List<Checker> CHECKERS = List.of(new FontChecker(), new LineSpaceChecker(), new SizeChecker());
+    private static final List<Checker> CHECKERS = List.of(
+            new FontChecker(),
+            new LineSpaceChecker(),
+            new AlignmentChecker(),
+            new ParagraphSpacingChecker(),
+            new SizeChecker()
+    );
 
     static void main(String[] args) {
         Parser<List<String>> filePathParser = new FilePathParser();
