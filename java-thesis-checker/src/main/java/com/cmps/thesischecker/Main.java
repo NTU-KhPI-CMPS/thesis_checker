@@ -40,12 +40,14 @@ public class Main {
         LineSpaceChecker lineSpaceChecker = new LineSpaceChecker();
         AlignmentChecker alignmentChecker = new AlignmentChecker();
         ParagraphSpacingChecker paragraphSpacingChecker = new ParagraphSpacingChecker();
+        SizeChecker fontSizeChecker = new SizeChecker();
 
         CHECKERS_BY_CATEGORY = Map.of(
                 ErrorCategory.FONT_NAME, fontChecker,
                 ErrorCategory.LINE_SPACING, lineSpaceChecker,
                 ErrorCategory.ALIGNMENT, alignmentChecker,
-                ErrorCategory.INDENTATION, paragraphSpacingChecker
+                ErrorCategory.INDENTATION, paragraphSpacingChecker,
+                ErrorCategory.FONT_SIZE, fontSizeChecker
         );
 
         CHECKERS = new ArrayList<>(CHECKERS_BY_CATEGORY.values());
