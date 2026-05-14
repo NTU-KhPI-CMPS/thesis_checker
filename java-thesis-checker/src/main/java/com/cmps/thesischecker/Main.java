@@ -8,6 +8,7 @@ import com.cmps.thesischecker.checker.Checker;
 import com.cmps.thesischecker.checker.FontChecker;
 import com.cmps.thesischecker.checker.LineSpaceChecker;
 import com.cmps.thesischecker.checker.ParagraphSpacingChecker;
+import com.cmps.thesischecker.checker.SizeChecker;
 import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.model.Report;
