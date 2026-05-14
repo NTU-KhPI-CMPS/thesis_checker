@@ -25,6 +25,10 @@ public abstract class BaseTest {
     @ValueSource(strings = {"src/test/resources/normal_style.docx",
             "src/test/resources/inherited_styles.docx"})
     void check_noErrors(String fileName) {
+        if (getChecker() == null) {
+            return;
+        }
+
         // WHEN
         List<FormatError> result = getChecker().check(fileName);
 

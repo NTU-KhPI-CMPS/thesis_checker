@@ -21,4 +21,7 @@ public class RequirementsHolder {
     
     @Getter
     private static String paragraphSpacing = "0";
+
+    @Getter
+    private static String firstLineIndentation = "1.25";
 }

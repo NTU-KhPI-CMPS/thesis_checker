@@ -208,7 +208,7 @@ public class ParagraphSpacingChecker implements Checker {
     private static FormatError buildSpacingBeforeError(String paragraphText, Double found) {
         FormatError error = new FormatError();
         error.setId("err_spacing_before");
-        error.setCategory(ErrorCategory.INDENTATION);
+        error.setCategory(ErrorCategory.SPACING);
         error.setSeverity("error");
         error.setTitle("Невірний відступ перед абзацом");
         error.setParagraphText(paragraphText);
@@ -227,7 +227,7 @@ public class ParagraphSpacingChecker implements Checker {
     private static FormatError buildSpacingAfterError(String paragraphText, Double found) {
         FormatError error = new FormatError();
         error.setId("err_spacing_after");
-        error.setCategory(ErrorCategory.INDENTATION);
+        error.setCategory(ErrorCategory.SPACING);
         error.setSeverity("error");
         error.setTitle("Невірний відступ після абзацу");
         error.setParagraphText(paragraphText);
