@@ -84,7 +84,7 @@ void main() {
 
       expect(result.fileName, 'empty.docx');
       expect(result.totalErrors, 0);
-      expect(result.errorsByCategory.length, 2);
+      expect(result.errorsByCategory.length, 4);
       expect(result.errorsByCategory.every((item) => item.errors.isEmpty), isTrue);
       expect(result.selectedChecks, [otherType]);
       verify(mockRunner.checkFile(filePath, selectedChecks: [otherType])).called(1);
