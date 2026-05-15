@@ -35,6 +35,18 @@ public class AlignmentChecker implements Checker {
         }
     }
 
+
+    /**
+     * Returns the error category for this instance.
+     *
+     * @return {@link ErrorCategory#ALIGNMENT} indicating that this error
+     *         is related to alignment issues
+     */
+    @Override
+    public ErrorCategory getErrorCategory() {
+        return ErrorCategory.ALIGNMENT;
+    }
+
     /**
      * Checks the document for text alignment violations and returns all found format errors.
      *

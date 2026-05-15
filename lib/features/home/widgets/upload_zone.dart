@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:thesis_checker/features/home/bloc/file_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:thesis_checker/features/home/widgets/custom_animated_button.dart';
 
 /// Interactive drop area for uploading thesis files.
 class UploadZone extends StatefulWidget {
@@ -56,7 +57,13 @@ class _UploadZoneState extends State<UploadZone> {
             final file = details.files.first;
             final filePath = file.path;
             final fileName = file.name;
-            context.read<FileBloc>().add(FileDroppedEvent(filePath, fileName));
+            context.read<FileBloc>().add(
+              FileDroppedEvent(
+                filePath: filePath,
+                fileName: fileName,
+                selectedChecks: [],
+              )
+            );
           },
           child: AnimatedContainer(
             duration: Duration(milliseconds: 200),
@@ -97,10 +104,10 @@ class _UploadZoneState extends State<UploadZone> {
                   ),
                 ),
                 SizedBox(height: 24.0),
-                MouseRegion(
-                  onEnter: (event) => setState(() => buttonIsHovered = true),
-                  onExit: (event) => setState(() => buttonIsHovered = false),
-                  child: GestureDetector(
+                CustomAnimatedButton(
+                    text: '+ Обрати файл',
+                    buttonIsHovered: buttonIsHovered,
+                    accentColor: accentColor,
                     onTap: () async {
                       final bloc = context.read<FileBloc>();
                       final file = await FilePicker.platform.pickFiles(
@@ -110,41 +117,16 @@ class _UploadZoneState extends State<UploadZone> {
                       if (file != null) {
                         final filePath = file.files.first.path!;
                         final fileName = file.files.first.name;
-                        bloc.add(FileDroppedEvent(filePath, fileName));
-                      }
-                    },
-                    child: TweenAnimationBuilder<double>(
-                      tween: Tween(begin: 0.0, end: buttonIsHovered ? -2.0 : 0.0),
-                      duration: const Duration(milliseconds: 200),
-                      curve: Curves.easeInOut,
-                      builder: (context, offset, child) {
-                        return Transform.translate(
-                          offset: Offset(0, offset),
-                          child: child,
+                        bloc.add(
+                          FileDroppedEvent(
+                            fileName: fileName,
+                            filePath: filePath,
+                            selectedChecks: [],
+                          ),
                         );
-                      },
-                      child: AnimatedContainer(
-                      duration: Duration(milliseconds: 200),
-                      padding: EdgeInsets.symmetric(
-                        vertical: 8.0,
-                        horizontal: 24.0,
-                      ),
-                      decoration: BoxDecoration(
-                        color: buttonIsHovered ? accentColor.withAlpha(200): accentColor,
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Text(
-                        '+ Обрати файл',
-                        style: TextStyle(
-                          color: buttonIsHovered ? Colors.grey[100]: Colors.white,
-                          fontSize: 16.0,
-                          fontFamily: 'FunnelSans',
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                      }
+                  },
+                  onHover: (isHovered) => setState(() => buttonIsHovered = isHovered)
                 ),
               ],
             ),

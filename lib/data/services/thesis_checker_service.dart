@@ -3,6 +3,7 @@ import 'dart:ffi' as ffi;
 
 import 'package:ffi/ffi.dart';
 import 'package:path/path.dart' as p;
+import 'package:thesis_checker/models/check_type_info.dart';
 
 final class GraalIsolate extends ffi.Opaque {}
 final class GraalIsolateThread extends ffi.Opaque {}
@@ -24,12 +25,16 @@ typedef RunChecksC = ffi.Int32 Function(
     ffi.Int32 numberOfFiles,
     ffi.Pointer<ffi.Pointer<Utf8>> filePaths,
     ffi.Pointer<Utf8> resultDirectory,
+    ffi.Int32 numberOfChecks,
+    ffi.Pointer<ffi.Pointer<Utf8>> checkCodes,
 );
 typedef RunChecksDart = int Function(
     ffi.Pointer<GraalIsolateThread> thread,
     int numberOfFiles,
     ffi.Pointer<ffi.Pointer<Utf8>> filePaths,
     ffi.Pointer<Utf8> resultDirectory,
+    int numberOfChecks,
+    ffi.Pointer<ffi.Pointer<Utf8>> checkCodes,
 );
 
 class ThesisCheckerService {
@@ -41,26 +46,53 @@ class ThesisCheckerService {
   Future<int> runThesisChecks({
     required List<String> files,
     required String resultDirectory,
+    required List<CheckTypeInfo> selectedChecks,
   }) async {
     if (!isInitialized) {
         _init();
     }
 
-    int length = files.length;
-    final pointerArray = calloc<ffi.Pointer<Utf8>>(length);
-    for (int i = 0; i < length; i++) {
+    final fileCount = files.length;
+    final pointerArray = calloc<ffi.Pointer<Utf8>>(fileCount);
+    for (int i = 0; i < fileCount; i++) {
       pointerArray[i] = files[i].toNativeUtf8();
+    }
+
+    final checkCodes = selectedChecks
+        .expand((info) => info.checks)
+        .map((check) => check.name)
+        .toList();
+    final checkCount = checkCodes.length;
+    final checksArray = checkCount > 0
+        ? calloc<ffi.Pointer<Utf8>>(checkCount)
+        : ffi.nullptr;
+    for (int i = 0; i < checkCount; i++) {
+      checksArray[i] = checkCodes[i].toNativeUtf8();
     }
 
     final resultDirC = resultDirectory.toNativeUtf8();
 
     try {
-      return _runChecksFunc(_threadPtr!, length, pointerArray, resultDirC);
+      return _runChecksFunc(
+        _threadPtr!,
+        fileCount,
+        pointerArray,
+        resultDirC,
+        checkCount,
+        checksArray,
+      );
     } finally {
-      for (int i = 0; i < length; i++) {
+      for (int i = 0; i < fileCount; i++) {
         calloc.free(pointerArray[i]);
       }
       calloc.free(pointerArray);
+
+      for (int i = 0; i < checkCount; i++) {
+        calloc.free(checksArray[i]);
+      }
+      if (checkCount > 0) {
+        calloc.free(checksArray);
+      }
 
       calloc.free(resultDirC);
     }

@@ -78,7 +78,11 @@ class _HomeViewState extends State<HomeView> {
           setState(() {
             selectedIndex = 1;
             context.read<AnalysisBloc>().add(
-              StartAnalysisEvent(filePath: state.filePath),
+              StartAnalysisEvent(
+                filePath: state.filePath,
+                fileName: state.fileName,
+                selectedChecks: state.selectedChecks
+              )
             );
           });
         }

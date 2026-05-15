@@ -1,0 +1,60 @@
+import 'package:flutter/widgets.dart';
+
+/// A card widget used in the analysis options dialog to display information about a specific check type or option.
+class DialogInfoCard extends StatelessWidget {
+  final Color borderColor;
+  final Color textColor;
+
+  final String imageAsset;
+  final String infoText;
+
+  const DialogInfoCard({
+    super.key,
+    required this.borderColor,
+    required this.textColor,
+    required this.imageAsset,
+    required this.infoText
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+      decoration: BoxDecoration(
+        color: borderColor,
+        borderRadius: BorderRadius.all(
+          Radius.circular(8.0),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.asset(
+            imageAsset,
+            width: 20.0,
+            height: 20.0,
+          ),
+          SizedBox(width: 10.0),
+          Expanded(
+            child: Text(
+              infoText,
+              maxLines: 1,
+              softWrap: false,
+              style: TextStyle(
+                fontSize: 14.0,
+                color: textColor,
+                overflow: TextOverflow.ellipsis,
+                fontFamily: 'FunnelSans',
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+

@@ -21,6 +21,17 @@ import java.util.Set;
 
 public class ParagraphSpacingChecker implements Checker {
 
+    /**
+     * Returns the error category for this instance.
+     *
+     * @return {@link ErrorCategory#INDENTATION} indicating that this error
+     *         is related to indentation issues
+     */
+    @Override
+    public ErrorCategory getErrorCategory() {
+        return ErrorCategory.INDENTATION;
+    }
+
     @Override
     public List<FormatError> check(String filePath) {
         List<FormatError> allErrors = new ArrayList<>();

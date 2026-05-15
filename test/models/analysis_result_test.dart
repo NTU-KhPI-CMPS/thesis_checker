@@ -1,5 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:thesis_checker/core/enums/check.dart';
+import 'package:thesis_checker/core/constants/available_check_types.dart';
+import 'package:thesis_checker/models/check_type_info.dart';
 import 'package:thesis_checker/data/models/error_by_category.dart';
 import 'package:thesis_checker/data/models/format_error_api.dart';
 import 'package:thesis_checker/models/analysis_result.dart';
@@ -19,6 +21,7 @@ void main() {
   group('AnalysisResult', () {
     test('computes totalErrors based on category counts', () {
       final result = AnalysisResult(
+        filePath: '/tmp/thesis.docx',
         fileName: 'thesis.docx',
         analyzedAt: DateTime.parse('2026-04-16T12:00:00.000Z'),
         errorsByCategory: [
@@ -30,6 +33,9 @@ void main() {
             ],
           ),
           ErrorsByCategory(category: 'Інші', errors: const []),
+        ],
+        selectedChecks: [
+          AvailableCheckTypes.checkTypes.firstWhere((type) => type.title == 'Шрифт'),
         ],
       );
 
@@ -43,9 +49,11 @@ void main() {
 
     test('returns zero totalErrors when no categories are present', () {
       final result = AnalysisResult(
+        filePath: '',
         fileName: '',
         analyzedAt: DateTime.fromMillisecondsSinceEpoch(0),
         errorsByCategory: const [],
+        selectedChecks: const <CheckTypeInfo>[],
       );
 
       expect(result.fileName, '');

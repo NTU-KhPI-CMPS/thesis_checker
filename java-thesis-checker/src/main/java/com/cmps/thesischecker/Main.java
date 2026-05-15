@@ -7,8 +7,9 @@ import com.cmps.thesischecker.checker.AlignmentChecker;
 import com.cmps.thesischecker.checker.Checker;
 import com.cmps.thesischecker.checker.FontChecker;
 import com.cmps.thesischecker.checker.LineSpaceChecker;
-import com.cmps.thesischecker.checker.SizeChecker;
 import com.cmps.thesischecker.checker.ParagraphSpacingChecker;
+import com.cmps.thesischecker.checker.SizeChecker;
+import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.model.Report;
 import org.graalvm.nativeimage.IsolateThread;
@@ -26,6 +27,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.Collection;
 
 public class Main {
 
@@ -49,7 +51,7 @@ public class Main {
             System.exit(1);
         }
 
-        processFiles(files, outputDir);
+        processFiles(files, outputDir, CHECKERS);
     }
 
     @CEntryPoint(name = "run_thesis_checks")
@@ -57,16 +59,20 @@ public class Main {
     public static int runThesisChecks(IsolateThread thread,
                                       int numberOfFiles,
                                       CCharPointerPointer filePathsPtr,
-                                      CCharPointer resultDirPtr) {
+                                      CCharPointer resultDirPtr,
+                                      int numberOfChecks,
+                                      CCharPointerPointer checkCodesPtr) {
         List<String> files = parseCArray(filePathsPtr, numberOfFiles);
         String outputDir = CTypeConversion.toJavaString(resultDirPtr);
+        List<String> checkCodes = parseCArray(checkCodesPtr, numberOfChecks);
 
         if (files.isEmpty()) {
             System.err.println("No input files specified.");
             return 1;
         }
 
-        processFiles(files, outputDir);
+        List<Checker> activeCheckers = resolveCheckers(checkCodes);
+        processFiles(files, outputDir, activeCheckers);
 
         return 0;
     }
@@ -84,11 +90,11 @@ public class Main {
         return result;
     }
 
-    private static void processFiles(List<String> files, String outputDir) {
+    private static void processFiles(List<String> files, String outputDir, Collection<Checker> checkers) {
         for (String filePath : files) {
             List<FormatError> allErrors = new ArrayList<>();
 
-            for (Checker checker : CHECKERS) {
+            for (Checker checker : checkers) {
                 List<FormatError> errors = checker.check(filePath);
                 allErrors.addAll(errors);
             }
@@ -98,6 +104,49 @@ public class Main {
             report.setErrors(allErrors);
             saveJsonReport(report, outputDir);
         }
+    }
+
+    private static List<Checker> resolveCheckers(List<String> checkCodes) {
+        if (checkCodes == null || checkCodes.isEmpty()) {
+            return CHECKERS;
+        }
+
+        List<Checker> resolved = new ArrayList<>();
+        for (String code : checkCodes) {
+            if (code == null) {
+                continue;
+            }
+            ErrorCategory category = parseCategory(code);
+            if (category == null) {
+                continue;
+            }
+            Checker mapped = parseCheckerByError(category);
+            if (mapped != null && !resolved.contains(mapped)) {
+                resolved.add(mapped);
+            }
+        }
+
+        return resolved.isEmpty() ? CHECKERS : resolved;
+    }
+
+    private static ErrorCategory parseCategory(String rawCode) {
+        String normalized = rawCode.trim().toUpperCase();
+
+        try {
+            return ErrorCategory.valueOf(normalized);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    private static Checker parseCheckerByError(ErrorCategory category) {
+        for (Checker checker : CHECKERS) {
+            if (checker.getErrorCategory() == category) {
+                return checker;
+            }
+        }
+
+        return null;
     }
 
     private static void printReport(String filePath, List<FormatError> errors) {

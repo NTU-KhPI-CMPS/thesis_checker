@@ -1,6 +1,7 @@
 import 'package:thesis_checker/data/repositories/analysis_repository.dart';
 import 'package:thesis_checker/models/analysis_result.dart';
 import 'package:thesis_checker/features/result/cubit/result_cubit.dart';
+import 'package:thesis_checker/models/check_type_info.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -20,7 +21,11 @@ class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
   Future<void> _onStartAnalysis(StartAnalysisEvent event, Emitter<AnalysisState> emit) async {
     try {
       emit(AnalysisInProgressState());
-      final AnalysisResult analysisResult = await analysisRepository.checkFile(event.filePath);
+      final AnalysisResult analysisResult = await analysisRepository.checkFile(
+        event.filePath,
+        fileName: event.fileName,
+        selectedChecks: event.selectedChecks
+      );
 
       resultCubit.setResult(analysisResult);
       emit(AnalysisDoneState());

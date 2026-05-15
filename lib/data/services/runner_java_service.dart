@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:thesis_checker/data/models/report_api.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:thesis_checker/data/services/thesis_checker_service.dart';
+import 'package:thesis_checker/models/check_type_info.dart';
 
 class RunnerJavaService {
   RunnerJavaService._internal();
@@ -13,7 +14,7 @@ class RunnerJavaService {
 
   final checkerService = ThesisCheckerService();
 
-  Future<ReportApi> checkFile(String filePath) async {
+  Future<ReportApi> checkFile(String filePath, {required List<CheckTypeInfo> selectedChecks}) async {
     try {
       final directory = await getApplicationSupportDirectory();
       final resultsRoot = Directory('${directory.path}/results');
@@ -21,6 +22,7 @@ class RunnerJavaService {
       final returnCode = await checkerService.runThesisChecks(
         files: [filePath],
         resultDirectory: resultsRoot.path,
+        selectedChecks: selectedChecks,
       );
 
       if (returnCode != 0) {

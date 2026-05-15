@@ -21,6 +21,17 @@ import com.cmps.thesischecker.requirements.RequirementsHolder;
 public class LineSpaceChecker implements Checker {
 
     /**
+     * Returns the error category for this instance.
+     *
+     * @return {@link ErrorCategory#LINE_SPACING} indicating that this error
+     *         is related to line spacing issues
+     */
+    @Override
+    public ErrorCategory getErrorCategory() {
+        return ErrorCategory.LINE_SPACING;
+    }
+
+    /**
      * Checks the document for line-spacing violations and returns all found format errors.
      *
      * @param filePath path to the DOCX file
