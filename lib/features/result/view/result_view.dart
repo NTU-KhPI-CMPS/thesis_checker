@@ -12,7 +12,7 @@ import 'package:thesis_checker/core/widgets/info_text.dart';
 import 'package:thesis_checker/features/result/cubit/result_cubit.dart';
 import 'package:thesis_checker/features/result/cubit/result_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:thesis_checker/features/result/widgets/custom_dialog.dart';
+import 'package:thesis_checker/features/analysis_options_dialog/analysis_options_dialog.dart';
 
 class ResultView extends StatefulWidget {
   const ResultView({super.key});
@@ -41,10 +41,10 @@ class _ResultViewState extends State<ResultView> {
 
         final result = state.result;
         final checkTypes = AvailableCheckTypes.checkTypes;
-        final selectedCategories = result.selectedCategories ?? const <String>[];
-        final visibleCheckTypes = selectedCategories.isEmpty
+        final selectedChecks = result.selectedChecks;
+        final visibleCheckTypes = selectedChecks.isEmpty
             ? checkTypes
-            : checkTypes.where((type) => selectedCategories.contains(type.title)).toList();
+            : checkTypes.where(selectedChecks.contains).toList();
         if (visibleCheckTypes.isEmpty) {
           return const HintText(text: 'Немає обраних категорій для відображення');
         }
@@ -110,11 +110,11 @@ class _ResultViewState extends State<ResultView> {
                         accentColor: accentColor,
                         onTap: () => showDialog(
                             context: context,
-                            builder: (context) => CustomDialog(
-                                filePath: result.filePath,
-                                fileName: result.fileName
-                            )
-                        ),
+                            builder: (context) => AnalysisOptionsDialog(
+                                 filePath: result.filePath,
+                                 fileName: result.fileName
+                             )
+                         ),
                         onHover: (isHovered) => setState(() => buttonIsHovered = isHovered),
                       ),
                     ],

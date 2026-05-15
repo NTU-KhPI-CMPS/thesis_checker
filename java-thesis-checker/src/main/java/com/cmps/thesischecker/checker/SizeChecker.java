@@ -18,6 +18,16 @@ public class SizeChecker implements Checker {
         this.expectedSize = Integer.parseInt(RequirementsHolder.getFontSize());
     }
 
+    /**
+     * Returns the error category for this instance.
+     *
+     * @return {@link ErrorCategory#FONT_SIZE} indicating that this error
+     *         is related to font size issues
+     */
+    @Override
+    public ErrorCategory getErrorCategory() {
+        return ErrorCategory.FONT_SIZE;
+    }
 
     @Override
     public List<FormatError> check(String filePath) {

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-/// A compact checkbox used inside option cards.
-class CustomCheckbox extends StatelessWidget {
+/// A compact checkbox used to display a selection.
+class OptionCheckbox extends StatelessWidget {
   final bool value;
   final ValueChanged<bool>? onChanged;
   final VoidCallback? onTap;
 
-  const CustomCheckbox({
+  const OptionCheckbox({
     super.key,
     required this.value,
     this.onChanged,
@@ -50,4 +50,5 @@ class CustomCheckbox extends StatelessWidget {
     );
   }
 }
+
 

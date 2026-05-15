@@ -15,6 +15,17 @@ public class FontChecker implements Checker {
     public FontChecker() {
     }
 
+    /**
+     * Returns the error category for this instance.
+     *
+     * @return {@link ErrorCategory#FONT_NAME} indicating that this error
+     *         is related to font name issues
+     */
+    @Override
+    public ErrorCategory getErrorCategory() {
+        return ErrorCategory.FONT_NAME;
+    }
+
     @Override
     public List<FormatError> check(String filePath) {
         List<FormatError> allErrors = new ArrayList<>();

@@ -1,13 +1,14 @@
 import 'package:flutter/widgets.dart';
 
-class DialogInfoContainer extends StatelessWidget {
+/// A card widget used in the analysis options dialog to display information about a specific check type or option.
+class DialogInfoCard extends StatelessWidget {
   final Color borderColor;
   final Color textColor;
 
   final String imageAsset;
   final String infoText;
 
-  const DialogInfoContainer({
+  const DialogInfoCard({
     super.key,
     required this.borderColor,
     required this.textColor,
@@ -55,4 +56,5 @@ class DialogInfoContainer extends StatelessWidget {
     );
   }
 }
+
 

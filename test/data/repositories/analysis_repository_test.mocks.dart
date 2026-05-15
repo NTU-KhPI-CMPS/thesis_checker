@@ -8,6 +8,7 @@ import 'dart:async' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:thesis_checker/data/models/report_api.dart' as _i2;
 import 'package:thesis_checker/data/services/runner_java_service.dart' as _i3;
+import 'package:thesis_checker/models/check_type_info.dart' as _i5;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -34,7 +35,7 @@ class _FakeReportApi_0 extends _i1.SmartFake implements _i2.ReportApi {
 /// See the documentation for Mockito's code generation for more information.
 class MockRunnerJavaService extends _i1.Mock implements _i3.RunnerJavaService {
   @override
-  _i4.Future<_i2.ReportApi> checkFile(String filePath, {required List<String> selectedChecks}) =>
+  _i4.Future<_i2.ReportApi> checkFile(String filePath, {required List<_i5.CheckTypeInfo> selectedChecks}) =>
       (super.noSuchMethod(
             Invocation.method(
               #checkFile,

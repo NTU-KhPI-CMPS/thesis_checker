@@ -1,6 +1,7 @@
 import 'package:thesis_checker/core/utils/file_extensions.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:thesis_checker/models/check_type_info.dart';
 
 part 'file_event.dart';
 part 'file_state.dart';
@@ -19,7 +20,6 @@ class FileBloc extends Bloc<FileEvent, FileState> {
         filePath: e.filePath,
         fileName: e.fileName,
         selectedChecks: e.selectedChecks,
-        selectedCategories: e.selectedCategories,
       ));
     } else {
       emit(FileUploadErrorState(error: 'Файл з розширенням $fileExtension не підтримується'));

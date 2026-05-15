@@ -3,23 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thesis_checker/core/constants/app_colors.dart';
 import 'package:thesis_checker/core/constants/available_check_types.dart';
-import 'package:thesis_checker/features/result/widgets/checkbox_container.dart';
+import 'package:thesis_checker/models/check_type_info.dart';
+import 'package:thesis_checker/features/analysis_options_dialog/widgets/clickable_option_card.dart';
 import 'package:thesis_checker/features/home/widgets/custom_animated_button.dart';
-import 'package:thesis_checker/features/result/widgets/dialog_info_container.dart';
+import 'package:thesis_checker/features/analysis_options_dialog/widgets/dialog_info_card.dart';
 import 'package:thesis_checker/features/home/bloc/file_bloc.dart';
 
 /// A modal dialog that lets users configure analysis options before starting.
-class CustomDialog extends StatefulWidget {
+class AnalysisOptionsDialog extends StatefulWidget {
   final String filePath;
   final String fileName;
 
-  const CustomDialog({super.key, required this.filePath, required this.fileName});
+  const AnalysisOptionsDialog({super.key, required this.filePath, required this.fileName});
 
   @override
-  State<CustomDialog> createState() => _CustomDialogState();
+  State<AnalysisOptionsDialog> createState() => _AnalysisOptionsDialogState();
 }
 
-class _CustomDialogState extends State<CustomDialog> with SingleTickerProviderStateMixin {
+class _AnalysisOptionsDialogState extends State<AnalysisOptionsDialog> with SingleTickerProviderStateMixin {
   double _scale = 0.0;
 
   bool _closeButtonIsHovered = false;
@@ -31,8 +32,7 @@ class _CustomDialogState extends State<CustomDialog> with SingleTickerProviderSt
   late final AnimationController _animationController;
   late final Animation<double> _shakeAnim;
 
-  final Set<String> selectedChecks = {};
-  final Set<String> selectedCategories = {};
+  final Set<CheckTypeInfo> selectedChecks = {};
 
   @override
   void initState() {
@@ -193,7 +193,7 @@ class _CustomDialogState extends State<CustomDialog> with SingleTickerProviderSt
                         ],
                       ),
                       SizedBox(height: 10.0),
-                      DialogInfoContainer(
+                      DialogInfoCard(
                         borderColor: borderColor,
                         textColor: textColor!,
                         imageAsset: 'assets/images/document.png',
@@ -226,7 +226,7 @@ class _CustomDialogState extends State<CustomDialog> with SingleTickerProviderSt
                             ),
                             itemBuilder: (context, index) {
                               final option = AvailableCheckTypes.checkTypes[index];
-                              return CheckboxContainer(
+                              return ClickableOptionCard(
                                 children: [
                                   Image.asset(
                                     option.iconPath,
@@ -260,26 +260,11 @@ class _CustomDialogState extends State<CustomDialog> with SingleTickerProviderSt
                                   ),
                                 ],
                                 onTap: () {
-                                  final checkCodes = option.checks
-                                      .map((check) => check.name)
-                                      .toList();
                                   setState(() {
-                                    if (checkCodes.isEmpty) {
-                                      if (selectedCategories.contains(option.title)) {
-                                        selectedCategories.remove(option.title);
-                                      } else {
-                                        selectedCategories.add(option.title);
-                                      }
-                                      return;
-                                    }
-
-                                    final hasAll = checkCodes.every(selectedChecks.contains);
-                                    if (hasAll) {
-                                      selectedChecks.removeAll(checkCodes);
-                                      selectedCategories.remove(option.title);
+                                    if (selectedChecks.contains(option)) {
+                                      selectedChecks.remove(option);
                                     } else {
-                                      selectedChecks.addAll(checkCodes);
-                                      selectedCategories.add(option.title);
+                                      selectedChecks.add(option);
                                     }
                                   });
                                 },
@@ -313,7 +298,7 @@ class _CustomDialogState extends State<CustomDialog> with SingleTickerProviderSt
                       ),
                       SizedBox(height: 15.0,),
                       if (isError) ...[
-                        DialogInfoContainer(
+                        DialogInfoCard(
                           borderColor: errorContainerColor!,
                           textColor: errorTextColor!,
                           imageAsset: 'assets/images/warning.png',
@@ -368,27 +353,12 @@ class _CustomDialogState extends State<CustomDialog> with SingleTickerProviderSt
                               buttonIsHovered: _startButtonIsHovered,
                               accentColor: accentColor,
                               onTap: () {
-                                if (selectedCategories.isNotEmpty) {
-                                  final categoryByTitle = {
-                                    for (final type in AvailableCheckTypes.checkTypes)
-                                      type.title: type,
-                                  };
-                                  final hasCategoryWithoutChecks = selectedCategories.any(
-                                    (title) => (categoryByTitle[title]?.checks.isEmpty ?? false),
-                                  );
-                                  // TODO: Remove this fallback once 'Інші' has explicit checks.
-                                  // When 'Інші' gets checks, delete hasCategoryWithoutChecks and use:
-                                  // final checksToRun = selectedChecks.toList(growable: false);
-                                  final checksToRun = hasCategoryWithoutChecks || selectedChecks.isEmpty
-                                      ? const <String>[]
-                                      : selectedChecks.toList(growable: false);
-
+                                if (selectedChecks.isNotEmpty) {
                                   context.read<FileBloc>().add(
-                                    FileDroppedEvent.withOptions(
-                                      widget.filePath,
-                                      widget.fileName,
-                                      selectedChecks: checksToRun,
-                                      selectedCategories: selectedCategories.toList(growable: false),
+                                    FileDroppedEvent(
+                                      filePath: widget.filePath,
+                                      fileName: widget.fileName,
+                                      selectedChecks: selectedChecks.toList(growable: false),
                                     ),
                                   );
                                   Navigator.of(context).pop();

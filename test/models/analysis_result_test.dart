@@ -1,5 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:thesis_checker/core/enums/check.dart';
+import 'package:thesis_checker/core/constants/available_check_types.dart';
+import 'package:thesis_checker/models/check_type_info.dart';
 import 'package:thesis_checker/data/models/error_by_category.dart';
 import 'package:thesis_checker/data/models/format_error_api.dart';
 import 'package:thesis_checker/models/analysis_result.dart';
@@ -32,7 +34,9 @@ void main() {
           ),
           ErrorsByCategory(category: 'Інші', errors: const []),
         ],
-        selectedCategories: const ['Шрифт'],
+        selectedChecks: [
+          AvailableCheckTypes.checkTypes.firstWhere((type) => type.title == 'Шрифт'),
+        ],
       );
 
       expect(result.fileName, 'thesis.docx');
@@ -49,7 +53,7 @@ void main() {
         fileName: '',
         analyzedAt: DateTime.fromMillisecondsSinceEpoch(0),
         errorsByCategory: const [],
-        selectedCategories: const [],
+        selectedChecks: const <CheckTypeInfo>[],
       );
 
       expect(result.fileName, '');

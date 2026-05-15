@@ -58,10 +58,11 @@ class _UploadZoneState extends State<UploadZone> {
             final filePath = file.path;
             final fileName = file.name;
             context.read<FileBloc>().add(
-              FileDroppedEvent.onlyPath(
-                filePath,
-                fileName,
-              ),
+              FileDroppedEvent(
+                filePath: filePath,
+                fileName: fileName,
+                selectedChecks: [],
+              )
             );
           },
           child: AnimatedContainer(
@@ -117,9 +118,10 @@ class _UploadZoneState extends State<UploadZone> {
                         final filePath = file.files.first.path!;
                         final fileName = file.files.first.name;
                         bloc.add(
-                          FileDroppedEvent.onlyPath(
-                            filePath,
-                            fileName,
+                          FileDroppedEvent(
+                            fileName: fileName,
+                            filePath: filePath,
+                            selectedChecks: [],
                           ),
                         );
                       }

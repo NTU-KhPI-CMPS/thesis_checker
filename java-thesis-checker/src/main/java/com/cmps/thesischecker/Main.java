@@ -26,33 +26,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.Collection;
 
 public class Main {
 
-    private static final List<Checker> CHECKERS;
-
-    private static final Map<ErrorCategory, Checker> CHECKERS_BY_CATEGORY;
-
-    // Initialize checker registry once when the class is loaded.
-    static {
-        FontChecker fontChecker = new FontChecker();
-        LineSpaceChecker lineSpaceChecker = new LineSpaceChecker();
-        AlignmentChecker alignmentChecker = new AlignmentChecker();
-        ParagraphSpacingChecker paragraphSpacingChecker = new ParagraphSpacingChecker();
-        SizeChecker fontSizeChecker = new SizeChecker();
-
-        CHECKERS_BY_CATEGORY = Map.of(
-                ErrorCategory.FONT_NAME, fontChecker,
-                ErrorCategory.LINE_SPACING, lineSpaceChecker,
-                ErrorCategory.ALIGNMENT, alignmentChecker,
-                ErrorCategory.INDENTATION, paragraphSpacingChecker,
-                ErrorCategory.FONT_SIZE, fontSizeChecker
-        );
-
-        CHECKERS = new ArrayList<>(CHECKERS_BY_CATEGORY.values());
-    }
+    private static final List<Checker> CHECKERS = List.of(
+            new FontChecker(),
+            new LineSpaceChecker(),
+            new AlignmentChecker(),
+            new ParagraphSpacingChecker(),
+            new SizeChecker()
+    );
 
     static void main(String[] args) {
         Parser<List<String>> filePathParser = new FilePathParser();
@@ -105,7 +90,7 @@ public class Main {
         return result;
     }
 
-    private static void processFiles(List<String> files, String outputDir, List<Checker> checkers) {
+    private static void processFiles(List<String> files, String outputDir, Collection<Checker> checkers) {
         for (String filePath : files) {
             List<FormatError> allErrors = new ArrayList<>();
 
@@ -135,7 +120,7 @@ public class Main {
             if (category == null) {
                 continue;
             }
-            Checker mapped = CHECKERS_BY_CATEGORY.get(category);
+            Checker mapped = parseCheckerByError(category);
             if (mapped != null && !resolved.contains(mapped)) {
                 resolved.add(mapped);
             }
@@ -152,6 +137,16 @@ public class Main {
         } catch (IllegalArgumentException e) {
             return null;
         }
+    }
+
+    private static Checker parseCheckerByError(ErrorCategory category) {
+        for (Checker checker : CHECKERS) {
+            if (checker.getErrorCategory() == category) {
+                return checker;
+            }
+        }
+
+        return null;
     }
 
     private static void printReport(String filePath, List<FormatError> errors) {

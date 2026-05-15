@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:thesis_checker/core/constants/available_check_types.dart';
 import 'package:thesis_checker/core/enums/check.dart';
 import 'package:thesis_checker/data/services/runner_java_service.dart';
@@ -21,8 +19,8 @@ class AnalysisRepository {
 
   Future<AnalysisResult> checkFile(
     String filePath, {
-    required List<String> selectedChecks,
-    List<String>? selectedCategories,
+    required String fileName,
+    required List<CheckTypeInfo> selectedChecks,
   }) async {
     final report = await _runnerJavaService.checkFile(filePath, selectedChecks: selectedChecks);
     final foundErrors = report.errors;
@@ -46,10 +44,10 @@ class AnalysisRepository {
 
     return AnalysisResult(
       filePath: filePath,
-      fileName: filePath.split(Platform.pathSeparator).last,
+      fileName: fileName,
       analyzedAt: DateTime.now(),
       errorsByCategory: errorsByCategory,
-      selectedCategories: selectedCategories,
+      selectedChecks: selectedChecks,
     );
   }
 

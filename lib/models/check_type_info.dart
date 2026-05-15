@@ -1,7 +1,8 @@
+import 'package:equatable/equatable.dart';
 import 'package:thesis_checker/core/enums/check.dart';
 
 /// UI model for cards describing available check types.
-class CheckTypeInfo {
+class CheckTypeInfo extends Equatable{
   final String title;
   final String description;
   final List<Check> checks;
@@ -13,4 +14,7 @@ class CheckTypeInfo {
     required this.checks,
     required this.iconPath,
   });
+
+  @override
+  List<Object?> get props => [title, description, checks, iconPath];
 }

@@ -3,6 +3,7 @@ import 'dart:ffi' as ffi;
 
 import 'package:ffi/ffi.dart';
 import 'package:path/path.dart' as p;
+import 'package:thesis_checker/models/check_type_info.dart';
 
 final class GraalIsolate extends ffi.Opaque {}
 final class GraalIsolateThread extends ffi.Opaque {}
@@ -45,7 +46,7 @@ class ThesisCheckerService {
   Future<int> runThesisChecks({
     required List<String> files,
     required String resultDirectory,
-    required List<String> selectedChecks,
+    required List<CheckTypeInfo> selectedChecks,
   }) async {
     if (!isInitialized) {
         _init();
@@ -57,13 +58,16 @@ class ThesisCheckerService {
       pointerArray[i] = files[i].toNativeUtf8();
     }
 
-    final checks = selectedChecks;
-    final checkCount = checks.length;
+    final checkCodes = selectedChecks
+        .expand((info) => info.checks)
+        .map((check) => check.name)
+        .toList();
+    final checkCount = checkCodes.length;
     final checksArray = checkCount > 0
         ? calloc<ffi.Pointer<Utf8>>(checkCount)
         : ffi.nullptr;
     for (int i = 0; i < checkCount; i++) {
-      checksArray[i] = checks[i].toNativeUtf8();
+      checksArray[i] = checkCodes[i].toNativeUtf8();
     }
 
     final resultDirC = resultDirectory.toNativeUtf8();

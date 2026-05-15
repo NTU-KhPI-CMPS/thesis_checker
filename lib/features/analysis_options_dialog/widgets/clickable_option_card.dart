@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:thesis_checker/features/result/widgets/custom_checkbox.dart';
+import 'package:thesis_checker/features/analysis_options_dialog/widgets/option_checkbox.dart';
 
 /// Clickable option card with hover state and an anchored checkbox.
-class CheckboxContainer extends StatefulWidget {
+class ClickableOptionCard extends StatefulWidget {
   final List<Widget> children;
   final VoidCallback onTap;
 
-  const CheckboxContainer({super.key, required this.children, required this.onTap});
+  const ClickableOptionCard({super.key, required this.children, required this.onTap});
   @override
-  State<CheckboxContainer> createState() => _CheckboxContainerState();
+  State<ClickableOptionCard> createState() => _ClickableOptionCardState();
 }
 
-class _CheckboxContainerState extends State<CheckboxContainer> {
+class _ClickableOptionCardState extends State<ClickableOptionCard> {
   bool isHovered = false;
   bool isChecked = false;
 
@@ -53,7 +53,7 @@ class _CheckboxContainerState extends State<CheckboxContainer> {
               Positioned(
                 top: 0,
                 right: 0,
-                child: CustomCheckbox(
+                child: OptionCheckbox(
                   value: isChecked,
                   onChanged: (value) => setState(() => isChecked = value),
                   onTap: () => widget.onTap(),
@@ -66,3 +66,4 @@ class _CheckboxContainerState extends State<CheckboxContainer> {
     );
   }
 }
+
