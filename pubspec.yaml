@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
+version: 2.0.0+1
 
 environment:
   sdk: ^3.9.2
@@ -24,7 +24,7 @@ environment:
 msix_config:
   display_name: Thesis Checker
   publisher_display_name: Mariia Borodin (CMPS, PhD Student)
-  msix_version: 1.0.0.0
+  msix_version: 2.0.0.0
   identity_name: cmps.thesischecker
   publisher: CN=Mariia Borodin, O=Mariia Borodin, L=Warsaw, S=Mazowieckie, C=PL
   sign_msix: false
