@@ -163,6 +163,7 @@
                     <buildArgs>
                         <arg>-H:+AddAllCharsets</arg>
                         <arg>--shared</arg>
+                        <arg>-march=compatibility</arg>
                     </buildArgs>
                     <skip>false</skip>
                     <useArgFile>false</useArgFile>
