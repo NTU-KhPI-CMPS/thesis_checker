@@ -66,7 +66,7 @@ class _UploadZoneState extends State<UploadZone> {
             );
           },
           child: AnimatedContainer(
-            duration: Duration(milliseconds: 200),
+            duration: const Duration(milliseconds: 200),
             curve: Curves.easeInOut,
             width: double.infinity,
             height: 300.0,

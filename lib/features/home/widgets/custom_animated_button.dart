@@ -31,8 +31,9 @@ class CustomAnimatedButton extends StatelessWidget {
             return Transform.translate(
               offset: Offset(0, offset),
               child: AnimatedContainer(
-                duration: Duration(milliseconds: 200),
-                padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 24.0),
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeInOut,
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 24.0),
                 decoration: BoxDecoration(
                   color: buttonIsHovered ? accentColor.withAlpha(200) : accentColor,
                   borderRadius: BorderRadius.circular(8.0),

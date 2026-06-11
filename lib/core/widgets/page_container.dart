@@ -16,7 +16,9 @@ class PageContainer extends StatelessWidget {
     final bgColor = Theme.of(context).canvasColor;
     final borderColor = Theme.of(context).dividerColor;
 
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeInOut,
       width: double.infinity,
       height: double.infinity,
       decoration: BoxDecoration(

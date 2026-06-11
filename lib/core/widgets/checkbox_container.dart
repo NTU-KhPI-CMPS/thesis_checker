@@ -43,8 +43,9 @@ class _CheckboxContainerState extends State<CheckboxContainer> {
       child: GestureDetector(
         onTap: widget.onTap,
         child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeInOut,
           width: double.infinity,
-          duration: const Duration(milliseconds: 180),
           padding: const EdgeInsets.all(12.0),
           decoration: BoxDecoration(
             color: isActive ? activeBackgroundColor : backgroundColor,

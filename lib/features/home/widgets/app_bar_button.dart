@@ -31,7 +31,7 @@ class AppBarNavButton extends StatelessWidget {
             vertical: 6.0,
             horizontal: 12.0,
           ),
-          duration: const Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 200),
           curve: Curves.easeInOut,
           decoration: BoxDecoration(
             color: isActive ? bgColor : bgColor.withAlpha(0),
