@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:thesis_checker/core/constants/app_colors.dart';
 import 'package:thesis_checker/core/utils/ukrainian_plural.dart';
 
 /// Compact badge that displays error count with theme-aware error container color.
@@ -15,12 +16,18 @@ class ErrorCountBadge extends StatelessWidget {
     final errorContainerColor = Theme.of(context).colorScheme.errorContainer;
     final textColor = Theme.of(context).colorScheme.error;
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeInOut,
+    final isLightTheme = Theme.of(context).brightness == Brightness.light;
+    final noErrorContainerColor = isLightTheme ? AppColors.okLight : AppColors.okDark;
+    final noErrorTextColor = AppColors.ok;
+
+    final hasErrors = count > 0;
+    final containerColor = hasErrors ? errorContainerColor : noErrorContainerColor;
+    final displayTextColor = hasErrors ? textColor : noErrorTextColor;
+
+    return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       decoration: BoxDecoration(
-        color: errorContainerColor,
+        color: containerColor,
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Text(
@@ -29,7 +36,7 @@ class ErrorCountBadge extends StatelessWidget {
           fontSize: 11.0,
           fontWeight: FontWeight.w700,
           fontFamily: 'FunnelSans',
-          color: textColor,
+          color: displayTextColor,
         ),
       ),
     );
