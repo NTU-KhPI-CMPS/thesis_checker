@@ -18,7 +18,9 @@ class InfoCard extends StatelessWidget {
     final surfaceColor = Theme.of(context).scaffoldBackgroundColor;
     final borderColor = Theme.of(context).dividerColor;
 
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeInOut,
       padding: padding,
       decoration: BoxDecoration(
         color: surfaceColor,

@@ -72,6 +72,8 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    final scaffoldBackgroundColor = Theme.of(context).scaffoldBackgroundColor;
+
     return BlocListener<FileBloc, FileState>(
       listener: (context, state) {
         if (state is FileUploadedState) {
@@ -92,22 +94,34 @@ class _HomeViewState extends State<HomeView> {
           );
         }
       },
-      child: Scaffold(
-        appBar: _buildCustomAppBar(context),
-        body: _buildBodyContent(selectedIndex),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+        color: scaffoldBackgroundColor,
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: _buildCustomAppBar(context),
+          body: _buildBodyContent(selectedIndex),
+        ),
       ),
     );
   }
 
   AppBar _buildCustomAppBar(BuildContext context) {
-    final isLight = Theme.of(context).brightness == Brightness.light;
-    final textColor = Theme.of(context).textTheme.bodyLarge?.color;
-    final accentColor = Theme.of(context).primaryColor;
-    final borderColor = Theme.of(context).dividerColor;
-    final surface2Color = Theme.of(context).colorScheme.surface;
-    final textColor2 = Theme.of(context).textTheme.bodyMedium?.color;
+    final theme = Theme.of(context);
+    final isLight = theme.brightness == Brightness.light;
+    final textColor = theme.textTheme.bodyLarge?.color;
+    final accentColor = theme.primaryColor;
+    final borderColor = theme.dividerColor;
+    final surface2Color = theme.colorScheme.surface;
+    final textColor2 = theme.textTheme.bodyMedium?.color;
 
     return AppBar(
+      backgroundColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
+      shadowColor: Colors.transparent,
+      scrolledUnderElevation: 0.0,
+      elevation: 0.0,
       titleSpacing: 0.0,
       automaticallyImplyLeading: false,
       toolbarHeight: 85.0,
@@ -194,8 +208,15 @@ class _HomeViewState extends State<HomeView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(color: borderColor, height: 1.0),
-            Padding(
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+              color: borderColor,
+              height: 1.0,
+            ),
+            AnimatedPadding(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
               padding: const EdgeInsets.only(top: 10.0, left: 24.0),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
