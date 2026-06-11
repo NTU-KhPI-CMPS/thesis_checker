@@ -24,7 +24,9 @@ class ErrorCountBadge extends StatelessWidget {
     final containerColor = hasErrors ? errorContainerColor : noErrorContainerColor;
     final displayTextColor = hasErrors ? textColor : noErrorTextColor;
 
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeInOut,
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       decoration: BoxDecoration(
         color: containerColor,
