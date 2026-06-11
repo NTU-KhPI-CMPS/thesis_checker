@@ -76,49 +76,52 @@ class _ResultViewState extends State<ResultView> {
                   height: 24.0,
                 ),
                 const SizedBox(width: 12.0),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      result.fileName,
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'FunnelSans',
-                        color: fileNameTextColor,
-                      ),
-                    ),
-                    Text(
-                      'Знайдено: ${UkrainePlural.formatErrorCount(result.totalErrors)}',
-                      style: TextStyle(
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'FunnelSans',
-                        color: subTextColor,
-                      ),
-                    )
-                  ],
-                ),
                 Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustomAnimatedButton(
-                        text: 'Заново',
-                        buttonIsHovered: buttonIsHovered,
-                        accentColor: accentColor,
-                        onTap: () => showDialog(
-                            context: context,
-                            builder: (context) => AnalysisOptionsDialog(
-                                 filePath: result.filePath,
-                                 fileName: result.fileName
-                             )
-                         ),
-                        onHover: (isHovered) => setState(() => buttonIsHovered = isHovered),
+                      Text(
+                        result.fileName,
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'FunnelSans',
+                          color: fileNameTextColor,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 3,
                       ),
+                      Text(
+                        'Знайдено: ${UkrainePlural.formatErrorCount(result.totalErrors)}',
+                        style: TextStyle(
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'FunnelSans',
+                          color: subTextColor,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      )
                     ],
-                  )
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CustomAnimatedButton(
+                      text: 'Заново',
+                      buttonIsHovered: buttonIsHovered,
+                      accentColor: accentColor,
+                      onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => AnalysisOptionsDialog(
+                               filePath: result.filePath,
+                               fileName: result.fileName
+                           )
+                       ),
+                      onHover: (isHovered) => setState(() => buttonIsHovered = isHovered),
+                    ),
+                  ],
                 )
               ],
             ),
