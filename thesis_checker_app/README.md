@@ -14,7 +14,6 @@ Flutter desktop application for checking student academic works and their format
 - `lib/` - Flutter UI and state management (BLoC/Cubit)
 - `assets/checker/` - native checker binaries loaded by the app (`.dylib`, `.dll`, `.so`)
 - `assets/images/`, `assets/fonts/` - app assets
-- `test/` - unit and model tests
 - `tools/` - tools for application signing
 
 ## Requirements
@@ -27,7 +26,7 @@ Flutter desktop application for checking student academic works and their format
 ## Run locally
 
 ```bash
-cd /Users/dmitrijmaruhna/Desktop/thesis_checker/thesis_checker_app
+cd thesis_checker/thesis_checker_app
 flutter pub get
 flutter run -d macos
 ```
@@ -37,7 +36,7 @@ If you build for another desktop target, replace the device flag accordingly.
 ## Tests
 
 ```bash
-cd /Users/dmitrijmaruhna/Desktop/thesis_checker/thesis_checker_app
+cd thesis_checker/thesis_checker_app
 flutter test
 ```
 
@@ -54,16 +53,3 @@ Example when projects are siblings:
 ```xml
 <outputDirectory>${project.basedir}/../thesis_checker_app/assets/checker</outputDirectory>
 ```
-
-## Tools
-
-### macOS signing
-
-`tools/build-macos.sh` is used in the macOS signing/notarization flow.
-
-- Configure signing values inside the script (`TEAM_ID`, keychain profile, certificates).
-
-### Windows signing
-
-`tools/sign.bat` contains signing commands for MSIX artifacts.
-

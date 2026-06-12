@@ -31,10 +31,10 @@ On macOS:
 ### Build and sign app on Windows
 1. Build java app executing `mvn install`
 2. Build an installer executing `dart run msix:create`
-3. In [signing.json](thesis_checker_app/tools/signing.json) set `CodeSigningAccountName` and `CertificateProfileName`
-4. Run: [sign.bat](thesis_checker_app/tools/sign.bat)
+3. In [signing.json](tools/signing.json) set `CodeSigningAccountName` and `CertificateProfileName`
+4. Run: [sign.bat](tools/sign.bat)
 
 ### Build, sign and notarise app on macOS
 1. Build java app executing `mvn install`
-2. In [build-macos.sh](thesis_checker_app/tools/build-macos.sh) set `TEAM_ID` and `KEYCHAIN_PROFILE`
-3. Run: [build-macos.sh](thesis_checker_app/tools/build-macos.sh)
+2. In [build-macos.sh](tools/build-macos.sh) set `TEAM_ID` and `KEYCHAIN_PROFILE`
+3. Run: [build-macos.sh](tools/build-macos.sh)

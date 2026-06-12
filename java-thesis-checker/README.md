@@ -9,16 +9,6 @@ Java module for checking formatting of student academic works in `.docx` files.
 - Generates structured validation results
 - Builds a native library (`.dylib`, `.dll`, `.so`) for Flutter integration
 
-## Checks currently used
-
-The main processing flow includes these checkers:
-
-- `FontChecker`
-- `SizeChecker`
-- `LineSpaceChecker`
-- `AlignmentChecker`
-- `ParagraphSpacingChecker`
-
 ## Project structure
 
 - `src/main/java/com/cmps/thesischecker/` - entrypoint and orchestration (`Main`)
@@ -27,11 +17,10 @@ The main processing flow includes these checkers:
 - `src/main/java/com/cmps/thesischecker/requirements/` - formatting requirements configuration
 - `src/main/java/com/cmps/thesischecker/argparser/` - CLI argument parsers
 - `src/main/java/com/cmps/thesischecker/utils/` - utility classes
-- `src/test/java/` - unit tests for checkers
 
 ## Requirements
 
-- Java 25
+- Java 25 ([GraalVM](https://www.graalvm.org/downloads/))
 - Maven 3.9+
 - GraalVM Native Image toolchain (for native library build)
 
@@ -62,16 +51,3 @@ Current `pom.xml` output directory (when Java and Flutter projects are siblings)
 ```xml
 <outputDirectory>${project.basedir}/../thesis_checker_app/assets/checker</outputDirectory>
 ```
-
-## Main dependencies
-
-- `org.apache.poi:poi-ooxml`
-- `org.apache.poi:poi-scratchpad`
-- `tools.jackson.core:jackson-databind`
-- `org.graalvm.sdk:graal-sdk`
-- `org.projectlombok:lombok`
-- `org.junit.jupiter:junit-jupiter-api` (tests)
-- `org.junit.jupiter:junit-jupiter-params` (tests)
-
-
-
