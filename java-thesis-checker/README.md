@@ -20,7 +20,6 @@ Java module for checking formatting of student academic works in `.docx` files.
 
 ## Requirements
 
-- Java 25 ([GraalVM](https://www.graalvm.org/downloads/))
 - Maven 3.9+
 - GraalVM Native Image toolchain (for native library build)
 
