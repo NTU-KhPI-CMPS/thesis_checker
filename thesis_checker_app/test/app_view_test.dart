@@ -57,7 +57,7 @@ void main() {
       when(() => mockThemeCubit.state).thenReturn(ThemeLight());
       when(() => mockThemeCubit.stream).thenAnswer((_) => Stream.value(ThemeLight()));
 
-      // 2. Arrange: Pump the AppView widget
+      // 2. Act: Pump the AppView widget
       await pumpAppView(tester);
 
       // Assert: Verify that a MaterialApp is found and has the correct theme mode
@@ -73,7 +73,7 @@ void main() {
       when(() => mockThemeCubit.state).thenReturn(ThemeDark());
       when(() => mockThemeCubit.stream).thenAnswer((_) => Stream.value(ThemeDark()));
 
-      // 2. Arrange: Pump the AppView widget
+      // 2. Act: Pump the AppView widget
       await pumpAppView(tester);
 
       // Assert: Verify that a MaterialApp is found and has the correct theme mode
