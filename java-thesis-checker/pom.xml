@@ -186,7 +186,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.basedir}/../assets/checker</outputDirectory>
+                            <outputDirectory>${project.basedir}/../thesis_checker_app/assets/checker</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${project.build.directory}</directory>
