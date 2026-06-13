@@ -3,12 +3,14 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i4;
+import 'dart:async' as _i5;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:thesis_checker/data/models/report_api.dart' as _i2;
-import 'package:thesis_checker/data/services/runner_java_service.dart' as _i3;
-import 'package:thesis_checker/models/check_type_info.dart' as _i5;
+import 'package:thesis_checker/data/models/report_api.dart' as _i3;
+import 'package:thesis_checker/data/services/runner_java_service.dart' as _i4;
+import 'package:thesis_checker/data/services/thesis_checker_service.dart'
+    as _i2;
+import 'package:thesis_checker/models/check_type_info.dart' as _i6;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -25,29 +27,67 @@ import 'package:thesis_checker/models/check_type_info.dart' as _i5;
 // ignore_for_file: subtype_of_sealed_class
 // ignore_for_file: invalid_use_of_internal_member
 
-class _FakeReportApi_0 extends _i1.SmartFake implements _i2.ReportApi {
-  _FakeReportApi_0(Object parent, Invocation parentInvocation)
+class _FakeThesisCheckerService_0 extends _i1.SmartFake
+    implements _i2.ThesisCheckerService {
+  _FakeThesisCheckerService_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeReportApi_1 extends _i1.SmartFake implements _i3.ReportApi {
+  _FakeReportApi_1(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
 /// A class which mocks [RunnerJavaService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockRunnerJavaService extends _i1.Mock implements _i3.RunnerJavaService {
+class MockRunnerJavaService extends _i1.Mock implements _i4.RunnerJavaService {
   @override
-  _i4.Future<_i2.ReportApi> checkFile(String filePath, {required List<_i5.CheckTypeInfo> selectedChecks}) =>
+  _i2.ThesisCheckerService get checkerService =>
+      (super.noSuchMethod(
+            Invocation.getter(#checkerService),
+            returnValue: _FakeThesisCheckerService_0(
+              this,
+              Invocation.getter(#checkerService),
+            ),
+            returnValueForMissingStub: _FakeThesisCheckerService_0(
+              this,
+              Invocation.getter(#checkerService),
+            ),
+          )
+          as _i2.ThesisCheckerService);
+
+  @override
+  _i5.Future<_i3.ReportApi> checkFile(
+    String? filePath, {
+    required List<_i6.CheckTypeInfo>? selectedChecks,
+  }) =>
       (super.noSuchMethod(
             Invocation.method(
               #checkFile,
               [filePath],
               {#selectedChecks: selectedChecks},
             ),
-            returnValue: _i4.Future<_i2.ReportApi>.value(
-              _FakeReportApi_0(this, Invocation.method(#checkFile, [filePath])),
+            returnValue: _i5.Future<_i3.ReportApi>.value(
+              _FakeReportApi_1(
+                this,
+                Invocation.method(
+                  #checkFile,
+                  [filePath],
+                  {#selectedChecks: selectedChecks},
+                ),
+              ),
             ),
-            returnValueForMissingStub: _i4.Future<_i2.ReportApi>.value(
-              _FakeReportApi_0(this, Invocation.method(#checkFile, [filePath])),
+            returnValueForMissingStub: _i5.Future<_i3.ReportApi>.value(
+              _FakeReportApi_1(
+                this,
+                Invocation.method(
+                  #checkFile,
+                  [filePath],
+                  {#selectedChecks: selectedChecks},
+                ),
+              ),
             ),
           )
-          as _i4.Future<_i2.ReportApi>);
+          as _i5.Future<_i3.ReportApi>);
 }
