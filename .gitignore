@@ -48,3 +48,5 @@ app.*.map.json
 reports/
 /java-thesis-checker/dependency-reduced-pom.xml
 /java-thesis-checker/target
+/thesis_checker_app/build/
+/thesis_checker_app/assets/checker/java-thesis-checker.*

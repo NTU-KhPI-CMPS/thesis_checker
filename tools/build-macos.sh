@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TEAM_ID=""
+TEAM_ID="CGBRB86RM7"
 KEYCHAIN_PROFILE="notarytool-password"
 
 APP_NAME="Thesis Checker"
@@ -16,7 +16,7 @@ DMG_STAGING="build/macos/DMGStaging"
 DMG_OUTPUT="build/macos/${APP_NAME}.dmg"
 
 set -e
-cd ..
+cd ../thesis_checker_app
 
 echo "🚀 Step 1: Running Flutter build..."
 flutter build macos --release
@@ -68,7 +68,7 @@ rm -f "$DMG_OUTPUT"
 
 create-dmg \
   --volname "$APP_NAME" \
-  --background tools/dmg-background.png \
+  --background ../tools/dmg-background.png \
   --window-size 660 420 \
   --icon-size 160 \
   --icon "$(basename "$APP_BUNDLE")" 180 170 \
