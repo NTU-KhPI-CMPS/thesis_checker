@@ -227,18 +227,6 @@ public class ParagraphIndentationChecker implements Checker {
     }
 
     /**
-    * Rounds a double value to the specified number of decimal places.
-    *
-    * @param value    the value to round
-    * @param decimals the number of decimal places
-    * @return the rounded value
-    */
-    private static double roundTo(double value, int decimals) {
-        double factor = Math.pow(10, decimals);
-        return Math.round(value * factor) / factor;
-    }
-
-    /**
      * Extracts left/right indentation from CTInd and converts from twips to cm.
      *
      * @param spacing the raw indentation definition from Word
