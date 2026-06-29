@@ -4,15 +4,15 @@ import lombok.Getter;
 
 @Getter
 public class ParagraphIndentation {
-    private final Double leftSpacing;
-    private final Double rightSpacing;
+    private final Double leftIndentation;
+    private final Double rightIndentation;
 
     public ParagraphIndentation(Double leftSpacing, Double rightSpacing) {
-        this.leftSpacing = leftSpacing;
-        this.rightSpacing = rightSpacing;
+        this.leftIndentation = leftSpacing;
+        this.rightIndentation = rightSpacing;
     }
 
-    public boolean checkLeftRightSpacing() {
-        return leftSpacing == null && rightSpacing == null;
+    public boolean checkLeftRightIndentation() {
+        return leftIndentation == null && rightIndentation == null;
     }
 }

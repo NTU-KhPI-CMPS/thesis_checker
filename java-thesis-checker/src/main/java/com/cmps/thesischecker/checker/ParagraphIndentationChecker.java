@@ -66,18 +66,18 @@ public class ParagraphIndentationChecker implements Checker {
      */
     private List<FormatError> validate(XWPFParagraph paragraph) {
         List<FormatError> errors = new ArrayList<>();
-        ParagraphIndentation spacing = getIndentation(paragraph);
+        ParagraphIndentation indentation = getIndentation(paragraph);
 
-        if (!spacing.checkLeftRightSpacing()) {
+        if (!indentation.checkLeftRightIndentation()) {
             String text = paragraph.getText().trim();
 
             double expectedParagraphIndentations = Double.parseDouble(RequirementsHolder.getParagraphIndentations());
 
-            if (spacing.getLeftSpacing() != null && spacing.getLeftSpacing() > expectedParagraphIndentations) {
-                errors.add(buildIndentationLeftError(text, spacing.getLeftSpacing()));
+            if (indentation.getLeftIndentation() != null && indentation.getLeftIndentation() > expectedParagraphIndentations) {
+                errors.add(buildIndentationLeftError(text, indentation.getLeftIndentation()));
             }
-            if (spacing.getRightSpacing() != null && spacing.getRightSpacing() > expectedParagraphIndentations) {
-                errors.add(buildIndentationRightError(text, spacing.getRightSpacing()));
+            if (indentation.getRightIndentation() != null && indentation.getRightIndentation() > expectedParagraphIndentations) {
+                errors.add(buildIndentationRightError(text, indentation.getRightIndentation()));
             }
         }
 
@@ -145,14 +145,14 @@ public class ParagraphIndentationChecker implements Checker {
      * @return resolved indentation, fields are null if not set
      */
     private ParagraphIndentation getIndentation(XWPFParagraph paragraph) {
-        ParagraphIndentation spacing = getIndentationFromPPr(paragraph.getCTP().getPPr());
-        if (spacing != null) {
-            return spacing;
+        ParagraphIndentation indentation = getIndentationFromPPr(paragraph.getCTP().getPPr());
+        if (indentation != null) {
+            return indentation;
         }
 
-        spacing = getIndentationFromStyles(paragraph);
-        if (spacing != null) {
-            return spacing;
+        indentation = getIndentationFromStyles(paragraph);
+        if (indentation != null) {
+            return indentation;
         }
 
         return new ParagraphIndentation(null, null);
@@ -210,7 +210,7 @@ public class ParagraphIndentationChecker implements Checker {
         if (pPr == null) {
             return null;
         }
-        return getSpacingFromCTInd(pPr.getInd());
+        return getIndentationFromCTInd(pPr.getInd());
     }
 
     /**
@@ -223,26 +223,26 @@ public class ParagraphIndentationChecker implements Checker {
         if (pPr == null) {
             return null;
         }
-        return getSpacingFromCTInd(pPr.getInd());
+        return getIndentationFromCTInd(pPr.getInd());
     }
 
     /**
      * Extracts left/right indentation from CTInd and converts from twips to cm.
      *
-     * @param spacing the raw indentation definition from Word
+     * @param indentation the raw indentation definition from Word
      * @return ParagraphIndentation with values in cm, or null if indentation is absent
      */
-    private ParagraphIndentation getSpacingFromCTInd(CTInd spacing) {
-        if (spacing == null) {
+    private ParagraphIndentation getIndentationFromCTInd(CTInd indentation) {
+        if (indentation == null) {
             return null;
         }
 
-        Double left = spacing.getLeft() != null
-                ? ((BigInteger) spacing.getLeft()).doubleValue() / 567.0
+        Double left = indentation.getLeft() != null
+                ? ((BigInteger) indentation.getLeft()).doubleValue() / 567.0
                 : null;
 
-        Double right = spacing.getRight() != null
-                ? ((BigInteger) spacing.getRight()).doubleValue() / 567.0
+        Double right = indentation.getRight() != null
+                ? ((BigInteger) indentation.getRight()).doubleValue() / 567.0
                 : null;
 
         if (left == null && right == null) {
