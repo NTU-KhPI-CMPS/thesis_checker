@@ -12,7 +12,7 @@ public class ParagraphSpacing {
         this.bottomSpacing = bottomSpacing;
     }
 
-    public boolean checkSpacing() {
+    public boolean checkTopBottomSpacing() {
         return topSpacing == null && bottomSpacing == null;
     }
 }
