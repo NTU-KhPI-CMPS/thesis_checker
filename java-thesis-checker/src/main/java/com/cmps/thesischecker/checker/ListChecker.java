@@ -17,6 +17,7 @@ import org.apache.poi.xwpf.usermodel.XWPFNumbering;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTNumPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrGeneral;
 
 import java.io.FileInputStream;
 import java.math.BigInteger;
@@ -395,7 +396,7 @@ public class ListChecker implements Checker {
      * @param pPr the style's general paragraph properties, may be null
      * @return the numbering properties defined on the style, or null if none are set
      */
-    private CTNumPr getNumPr(org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrGeneral pPr) {
+    private CTNumPr getNumPr(CTPPrGeneral pPr) {
         if (pPr == null || !pPr.isSetNumPr() || pPr.getNumPr() == null) {
             return null;
         }
