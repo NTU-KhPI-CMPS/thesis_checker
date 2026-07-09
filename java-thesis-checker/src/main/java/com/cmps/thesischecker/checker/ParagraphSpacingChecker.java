@@ -24,14 +24,20 @@ public class ParagraphSpacingChecker implements Checker {
     /**
      * Returns the error category for this instance.
      *
-     * @return {@link ErrorCategory#INDENTATION} indicating that this error
+     * @return {@link ErrorCategory#SPACING} indicating that this error
      *         is related to indentation issues
      */
     @Override
     public ErrorCategory getErrorCategory() {
-        return ErrorCategory.INDENTATION;
+        return ErrorCategory.SPACING;
     }
 
+    /**
+     * Checks a Word document for paragraph spacing (before/after) issues.
+     *
+     * @param filePath path to the .docx file to check
+     * @return list of found format errors, empty if none
+     */
     @Override
     public List<FormatError> check(String filePath) {
         List<FormatError> allErrors = new ArrayList<>();
@@ -63,7 +69,7 @@ public class ParagraphSpacingChecker implements Checker {
         List<FormatError> errors = new ArrayList<>();
         ParagraphSpacing spacing = getSpacing(paragraph);
 
-        if (!spacing.checkSpacing()) {
+        if (!spacing.checkTopBottomSpacing()) {
             String text = paragraph.getText().trim();
 
             double expectedParagraphSpacing = Double.parseDouble(RequirementsHolder.getParagraphSpacing());
