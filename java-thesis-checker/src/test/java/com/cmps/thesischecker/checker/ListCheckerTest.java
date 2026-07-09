@@ -104,10 +104,10 @@ public class ListCheckerTest extends BaseTest {
     }
 
     @Test
-    @DisplayName("Should detect error when used arabic numerals")
+    @DisplayName("Should detect error when use roman numerals")
     void check_incorrectFormatting_arabicNumerals() {
         // GIVEN
-        String expectedParagraphText = "Перший пункт переліку, арабські числа.";
+        String expectedParagraphText = "Перший пункт переліку, римські числа.";
 
         //WHEN
         List<FormatError> result = checker.check("src/test/resources/incorrect_list_formatting.docx");
