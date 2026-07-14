@@ -1,7 +1,11 @@
 package com.cmps.thesischecker.requirements;
 
+import com.cmps.thesischecker.model.NumberingFormat;
 import lombok.Getter;
 
+/**
+ * Central holder for expected document-format values used by the checkers.
+ */
 public class RequirementsHolder {
 
     @Getter
@@ -18,7 +22,7 @@ public class RequirementsHolder {
 
     @Getter
     private static String fontSize = "14";
-    
+
     @Getter
     private static String paragraphSpacing = "0";
 
@@ -27,4 +31,22 @@ public class RequirementsHolder {
 
     @Getter
     private static String firstLineIndentation = "1.25";
+
+    @Getter
+    private static String listLevelStep = "1";
+
+    @Getter
+    private static String listFormattingConsistency = "consistent";
+
+    @Getter
+    private static String listAllowedMarkerFormats = String.join(", ",
+            NumberingFormat.DECIMAL.getDisplayName(),
+            NumberingFormat.LOWER_LETTER.getDisplayName(),
+            NumberingFormat.BULLET.getDisplayName());
+
+    @Getter
+    private static String listMarkerClosingSymbol = ")";
+
+    @Getter
+    private static String listBulletChar = "–";
 }
