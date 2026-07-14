@@ -10,6 +10,7 @@ import com.cmps.thesischecker.checker.LineSpaceChecker;
 import com.cmps.thesischecker.checker.ListChecker;
 import com.cmps.thesischecker.checker.ParagraphSpacingChecker;
 import com.cmps.thesischecker.checker.SizeChecker;
+import com.cmps.thesischecker.checker.ParagraphIndentationChecker;
 import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.model.Report;
@@ -38,7 +39,8 @@ public class Main {
             new AlignmentChecker(),
             new ListChecker(),
             new ParagraphSpacingChecker(),
-            new SizeChecker()
+            new SizeChecker(),
+            new ParagraphIndentationChecker()
     );
 
     static void main(String[] args) {
