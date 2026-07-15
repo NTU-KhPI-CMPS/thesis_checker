@@ -12,6 +12,8 @@ import java.util.*;
 
 public class FontChecker implements Checker {
 
+    private static final String FORMULA_FONT = "Cambria Math";
+
     public FontChecker() {
     }
 
@@ -121,7 +123,9 @@ public class FontChecker implements Checker {
             if (fragmentText == null) continue;
 
             String effectiveFont = getEffectiveFont(run, paragraph, document);
-            if (effectiveFont != null && !effectiveFont.equalsIgnoreCase(expectedFont)) {
+            if (effectiveFont != null
+                    && !effectiveFont.equalsIgnoreCase(expectedFont)
+                    && !effectiveFont.equalsIgnoreCase(FORMULA_FONT)) {
                 incorrectFonts.add(effectiveFont);
             }
         }
