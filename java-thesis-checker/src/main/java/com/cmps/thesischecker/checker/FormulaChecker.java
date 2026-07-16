@@ -31,8 +31,13 @@ import java.util.regex.Pattern;
 public class FormulaChecker implements Checker {
 
     private static final Pattern HEADING_NUMBER_PATTERN = Pattern.compile("^\\s*(\\d+)");
+    private static final Pattern LEADING_NUMBER_PATTERN = Pattern.compile("^[0-9.]+");
+    private static final Pattern FIRST_TOKEN_PATTERN = Pattern.compile("^\\S+");
     private final int expectedFontSize;
 
+    /**
+     * Constructs a FormulaChecker and initializes the expected font size parameter.
+     */
     public FormulaChecker() {
         this.expectedFontSize = Integer.parseInt(RequirementsHolder.getFontSize());
     }
@@ -95,16 +100,16 @@ public class FormulaChecker implements Checker {
      * @param allErrors                accumulator for found errors
      */
     private void validateFormulaBlock(List<XWPFParagraph> paragraphs, int formulaIndex, int currentChapter,
-                                       int[] expectedNumberInChapter, List<FormatError> allErrors) {
+                                      int[] expectedNumberInChapter, List<FormatError> allErrors) {
         XWPFParagraph formulaParagraph = paragraphs.get(formulaIndex);
         String formulaText = displayText(formulaParagraph);
 
-        // 1. Порожній рядок ПЕРЕД формулою
         if (formulaIndex == 0 || !MathUtils.isBlankParagraph(paragraphs.get(formulaIndex - 1))) {
             allErrors.add(buildSpacingError("err_formula_spacing_before",
-                    "Формула без порожнього рядка перед нею",
+                    "Формула без порожнього рядка перед неї",
                     formulaText,
-                    formulaIndex > 0 ? displayText(paragraphs.get(formulaIndex - 1)) : "Початок документу"));
+                    formulaIndex > 0 ? displayText(paragraphs.get(formulaIndex - 1)) : "Початок документу",
+                    "Порожній рядок перед формулою"));
         }
 
         String alignment = new AlignmentChecker().getAlignment(formulaParagraph);
@@ -127,7 +132,8 @@ public class FormulaChecker implements Checker {
             allErrors.add(buildSpacingError("err_formula_spacing_after",
                     "Формула без порожнього рядка після неї",
                     formulaText,
-                    "Кінець документу"));
+                    formulaText,
+                    "Порожній рядок після формули"));
             return;
         }
 
@@ -143,10 +149,11 @@ public class FormulaChecker implements Checker {
                 return;
             }
 
-            allErrors.add(buildSpacingError("err_formula_spacing_after",
-                    "Формула без порожнього рядка після неї",
+            allErrors.add(buildSpacingError("err_formula_spacing_before_notation",
+                    "Помилковий порожній рядок перед поясненням «де»",
                     formulaText,
-                    displayText(paragraphs.get(nextIndex))));
+                    formulaText,
+                    "Пояснення «де» безпосередньо под формулою (без відступу)"));
             afterFormulaIndex = cursor;
         }
 
@@ -158,9 +165,10 @@ public class FormulaChecker implements Checker {
 
             if (blockEnd >= paragraphs.size() || !MathUtils.isBlankParagraph(paragraphs.get(blockEnd))) {
                 allErrors.add(buildSpacingError("err_formula_notation_spacing",
-                        "Формула з неправильним відступом після пояснення де",
+                        "Відсутній порожній рядок після пояснення «де»",
                         formulaText,
-                        blockEnd < paragraphs.size() ? displayText(paragraphs.get(blockEnd)) : "Кінець документу"));
+                        formulaText,
+                        "Порожній рядок після блоку пояснень"));
             }
             return;
         }
@@ -169,15 +177,29 @@ public class FormulaChecker implements Checker {
             allErrors.add(buildSpacingError("err_formula_spacing_after",
                     "Формула без порожнього рядка після неї",
                     formulaText,
-                    displayText(paragraphs.get(nextIndex))));
+                    formulaText,
+                    "Порожній рядок після формули"));
         }
     }
 
+    /**
+     * Checks if the specified paragraph uses the Heading1 style.
+     *
+     * @param paragraph the paragraph to check
+     * @return true if the paragraph is a Heading1, false otherwise
+     */
     private boolean isHeading1(XWPFParagraph paragraph) {
         String styleId = paragraph.getStyle();
         return styleId != null && (styleId.equalsIgnoreCase("Heading1") || styleId.equalsIgnoreCase("1"));
     }
 
+    /**
+     * Extracts the chapter number from the heading paragraph and resets the formula counter.
+     *
+     * @param heading                 the heading paragraph containing the chapter number
+     * @param currentChapter          the mutable active chapter number tracker
+     * @param expectedNumberInChapter the mutable active formula number tracker
+     */
     private void updateChapter(XWPFParagraph heading, int[] currentChapter, int[] expectedNumberInChapter) {
         String text = heading.getText();
         if (text == null) return;
@@ -203,7 +225,7 @@ public class FormulaChecker implements Checker {
      * @param allErrors                accumulator for found errors
      */
     private void checkFormulaXml(String formulaXml, String paragraphText, int currentChapter,
-                                  int[] expectedNumberInChapter, int[] markerCount, List<FormatError> allErrors) {
+                                 int[] expectedNumberInChapter, int[] markerCount, List<FormatError> allErrors) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setNamespaceAware(false);
@@ -219,22 +241,44 @@ public class FormulaChecker implements Checker {
             }
 
             NodeList texts = document.getElementsByTagName("m:t");
+            StringBuilder flatBuilder = new StringBuilder();
             for (int i = 0; i < texts.getLength(); i++) {
-                String current = texts.item(i).getTextContent().trim();
-                if (!current.endsWith("#")) continue;
+                String t = texts.item(i).getTextContent();
+                if (t != null) flatBuilder.append(t);
+            }
+            String flatText = flatBuilder.toString();
+
+            int searchFrom = 0;
+            while (true) {
+                int hashPos = flatText.indexOf('#', searchFrom);
+                if (hashPos < 0) break;
 
                 markerCount[0]++;
 
-                String numberText = getNumberAfterMarker(texts, i);
-                if (numberText.isEmpty()) continue;
+                int nextHashPos = flatText.indexOf('#', hashPos + 1);
+                int segmentEnd = nextHashPos >= 0 ? nextHashPos : flatText.length();
+                String segment = flatText.substring(hashPos + 1, segmentEnd).replaceFirst("^\\s+", "");
 
-                validateFormulaNumber(numberText, paragraphText, currentChapter, expectedNumberInChapter, allErrors);
+                String numberText = extractFormulaNumberCandidate(segment);
+                if (!numberText.isEmpty()) {
+                    validateFormulaNumber(numberText, paragraphText, currentChapter, expectedNumberInChapter, allErrors);
+                }
+
+                searchFrom = hashPos + 1;
             }
         } catch (Exception e) {
             allErrors.add(buildException(e));
         }
     }
 
+    /**
+     * Checks if the run size inside the formula matches the expected document font size.
+     *
+     * @param run           the XML Element containing run properties
+     * @param text          the text fragment inside the run
+     * @param paragraphText the text of the entire paragraph
+     * @param allErrors     accumulator for found errors
+     */
     private void checkRunSize(Element run, String text, String paragraphText, List<FormatError> allErrors) {
         NodeList sizes = run.getElementsByTagName("w:sz");
 
@@ -252,27 +296,41 @@ public class FormulaChecker implements Checker {
     }
 
     /**
-     * Returns the raw text of the first non-empty m:t node following a numbering marker,
-     * whatever that text is (valid number or not) — format validation happens afterwards
-     * in {@link #validateFormulaNumber}, so a malformed value here still produces a useful
-     * "wrong format" error instead of being silently skipped.
+     * Extracts a number candidate from the text right after a "#" marker (already bounded
+     * to not cross into the next marker). Prefers the leading run of digits/dots (handles
+     * the case where legitimate formula content, e.g. the next formula's variables in an
+     * m:eqArr, follows right after with no separator). If the segment doesn't start with a
+     * digit at all (a clearly malformed number, e.g. "(1]3)"), falls back to the first
+     * whitespace-delimited token so the error is still reported instead of silently skipped.
      *
-     * @param texts       all m:t nodes of the formula
-     * @param markerIndex index of the marker node
-     * @return the next node's raw trimmed text, or empty string if none follows
+     * @param segment the text between a marker and the next marker (or end of formula)
+     * @return the best-effort number candidate, or empty string if the segment is empty
      */
-    private String getNumberAfterMarker(NodeList texts, int markerIndex) {
-        for (int j = markerIndex + 1; j < texts.getLength(); j++) {
-            String part = texts.item(j).getTextContent().trim();
-            if (!part.isEmpty()) {
-                return part;
-            }
+    private String extractFormulaNumberCandidate(String segment) {
+        if (segment.isEmpty()) {
+            return "";
         }
-        return "";
+
+        Matcher numeric = LEADING_NUMBER_PATTERN.matcher(segment);
+        if (numeric.lookingAt()) {
+            return numeric.group();
+        }
+
+        Matcher token = FIRST_TOKEN_PATTERN.matcher(segment);
+        return token.find() ? token.group() : "";
     }
 
+    /**
+     * Validates the extracted formula number against the current chapter and expected sequence.
+     *
+     * @param numberText              the extracted formula number string
+     * @param paragraphText           the text of the entire paragraph
+     * @param currentChapter           the current chapter number
+     * @param expectedNumberInChapter the expected next formula number
+     * @param allErrors                accumulator for found errors
+     */
     private void validateFormulaNumber(String numberText, String paragraphText, int currentChapter,
-                                        int[] expectedNumberInChapter, List<FormatError> allErrors) {
+                                       int[] expectedNumberInChapter, List<FormatError> allErrors) {
         String[] parts = numberText.split("\\.");
         if (parts.length != 2) {
             allErrors.add(buildFormatError(paragraphText, numberText, currentChapter + "." + expectedNumberInChapter[0]));
@@ -291,13 +349,22 @@ public class FormulaChecker implements Checker {
 
         if (chapterInFormula != currentChapter) {
             allErrors.add(buildChapterMismatchError(paragraphText, numberText, currentChapter));
-        } else if (numberInChapter != expectedNumberInChapter[0]) {
+            return;
+        }
+
+        if (numberInChapter != expectedNumberInChapter[0]) {
             allErrors.add(buildSequenceError(paragraphText, numberText, currentChapter + "." + expectedNumberInChapter[0]));
         }
 
         expectedNumberInChapter[0] = numberInChapter + 1;
     }
 
+    /**
+     * Extracts text content from a math run element.
+     *
+     * @param run the run element
+     * @return the text content of the run
+     */
     private String getRunText(Element run) {
         NodeList texts = run.getElementsByTagName("m:t");
         if (texts.getLength() == 0) {
@@ -309,7 +376,17 @@ public class FormulaChecker implements Checker {
         return "";
     }
 
-    private static FormatError buildSpacingError(String id, String title, String paragraphText, String found) {
+    /**
+     * Builds a FormatError object related to spacing issues.
+     *
+     * @param id            the unique error identifier
+     * @param title         the detailed error title
+     * @param paragraphText the text content of the paragraph
+     * @param found         the incorrect format found in the document
+     * @param expected      the expected spacing requirements description
+     * @return a constructed FormatError instance
+     */
+    private static FormatError buildSpacingError(String id, String title, String paragraphText, String found, String expected) {
         FormatError error = new FormatError();
         error.setId(id);
         error.setCategory(ErrorCategory.FORMULA);
@@ -317,10 +394,17 @@ public class FormulaChecker implements Checker {
         error.setTitle(title);
         error.setParagraphText(paragraphText);
         error.setFound(Set.of(found));
-        error.setExpected(RequirementsHolder.getFormulaSpacing());
+        error.setExpected(expected);
         return error;
     }
 
+    /**
+     * Builds a FormatError object related to alignment issues.
+     *
+     * @param paragraphText the text content of the paragraph
+     * @param found         the incorrect alignment layout found in the document
+     * @return a constructed FormatError instance
+     */
     private static FormatError buildAlignmentError(String paragraphText, String found) {
         FormatError error = new FormatError();
         error.setId("err_formula_alignment");
@@ -333,6 +417,12 @@ public class FormulaChecker implements Checker {
         return error;
     }
 
+    /**
+     * Builds a FormatError object related to multi-formula placement violations.
+     *
+     * @param paragraphText the text content of the paragraph
+     * @return a constructed FormatError instance
+     */
     private static FormatError buildOneFormulaPerLineError(String paragraphText) {
         FormatError error = new FormatError();
         error.setId("err_formula_multiple_per_line");
@@ -344,6 +434,14 @@ public class FormulaChecker implements Checker {
         return error;
     }
 
+    /**
+     * Builds a FormatError object related to font size issues.
+     *
+     * @param paragraphText the text content of the paragraph
+     * @param fragment      the literal misconfigured formula run fragment
+     * @param foundSize     the size measured inside the run
+     * @return a constructed FormatError instance
+     */
     private FormatError buildFontSizeError(String paragraphText, String fragment, double foundSize) {
         FormatError error = new FormatError();
         error.setId("err_formula_font_size");
@@ -356,6 +454,14 @@ public class FormulaChecker implements Checker {
         return error;
     }
 
+    /**
+     * Builds a FormatError object related to chapter mismatch in formula numbering.
+     *
+     * @param paragraphText  the text content of the paragraph
+     * @param found          the erroneous formula numbering found
+     * @param currentChapter the current active chapter number
+     * @return a constructed FormatError instance
+     */
     private static FormatError buildChapterMismatchError(String paragraphText, String found, int currentChapter) {
         FormatError error = new FormatError();
         error.setId("err_formula_chapter_mismatch");
@@ -363,11 +469,19 @@ public class FormulaChecker implements Checker {
         error.setSeverity("error");
         error.setTitle("Формула з неправильним розділом (наприклад 2.1 замість 1.1)");
         error.setParagraphText(paragraphText);
-        error.setFound(Set.of("(" + found + ")"));
+        error.setFound(Set.of(withParens(found)));
         error.setExpected("(" + currentChapter + ".x)");
         return error;
     }
 
+    /**
+     * Builds a FormatError object related to a sequence mismatch.
+     *
+     * @param paragraphText the text content of the paragraph
+     * @param found         the sequence gap numbering found
+     * @param expected      the perfect next sequence expected
+     * @return a constructed FormatError instance
+     */
     private static FormatError buildSequenceError(String paragraphText, String found, String expected) {
         FormatError error = new FormatError();
         error.setId("err_formula_sequence");
@@ -375,11 +489,19 @@ public class FormulaChecker implements Checker {
         error.setSeverity("error");
         error.setTitle("Формула з порушеною послідовністю (наприклад 1.3 замість 1.2)");
         error.setParagraphText(paragraphText);
-        error.setFound(Set.of("(" + found + ")"));
+        error.setFound(Set.of(withParens(found)));
         error.setExpected("(" + expected + ")");
         return error;
     }
 
+    /**
+     * Builds a FormatError object related to structurally malformed numbers.
+     *
+     * @param paragraphText the parent paragraph text
+     * @param found         the broken numbering format found
+     * @param expected      the expected standard format layout
+     * @return a constructed FormatError instance
+     */
     private static FormatError buildFormatError(String paragraphText, String found, String expected) {
         FormatError error = new FormatError();
         error.setId("err_formula_format");
@@ -387,11 +509,32 @@ public class FormulaChecker implements Checker {
         error.setSeverity("error");
         error.setTitle("Формула з неправильним форматом номера (наприклад 1-1)");
         error.setParagraphText(paragraphText);
-        error.setFound(Set.of("(" + found + ")"));
+        error.setFound(Set.of(withParens(found)));
         error.setExpected("(" + expected + ")");
         return error;
     }
 
+    /**
+     * Wraps a number in parentheses for display, unless it's already wrapped
+     * (a malformed source number can already contain literal "(" / ")").
+     *
+     * @param text the raw number text
+     * @return the text wrapped in a single pair of parentheses
+     */
+    private static String withParens(String text) {
+        String trimmed = text.trim();
+        if (trimmed.startsWith("(") && trimmed.endsWith(")")) {
+            return trimmed;
+        }
+        return "(" + trimmed + ")";
+    }
+
+    /**
+     * Builds a file-level error from processing exceptions.
+     *
+     * @param e the captured Exception
+     * @return a constructed FormatError instance
+     */
     private static FormatError buildException(Exception e) {
         FormatError error = new FormatError();
         error.setId("err_000");
@@ -402,8 +545,45 @@ public class FormulaChecker implements Checker {
         return error;
     }
 
+    /**
+     * Displays formula text for error reporting.
+     *
+     * @param paragraph the source paragraph
+     * @return the extracted string, or a placeholder literal if blank
+     */
     private static String displayText(XWPFParagraph paragraph) {
         String text = paragraph.getText();
-        return (text == null || text.trim().isEmpty()) ? "[Порожній рядок]" : text.trim();
+        if (text != null && !text.trim().isEmpty()) {
+            return text.trim();
+        }
+
+        List<String> formulaXmls = MathUtils.getFormulaXmls(paragraph);
+        if (!formulaXmls.isEmpty()) {
+            StringBuilder formula = new StringBuilder();
+
+            try {
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                factory.setNamespaceAware(false);
+
+                for (String xml : formulaXmls) {
+                    Document document = factory.newDocumentBuilder()
+                            .parse(new InputSource(new StringReader(xml)));
+
+                    NodeList texts = document.getElementsByTagName("m:t");
+                    for (int i = 0; i < texts.getLength(); i++) {
+                        formula.append(texts.item(i).getTextContent());
+                    }
+                }
+
+                if (!formula.toString().isBlank()) {
+                    return formula.toString();
+                }
+            } catch (Exception ignored) {
+            }
+
+            return "[Формула]";
+        }
+
+        return "[Порожній рядок]";
     }
 }

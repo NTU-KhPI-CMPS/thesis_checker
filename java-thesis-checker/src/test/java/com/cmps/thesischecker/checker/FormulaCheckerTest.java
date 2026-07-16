@@ -2,6 +2,7 @@ package com.cmps.thesischecker.checker;
 
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.requirements.RequirementsHolder;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class FormulaCheckerTest extends BaseTest {
     }
 
     @Test
+    @DisplayName("Verify correct formula formatting")
     void check_correctFormatting() {
         // GIVEN
         String testFilePath = "src/test/resources/correct_formula.docx";
@@ -29,10 +31,11 @@ public class FormulaCheckerTest extends BaseTest {
         List<FormatError> result = checker.check(testFilePath);
 
         // THEN
-        assertTrue(result.isEmpty(), "File should not have any errors related to formulas.");
+        assertTrue(result.isEmpty(), "File contains no formula formatting errors.");
     }
 
     @Test
+    @DisplayName("Detect missing blank line before formula")
     void check_incorrectFormatting_missingSpaceBefore() {
         // GIVEN
         String testFilePath = "src/test/resources/incorrect_formula.docx";
@@ -46,13 +49,14 @@ public class FormulaCheckerTest extends BaseTest {
                 .filter(fe -> expectedErrorId.equals(fe.getId()))
                 .toList();
 
-        assertFalse(errorsWithExpectedText.isEmpty(), "Should find at least one missing space before error.");
+        assertFalse(errorsWithExpectedText.isEmpty(), "Failed to detect missing spacing before the formula.");
         FormatError formatError = errorsWithExpectedText.getFirst();
         assertEquals(FORMULA, formatError.getCategory());
-        assertEquals(RequirementsHolder.getFormulaSpacing(), formatError.getExpected());
+        assertEquals("Порожній рядок перед формулою", formatError.getExpected());
     }
 
     @Test
+    @DisplayName("Detect missing blank line after formula")
     void check_incorrectFormatting_missingSpaceAfter() {
         // GIVEN
         String testFilePath = "src/test/resources/incorrect_formula.docx";
@@ -66,13 +70,14 @@ public class FormulaCheckerTest extends BaseTest {
                 .filter(fe -> expectedErrorId.equals(fe.getId()))
                 .toList();
 
-        assertFalse(errorsWithExpectedText.isEmpty(), "Should find at least one missing space after error.");
+        assertFalse(errorsWithExpectedText.isEmpty(), "Failed to detect missing spacing after the formula.");
         FormatError formatError = errorsWithExpectedText.getFirst();
         assertEquals(FORMULA, formatError.getCategory());
-        assertEquals(RequirementsHolder.getFormulaSpacing(), formatError.getExpected());
+        assertEquals("Порожній рядок після формули", formatError.getExpected());
     }
 
     @Test
+    @DisplayName("Detect missing blank line after notation block")
     void check_incorrectFormatting_missingSpaceAfterNotation() {
         // GIVEN
         String testFilePath = "src/test/resources/incorrect_formula.docx";
@@ -86,13 +91,14 @@ public class FormulaCheckerTest extends BaseTest {
                 .filter(fe -> expectedErrorId.equals(fe.getId()))
                 .toList();
 
-        assertFalse(errorsWithExpectedText.isEmpty(), "Should find error for missing space after 'де...' block.");
+        assertFalse(errorsWithExpectedText.isEmpty(), "Failed to detect missing spacing after the notation block.");
         FormatError formatError = errorsWithExpectedText.getFirst();
         assertEquals(FORMULA, formatError.getCategory());
-        assertEquals(RequirementsHolder.getFormulaSpacing(), formatError.getExpected());
+        assertEquals("Порожній рядок після блоку пояснень", formatError.getExpected());
     }
 
     @Test
+    @DisplayName("Detect incorrect formula alignment")
     void check_incorrectFormatting_alignment() {
         // GIVEN
         String testFilePath = "src/test/resources/incorrect_formula.docx";
@@ -106,7 +112,7 @@ public class FormulaCheckerTest extends BaseTest {
                 .filter(fe -> Objects.equals(fe.getTitle(), expectedTitle))
                 .toList();
 
-        assertFalse(errorsWithExpectedText.isEmpty(), "Should find alignment error.");
+        assertFalse(errorsWithExpectedText.isEmpty(), "Failed to detect incorrect formula alignment.");
         FormatError formatError = errorsWithExpectedText.getFirst();
         assertEquals(FORMULA, formatError.getCategory());
         assertEquals(Set.of("LEFT"), formatError.getFound());
@@ -114,6 +120,7 @@ public class FormulaCheckerTest extends BaseTest {
     }
 
     @Test
+    @DisplayName("Detect multiple formulas in a single line")
     void check_incorrectFormatting_multipleFormulasPerLine() {
         // GIVEN
         String testFilePath = "src/test/resources/incorrect_formula.docx";
@@ -127,13 +134,14 @@ public class FormulaCheckerTest extends BaseTest {
                 .filter(fe -> Objects.equals(fe.getTitle(), expectedTitle))
                 .toList();
 
-        assertFalse(errorsWithExpectedText.isEmpty(), "Should find multiple formulas per line error.");
+        assertFalse(errorsWithExpectedText.isEmpty(), "Failed to detect multiple formulas in one line.");
         FormatError formatError = errorsWithExpectedText.getFirst();
         assertEquals(FORMULA, formatError.getCategory());
         assertEquals(RequirementsHolder.getFormulaMultiplePerLine(), formatError.getExpected());
     }
 
     @Test
+    @DisplayName("Detect formula font size mismatch")
     void check_incorrectFormatting_fontSize() {
         // GIVEN
         String testFilePath = "src/test/resources/incorrect_formula.docx";
@@ -147,7 +155,7 @@ public class FormulaCheckerTest extends BaseTest {
                 .filter(fe -> expectedId.equals(fe.getId()))
                 .toList();
 
-        assertFalse(errorsWithExpectedText.isEmpty(), "Should find font size error.");
+        assertFalse(errorsWithExpectedText.isEmpty(), "Failed to detect incorrect formula font size.");
         FormatError formatError = errorsWithExpectedText.getFirst();
         assertEquals(FORMULA, formatError.getCategory());
         assertTrue(formatError.getTitle().contains("Неправильний розмір шрифту у формулі (на фрагменті"));
@@ -155,6 +163,7 @@ public class FormulaCheckerTest extends BaseTest {
     }
 
     @Test
+    @DisplayName("Detect formula chapter prefix mismatch")
     void check_incorrectFormatting_chapterMismatch() {
         // GIVEN
         String testFilePath = "src/test/resources/incorrect_formula.docx";
@@ -168,12 +177,13 @@ public class FormulaCheckerTest extends BaseTest {
                 .filter(fe -> expectedId.equals(fe.getId()))
                 .toList();
 
-        assertFalse(errorsWithExpectedText.isEmpty(), "Should find chapter mismatch error.");
+        assertFalse(errorsWithExpectedText.isEmpty(), "Failed to detect formula and active chapter mismatch.");
         FormatError formatError = errorsWithExpectedText.getFirst();
         assertEquals(FORMULA, formatError.getCategory());
     }
 
     @Test
+    @DisplayName("Detect broken formula sequence numbering")
     void check_incorrectFormatting_sequence() {
         // GIVEN
         String testFilePath = "src/test/resources/incorrect_formula.docx";
@@ -187,12 +197,13 @@ public class FormulaCheckerTest extends BaseTest {
                 .filter(fe -> expectedId.equals(fe.getId()))
                 .toList();
 
-        assertFalse(errorsWithExpectedText.isEmpty(), "Should find sequence error.");
+        assertFalse(errorsWithExpectedText.isEmpty(), "Failed to detect broken numbering sequence.");
         FormatError formatError = errorsWithExpectedText.getFirst();
         assertEquals(FORMULA, formatError.getCategory());
     }
 
     @Test
+    @DisplayName("Detect malformed formula number layout")
     void check_incorrectFormatting_format() {
         // GIVEN
         String testFilePath = "src/test/resources/incorrect_formula.docx";
@@ -206,7 +217,7 @@ public class FormulaCheckerTest extends BaseTest {
                 .filter(fe -> expectedId.equals(fe.getId()))
                 .toList();
 
-        assertFalse(errorsWithExpectedText.isEmpty(), "Should find numbering format error.");
+        assertFalse(errorsWithExpectedText.isEmpty(), "Failed to detect incorrect formula number format.");
         FormatError formatError = errorsWithExpectedText.getFirst();
         assertEquals(FORMULA, formatError.getCategory());
     }

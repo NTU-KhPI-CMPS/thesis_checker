@@ -54,7 +54,7 @@ public class RequirementsHolder {
     private static String formulaAlignment = "CENTER або RIGHT";
 
     @Getter
-    private static String formulaSpacing = "порожній рядок";
+    private static String formulaSpacing = "Порожній рядок";
 
     @Getter
     private static String formulaMultiplePerLine = "1 формула в рядку";
