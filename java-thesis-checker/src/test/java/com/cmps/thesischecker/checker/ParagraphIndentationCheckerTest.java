@@ -5,6 +5,7 @@ import com.cmps.thesischecker.requirements.RequirementsHolder;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
@@ -34,6 +35,7 @@ public class ParagraphIndentationCheckerTest extends BaseTest {
     void check_incorrectFormatting_defaultFormatting() {
         // GIVEN
         String expectedParagraphText = "Неправильний відступ тільки лівий через верхню панель (0.5 cm).";
+        double expectedValue = 0.5;
 
         //WHEN
         List<FormatError> result = checker.check("src/test/resources/incorrect_left_right_indentations.docx");
@@ -48,7 +50,7 @@ public class ParagraphIndentationCheckerTest extends BaseTest {
         FormatError formatError = errorsWithExpectedText.getFirst();
         assertEquals(expectedParagraphText, formatError.getParagraphText());
         assertEquals(INDENTATION, formatError.getCategory());
-        assertEquals(Set.of("0.5 см"), formatError.getFound());
+        assertEquals(Set.of(String.format(Locale.US, "%.1f см", expectedValue)), formatError.getFound());
         assertEquals(RequirementsHolder.getParagraphSpacing() + " см", formatError.getExpected());
     }
 
@@ -56,6 +58,7 @@ public class ParagraphIndentationCheckerTest extends BaseTest {
     void check_incorrectFormatting_defaultFormatting_left_indentation() {
         // GIVEN
         String expectedParagraphText = "Неправильний відступ тільки лівий через верхню панель (0.5 cm).";
+        double expectedValue = 0.5;
 
         //WHEN
         List<FormatError> result = checker.check("src/test/resources/incorrect_left_right_indentations.docx");
@@ -70,7 +73,7 @@ public class ParagraphIndentationCheckerTest extends BaseTest {
         FormatError formatError = errorsWithExpectedText.getFirst();
         assertEquals(expectedParagraphText, formatError.getParagraphText());
         assertEquals(INDENTATION, formatError.getCategory());
-        assertEquals(Set.of("0.5 см"), formatError.getFound());
+        assertEquals(Set.of(String.format(Locale.US, "%.1f см", expectedValue)), formatError.getFound());
         assertEquals(RequirementsHolder.getParagraphSpacing() + " см", formatError.getExpected());
     }
 
@@ -78,6 +81,7 @@ public class ParagraphIndentationCheckerTest extends BaseTest {
     void check_incorrectFormatting_defaultFormatting_right_indentation() {
         // GIVEN
         String expectedParagraphText = "Неправильний відступ тільки правий через верхню панель (0.5 cm).";
+        double expectedValue = 0.5;
 
         //WHEN
         List<FormatError> result = checker.check("src/test/resources/incorrect_left_right_indentations.docx");
@@ -92,7 +96,7 @@ public class ParagraphIndentationCheckerTest extends BaseTest {
         FormatError formatError = errorsWithExpectedText.getFirst();
         assertEquals(expectedParagraphText, formatError.getParagraphText());
         assertEquals(INDENTATION, formatError.getCategory());
-        assertEquals(Set.of("0.5 см"), formatError.getFound());
+        assertEquals(Set.of(String.format(Locale.US, "%.1f см", expectedValue)), formatError.getFound());
         assertEquals(RequirementsHolder.getParagraphSpacing() + " см", formatError.getExpected());
     }
 
@@ -100,6 +104,7 @@ public class ParagraphIndentationCheckerTest extends BaseTest {
     void check_incorrectFormatting_defaultFormatting_both_indentations() {
         // GIVEN
         String expectedParagraphText = "Обидва відступи не правильні через верхню панель(1 cm left and right).";
+        double expectedValue = 1.0;
 
         //WHEN
         List<FormatError> result = checker.check("src/test/resources/incorrect_left_right_indentations.docx");
@@ -114,7 +119,7 @@ public class ParagraphIndentationCheckerTest extends BaseTest {
         FormatError formatError = errorsWithExpectedText.getFirst();
         assertEquals(expectedParagraphText, formatError.getParagraphText());
         assertEquals(INDENTATION, formatError.getCategory());
-        assertEquals(Set.of("1.0 см"), formatError.getFound());
+        assertEquals(Set.of(String.format(Locale.US, "%.1f см", expectedValue)), formatError.getFound());
         assertEquals(RequirementsHolder.getParagraphSpacing() + " см", formatError.getExpected());
     }
 
@@ -122,6 +127,7 @@ public class ParagraphIndentationCheckerTest extends BaseTest {
     void check_incorrectFormatting_formattingFromStyle_left_indentation() {
         // GIVEN
         String expectedParagraphText = "Неправильний лівий відступ через стилі (10 cm).";
+        double expectedValue = 10.0;
 
         //WHEN
         List<FormatError> result = checker.check("src/test/resources/incorrect_left_right_indentations.docx");
@@ -136,7 +142,7 @@ public class ParagraphIndentationCheckerTest extends BaseTest {
         FormatError formatError = errorsWithExpectedText.getFirst();
         assertEquals(expectedParagraphText, formatError.getParagraphText());
         assertEquals(INDENTATION, formatError.getCategory());
-        assertEquals(Set.of("10.0 см"), formatError.getFound());
+        assertEquals(Set.of(String.format(Locale.US, "%.1f см", expectedValue)), formatError.getFound());
         assertEquals(RequirementsHolder.getParagraphSpacing() + " см", formatError.getExpected());
     }
 
@@ -144,6 +150,7 @@ public class ParagraphIndentationCheckerTest extends BaseTest {
     void check_incorrectFormatting_formattingFromStyle_right_indentation() {
         // GIVEN
         String expectedParagraphText = "Неправильнй правий відступ через стилі (11 cm).";
+        double expectedValue = 11.0;
 
         //WHEN
         List<FormatError> result = checker.check("src/test/resources/incorrect_left_right_indentations.docx");
@@ -158,7 +165,7 @@ public class ParagraphIndentationCheckerTest extends BaseTest {
         FormatError formatError = errorsWithExpectedText.getFirst();
         assertEquals(expectedParagraphText, formatError.getParagraphText());
         assertEquals(INDENTATION, formatError.getCategory());
-        assertEquals(Set.of("11.0 см"), formatError.getFound());
+        assertEquals(Set.of(String.format(Locale.US, "%.1f см", expectedValue)), formatError.getFound());
         assertEquals(RequirementsHolder.getParagraphSpacing() + " см", formatError.getExpected());
     }
 
@@ -166,6 +173,7 @@ public class ParagraphIndentationCheckerTest extends BaseTest {
     void check_incorrectFormatting_formattingFromStyle_both_indentations() {
         // GIVEN
         String expectedParagraphText = "Два не правильних відступи не правильні через стилі (12 cm left and right).";
+        double expectedValue = 12.0;
 
         //WHEN
         List<FormatError> result = checker.check("src/test/resources/incorrect_left_right_indentations.docx");
@@ -180,7 +188,7 @@ public class ParagraphIndentationCheckerTest extends BaseTest {
         FormatError formatError = errorsWithExpectedText.getFirst();
         assertEquals(expectedParagraphText, formatError.getParagraphText());
         assertEquals(INDENTATION, formatError.getCategory());
-        assertEquals(Set.of("12.0 см"), formatError.getFound());
+        assertEquals(Set.of(String.format(Locale.US, "%.1f см", expectedValue)), formatError.getFound());
         assertEquals(RequirementsHolder.getParagraphSpacing() + " см", formatError.getExpected());
     }
 }
