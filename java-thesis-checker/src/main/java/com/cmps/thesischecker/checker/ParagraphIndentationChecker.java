@@ -17,6 +17,7 @@ import java.io.FileInputStream;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class ParagraphIndentationChecker implements Checker {
@@ -98,7 +99,7 @@ public class ParagraphIndentationChecker implements Checker {
         error.setSeverity("error");
         error.setTitle("Невірний відступ зліва");
         error.setParagraphText(paragraphText);
-        error.setFound(Set.of(String.format("%.1f см", found)));
+        error.setFound(Set.of(String.format(Locale.US, "%.1f см", found)));
         error.setExpected("0 см");
         return error;
     }
@@ -117,7 +118,7 @@ public class ParagraphIndentationChecker implements Checker {
         error.setSeverity("error");
         error.setTitle("Невірний відступ справа");
         error.setParagraphText(paragraphText);
-        error.setFound(Set.of(String.format("%.1f см", found)));
+        error.setFound(Set.of(String.format(Locale.US, "%.1f см", found)));
         error.setExpected("0 см");
         return error;
     }
