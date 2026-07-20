@@ -3,6 +3,7 @@ package com.cmps.thesischecker.checker;
 import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.model.Style;
+import com.cmps.thesischecker.utils.MainContentUtils;
 import com.cmps.thesischecker.utils.StyleUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -59,7 +60,7 @@ public class AlignmentChecker implements Checker {
 
         try (FileInputStream fis = new FileInputStream(filePath);
              XWPFDocument doc = new XWPFDocument(fis)) {
-            for (XWPFParagraph paragraph : doc.getParagraphs()) {
+            for (XWPFParagraph paragraph : MainContentUtils.getMainContentParagraphs(doc)) {
                 String paragraphText = paragraph.getText().trim();
                 if (paragraphText.isEmpty()) {
                     continue;

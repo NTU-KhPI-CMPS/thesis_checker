@@ -3,6 +3,7 @@ package com.cmps.thesischecker.checker;
 import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.requirements.RequirementsHolder;
+import com.cmps.thesischecker.utils.MainContentUtils;
 import com.cmps.thesischecker.utils.StyleUtils;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
@@ -34,7 +35,7 @@ public class FontChecker implements Checker {
 
         try (FileInputStream fis = new FileInputStream(filePath);
              XWPFDocument doc = new XWPFDocument(fis)) {
-            for (XWPFParagraph paragraph : doc.getParagraphs()) {
+            for (XWPFParagraph paragraph : MainContentUtils.getMainContentParagraphs(doc)) {
                 String paragraphText = paragraph.getText().trim();
                 if (paragraphText.isEmpty()) continue;
                 Set<String> incorrectFonts = validate(paragraph);
@@ -70,7 +71,7 @@ public class FontChecker implements Checker {
                 }
             }
 
-            for (XWPFTable table : doc.getTables()) {
+            for (XWPFTable table : MainContentUtils.getMainContentTables(doc)) {
                 for (XWPFTableRow row : table.getRows()) {
                     for (XWPFTableCell cell : row.getTableCells()) {
                         for (XWPFParagraph paragraph : cell.getParagraphs()) {

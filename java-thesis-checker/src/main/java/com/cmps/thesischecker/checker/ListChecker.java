@@ -6,6 +6,7 @@ import com.cmps.thesischecker.model.ListLevelState;
 import com.cmps.thesischecker.model.MarkerDefinition;
 import com.cmps.thesischecker.model.NumberingFormat;
 import com.cmps.thesischecker.requirements.RequirementsHolder;
+import com.cmps.thesischecker.utils.MainContentUtils;
 import com.cmps.thesischecker.utils.StyleUtils;
 import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -57,7 +58,7 @@ public class ListChecker implements Checker {
 
             Map<BigInteger, ListLevelState> stateByNumId = new HashMap<>();
 
-            for (XWPFParagraph paragraph : doc.getParagraphs()) {
+            for (XWPFParagraph paragraph : MainContentUtils.getMainContentParagraphs(doc)) {
                 String paragraphText = paragraph.getText().trim();
                 if (paragraphText.isEmpty()) {
                     continue;

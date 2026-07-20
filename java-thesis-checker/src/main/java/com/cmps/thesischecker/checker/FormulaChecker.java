@@ -4,6 +4,7 @@ import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.requirements.RequirementsHolder;
 import com.cmps.thesischecker.utils.FormulaUtils;
+import com.cmps.thesischecker.utils.MainContentUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.w3c.dom.Document;
@@ -65,7 +66,7 @@ public class FormulaChecker implements Checker {
         try (FileInputStream fis = new FileInputStream(filePath);
              XWPFDocument doc = new XWPFDocument(fis)) {
 
-            List<XWPFParagraph> paragraphs = doc.getParagraphs();
+            List<XWPFParagraph> paragraphs = MainContentUtils.getMainContentParagraphs(doc);
             int[] currentChapter = {0};
             int[] expectedNumberInChapter = {1};
 
