@@ -3,7 +3,7 @@ package com.cmps.thesischecker.checker;
 import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.requirements.RequirementsHolder;
-import com.cmps.thesischecker.utils.MathUtils;
+import com.cmps.thesischecker.utils.FormulaUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.w3c.dom.Document;
@@ -77,7 +77,7 @@ public class FormulaChecker implements Checker {
                     continue;
                 }
 
-                if (!MathUtils.isFormulaOnlyParagraph(paragraph)) {
+                if (!FormulaUtils.isFormulaOnlyParagraph(paragraph)) {
                     continue;
                 }
 
@@ -104,7 +104,7 @@ public class FormulaChecker implements Checker {
         XWPFParagraph formulaParagraph = paragraphs.get(formulaIndex);
         String formulaText = displayText(formulaParagraph);
 
-        if (formulaIndex == 0 || !MathUtils.isBlankParagraph(paragraphs.get(formulaIndex - 1))) {
+        if (formulaIndex == 0 || !FormulaUtils.isBlankParagraph(paragraphs.get(formulaIndex - 1))) {
             allErrors.add(buildSpacingError("err_formula_spacing_before",
                     "Формула без порожнього рядка перед неї",
                     formulaText,
@@ -117,7 +117,7 @@ public class FormulaChecker implements Checker {
             allErrors.add(buildAlignmentError(formulaText, alignment));
         }
 
-        List<String> formulaXmls = MathUtils.getFormulaXmls(formulaParagraph);
+        List<String> formulaXmls = FormulaUtils.getFormulaXmls(formulaParagraph);
         int[] markerCount = {0};
         for (String formulaXml : formulaXmls) {
             checkFormulaXml(formulaXml, formulaText, currentChapter, expectedNumberInChapter, markerCount, allErrors);
@@ -139,13 +139,13 @@ public class FormulaChecker implements Checker {
 
         int afterFormulaIndex = nextIndex;
 
-        if (MathUtils.isBlankParagraph(paragraphs.get(nextIndex))) {
+        if (FormulaUtils.isBlankParagraph(paragraphs.get(nextIndex))) {
             int cursor = nextIndex;
-            while (cursor < paragraphs.size() && MathUtils.isBlankParagraph(paragraphs.get(cursor))) {
+            while (cursor < paragraphs.size() && FormulaUtils.isBlankParagraph(paragraphs.get(cursor))) {
                 cursor++;
             }
 
-            if (cursor >= paragraphs.size() || !MathUtils.isNotationParagraph(paragraphs.get(cursor))) {
+            if (cursor >= paragraphs.size() || !FormulaUtils.isNotationParagraph(paragraphs.get(cursor))) {
                 return;
             }
 
@@ -153,17 +153,17 @@ public class FormulaChecker implements Checker {
                     "Помилковий порожній рядок перед поясненням «де»",
                     formulaText,
                     formulaText,
-                    "Пояснення «де» безпосередньо под формулою (без відступу)"));
+                    "Пояснення «де» безпосередньо під формулою (без відступу)"));
             afterFormulaIndex = cursor;
         }
 
-        if (MathUtils.isNotationParagraph(paragraphs.get(afterFormulaIndex))) {
+        if (FormulaUtils.isNotationParagraph(paragraphs.get(afterFormulaIndex))) {
             int blockEnd = afterFormulaIndex + 1;
-            while (blockEnd < paragraphs.size() && MathUtils.isNotationContinuationLine(paragraphs.get(blockEnd))) {
+            while (blockEnd < paragraphs.size() && FormulaUtils.isNotationContinuationLine(paragraphs.get(blockEnd))) {
                 blockEnd++;
             }
 
-            if (blockEnd >= paragraphs.size() || !MathUtils.isBlankParagraph(paragraphs.get(blockEnd))) {
+            if (blockEnd >= paragraphs.size() || !FormulaUtils.isBlankParagraph(paragraphs.get(blockEnd))) {
                 allErrors.add(buildSpacingError("err_formula_notation_spacing",
                         "Відсутній порожній рядок після пояснення «де»",
                         formulaText,
@@ -438,16 +438,16 @@ public class FormulaChecker implements Checker {
      * Builds a FormatError object related to font size issues.
      *
      * @param paragraphText the text content of the paragraph
-     * @param fragment      the literal misconfigured formula run fragment
+     * @param formula      the specific formula text that has the font size issue
      * @param foundSize     the size measured inside the run
      * @return a constructed FormatError instance
      */
-    private FormatError buildFontSizeError(String paragraphText, String fragment, double foundSize) {
+    private FormatError buildFontSizeError(String paragraphText, String formula, double foundSize) {
         FormatError error = new FormatError();
         error.setId("err_formula_font_size");
         error.setCategory(ErrorCategory.FORMULA);
         error.setSeverity("error");
-        error.setTitle("Неправильний розмір шрифту у формулі (на фрагменті: \"" + fragment + "\")");
+        error.setTitle("Неправильний розмір шрифту у формулі \"" + formula + "\"");
         error.setParagraphText(paragraphText);
         error.setFound(Set.of(foundSize + "pt"));
         error.setExpected(expectedFontSize + "pt");
@@ -557,7 +557,7 @@ public class FormulaChecker implements Checker {
             return text.trim();
         }
 
-        List<String> formulaXmls = MathUtils.getFormulaXmls(paragraph);
+        List<String> formulaXmls = FormulaUtils.getFormulaXmls(paragraph);
         if (!formulaXmls.isEmpty()) {
             StringBuilder formula = new StringBuilder();
 

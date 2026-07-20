@@ -10,14 +10,14 @@ import java.util.regex.Pattern;
 /**
  * Utility class for working with formula (OMath) paragraphs.
  */
-public class MathUtils {
+public class FormulaUtils {
 
     // "symbol – description;" — line-continuation of the block of explanation of symbols (6.3.2.4),
     // e.g. "м — маса;". Short "symbol" (up to 10 characters), dash, and then text.
     private static final Pattern NOTATION_CONTINUATION_PATTERN =
             Pattern.compile("^[\\p{L}\\p{N}]{1,10}\\s*[–—-]\\s*\\S.*");
 
-    private MathUtils() {
+    private FormulaUtils() {
     }
 
     /**
