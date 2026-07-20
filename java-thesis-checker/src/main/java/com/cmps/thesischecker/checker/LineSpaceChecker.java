@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.math.BigInteger;
 import java.util.*;
 
+import com.cmps.thesischecker.utils.MainContentUtils;
 import com.cmps.thesischecker.utils.StyleUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
@@ -43,7 +44,7 @@ public class LineSpaceChecker implements Checker {
 
         try (FileInputStream fis = new FileInputStream(filePath);
              XWPFDocument doc = new XWPFDocument(fis)) {
-            for (XWPFParagraph paragraph : doc.getParagraphs()) {
+            for (XWPFParagraph paragraph : MainContentUtils.getMainContentParagraphs(doc)) {
                 String paragraphText = paragraph.getText().trim();
                 if (paragraphText.isEmpty()) {
                     continue;

@@ -4,6 +4,7 @@ import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.model.ParagraphIndentation;
 import com.cmps.thesischecker.requirements.RequirementsHolder;
+import com.cmps.thesischecker.utils.MainContentUtils;
 import com.cmps.thesischecker.utils.StyleUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -45,7 +46,7 @@ public class ParagraphIndentationChecker implements Checker {
         try (FileInputStream fis = new FileInputStream(filePath);
              XWPFDocument doc = new XWPFDocument(fis)) {
 
-            for (XWPFParagraph paragraph : doc.getParagraphs()) {
+            for (XWPFParagraph paragraph : MainContentUtils.getMainContentParagraphs(doc)) {
                 if (paragraph.getText().trim().isEmpty()) {
                     continue;
                 }
