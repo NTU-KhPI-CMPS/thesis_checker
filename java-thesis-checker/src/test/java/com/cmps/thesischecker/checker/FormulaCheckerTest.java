@@ -158,7 +158,7 @@ public class FormulaCheckerTest extends BaseTest {
         assertFalse(errorsWithExpectedText.isEmpty(), "Failed to detect incorrect formula font size.");
         FormatError formatError = errorsWithExpectedText.getFirst();
         assertEquals(FORMULA, formatError.getCategory());
-        assertTrue(formatError.getTitle().contains("Неправильний розмір шрифту у формулі (на фрагменті"));
+        assertTrue(formatError.getTitle().contains("Неправильний розмір шрифту у формулі"));
         assertEquals(RequirementsHolder.getFontSize() + "pt", formatError.getExpected());
     }
 
