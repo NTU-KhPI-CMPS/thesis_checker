@@ -6,6 +6,7 @@ import com.cmps.thesischecker.argparser.ResultDirectoryParser;
 import com.cmps.thesischecker.checker.AlignmentChecker;
 import com.cmps.thesischecker.checker.Checker;
 import com.cmps.thesischecker.checker.FontChecker;
+import com.cmps.thesischecker.checker.FormulaChecker;
 import com.cmps.thesischecker.checker.LineSpaceChecker;
 import com.cmps.thesischecker.checker.ListChecker;
 import com.cmps.thesischecker.checker.ParagraphSpacingChecker;
@@ -35,6 +36,7 @@ public class Main {
 
     private static final List<Checker> CHECKERS = List.of(
             new FontChecker(),
+            new FormulaChecker(),
             new LineSpaceChecker(),
             new AlignmentChecker(),
             new ListChecker(),
