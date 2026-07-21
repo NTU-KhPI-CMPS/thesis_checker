@@ -5,7 +5,6 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
 import org.apache.poi.xwpf.usermodel.XWPFStyles;
 
-import java.util.List;
 
 /**
  * Utility class for working with document styles, providing methods to retrieve style IDs based on known style aliases.
