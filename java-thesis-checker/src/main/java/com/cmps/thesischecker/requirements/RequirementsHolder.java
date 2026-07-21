@@ -1,7 +1,10 @@
 package com.cmps.thesischecker.requirements;
 
+import com.cmps.thesischecker.model.DocumentHeader;
 import com.cmps.thesischecker.model.NumberingFormat;
 import lombok.Getter;
+
+import java.util.List;
 
 /**
  * Central holder for expected document-format values used by the checkers.
@@ -58,4 +61,15 @@ public class RequirementsHolder {
 
     @Getter
     private static String formulaMultiplePerLine = "1 формула в рядку";
+
+    @Getter
+    private static List<DocumentHeader> orderStructuredElements = List.of(
+            new DocumentHeader("РЕФЕРАТ", false),
+            new DocumentHeader("ЗМІСТ", true),
+            new DocumentHeader("ПЕРЕЛІК ПОЗНАК ТА СКОРОЧЕНЬ", false),
+            new DocumentHeader("ВСТУП", true),
+            new DocumentHeader("ВИСНОВКИ", true),
+            new DocumentHeader("СПИСОК ДЖЕРЕЛ ІНФОРМАЦІЇ", true),
+            new DocumentHeader("ДОДАТОК", false)
+    );
 }

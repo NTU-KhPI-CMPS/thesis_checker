@@ -9,6 +9,7 @@ public enum ErrorCategory {
     SPACING,
     INDENTATION,
     FIRST_LINE_INDENTATION,
+    STRUCTURAL_ELEMENT_LOCATION,
     FORMULA,
     FILE
 }
