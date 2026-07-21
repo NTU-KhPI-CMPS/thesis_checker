@@ -31,12 +31,12 @@ public class StructuralElementChecker implements Checker {
     /**
      * Returns the error category produced by this checker.
      *
-     * @return {@link ErrorCategory#STRUCTURAL_ELEMENT_LOCATION} indicating that this error
+     * @return {@link ErrorCategory#STRUCTURAL_ELEMENT} indicating that this error
      *         is related to the location of structural elements in the document
      */
     @Override
     public ErrorCategory getErrorCategory() {
-        return ErrorCategory.STRUCTURAL_ELEMENT_LOCATION;
+        return ErrorCategory.STRUCTURAL_ELEMENT;
     }
 
     /**
@@ -551,7 +551,7 @@ public class StructuralElementChecker implements Checker {
     private FormatError buildMissingError(DocumentHeader header) {
         FormatError error = new FormatError();
         error.setId("err_structural_element_missing");
-        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT_LOCATION);
+        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT);
         error.setSeverity("error");
         error.setTitle("Відсутній обов'язковий структурний елемент \"" + header.getTitle() + "\"");
         error.setParagraphText("");
@@ -569,7 +569,7 @@ public class StructuralElementChecker implements Checker {
     private FormatError buildOrderError(List<String> expectedOrder, List<String> actualOrder) {
         FormatError error = new FormatError();
         error.setId("err_structural_element_order");
-        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT_LOCATION);
+        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT);
         error.setSeverity("error");
         error.setTitle("Порушено порядок структурних елементів документа");
         error.setParagraphText("");
@@ -588,7 +588,7 @@ public class StructuralElementChecker implements Checker {
     private FormatError buildNewPageWarning(FoundHeading heading) {
         FormatError error = new FormatError();
         error.setId("warn_structural_element_new_page");
-        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT_LOCATION);
+        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT);
         error.setSeverity("warning");
         error.setTitle("Структурний елемент \"" + heading.header().getTitle() + "\" не починається з нової сторінки");
         error.setParagraphText(heading.paragraphText());
@@ -605,7 +605,7 @@ public class StructuralElementChecker implements Checker {
     private FormatError buildUppercaseError(FoundHeading heading) {
         FormatError error = new FormatError();
         error.setId("err_structural_element_uppercase");
-        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT_LOCATION);
+        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT);
         error.setSeverity("error");
         error.setTitle("Заголовок структурного елемента має бути великими літерами");
         error.setParagraphText(heading.paragraphText());
@@ -622,7 +622,7 @@ public class StructuralElementChecker implements Checker {
     private FormatError buildTrailingDotError(FoundHeading heading) {
         FormatError error = new FormatError();
         error.setId("err_structural_element_trailing_dot");
-        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT_LOCATION);
+        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT);
         error.setSeverity("error");
         error.setTitle("Заголовок структурного елемента не повинен містити крапку в кінці");
         error.setParagraphText(heading.paragraphText());
@@ -639,7 +639,7 @@ public class StructuralElementChecker implements Checker {
     private FormatError buildBoldError(FoundHeading heading) {
         FormatError error = new FormatError();
         error.setId("err_structural_element_bold");
-        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT_LOCATION);
+        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT);
         error.setSeverity("error");
         error.setTitle("Заголовок структурного елемента має бути напівжирним");
         error.setParagraphText(heading.paragraphText());
@@ -656,7 +656,7 @@ public class StructuralElementChecker implements Checker {
     private FormatError buildUnderlineError(FoundHeading heading) {
         FormatError error = new FormatError();
         error.setId("err_structural_element_underline");
-        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT_LOCATION);
+        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT);
         error.setSeverity("error");
         error.setTitle("Заголовок структурного елемента не повинен бути підкресленим");
         error.setParagraphText(heading.paragraphText());
@@ -673,7 +673,7 @@ public class StructuralElementChecker implements Checker {
     private FormatError buildNumberedError(FoundHeading heading) {
         FormatError error = new FormatError();
         error.setId("err_structural_element_numbered");
-        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT_LOCATION);
+        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT);
         error.setSeverity("error");
         error.setTitle("Заголовок структурного елемента не повинен бути нумерованим");
         error.setParagraphText(heading.paragraphText());
@@ -690,7 +690,7 @@ public class StructuralElementChecker implements Checker {
     private FormatError buildItalicError(FoundHeading heading) {
         FormatError error = new FormatError();
         error.setId("err_structural_element_italic");
-        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT_LOCATION);
+        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT);
         error.setSeverity("error");
         error.setTitle("Заголовок структурного елемента не повинен бути курсивом");
         error.setParagraphText(heading.paragraphText());
@@ -701,7 +701,7 @@ public class StructuralElementChecker implements Checker {
     private FormatError buildCenteredError(FoundHeading heading) {
         FormatError error = new FormatError();
         error.setId("err_structural_element_not_centered");
-        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT_LOCATION);
+        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT);
         error.setSeverity("error");
         error.setTitle("Заголовок структурного елемента повинен бути вирівняний по центру");
         error.setParagraphText(heading.paragraphText());
