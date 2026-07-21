@@ -56,35 +56,4 @@ public class StyleUtils {
 
         return false;
     }
-
-    /**
-     * Checks if the paragraph text matches any of the pre-defined expected headings.
-     *
-     * @param paragraph        the paragraph to evaluate
-     * @param expectedHeadings the list of defined heading texts from requirements
-     * @return {@code true} if the paragraph text matches an expected heading; {@code false} otherwise
-     */
-    public static boolean isDefinedHeadingText(XWPFParagraph paragraph, List<String> expectedHeadings) {
-        if (paragraph == null || expectedHeadings == null) {
-            return false;
-        }
-
-        String text = paragraph.getText();
-        if (text == null) {
-            return false;
-        }
-
-        String trimmedText = text.trim();
-        if (trimmedText.isEmpty()) {
-            return false;
-        }
-
-        for (String expectedHeading : expectedHeadings) {
-            if (expectedHeading != null && trimmedText.equalsIgnoreCase(expectedHeading.trim())) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }
