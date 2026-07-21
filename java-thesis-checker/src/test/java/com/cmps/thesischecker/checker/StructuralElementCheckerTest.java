@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Objects;
 
-import static com.cmps.thesischecker.model.ErrorCategory.STRUCTURAL_ELEMENT_LOCATION;
+import static com.cmps.thesischecker.model.ErrorCategory.STRUCTURAL_ELEMENT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -41,7 +41,7 @@ public class StructuralElementCheckerTest extends BaseTest {
         assertEquals(1, missingErrors.size(), "Only one missing-element error should be found.");
 
         FormatError formatError = missingErrors.getFirst();
-        assertEquals(STRUCTURAL_ELEMENT_LOCATION, formatError.getCategory());
+        assertEquals(STRUCTURAL_ELEMENT, formatError.getCategory());
         assertEquals("error", formatError.getSeverity());
         assertEquals("ВИСНОВКИ", formatError.getExpected());
     }
@@ -59,7 +59,7 @@ public class StructuralElementCheckerTest extends BaseTest {
         assertEquals(1, orderErrors.size(), "Only one order error should be found.");
 
         FormatError formatError = orderErrors.getFirst();
-        assertEquals(STRUCTURAL_ELEMENT_LOCATION, formatError.getCategory());
+        assertEquals(STRUCTURAL_ELEMENT, formatError.getCategory());
         assertEquals("error", formatError.getSeverity());
         // Document has "ВСТУП" before "ЗМІСТ", while the requirement expects "ЗМІСТ" first.
         assertEquals("РЕФЕРАТ -> ЗМІСТ -> ВСТУП -> СПИСОК ДЖЕРЕЛ ІНФОРМАЦІЇ", formatError.getExpected());
@@ -84,7 +84,7 @@ public class StructuralElementCheckerTest extends BaseTest {
 
         FormatError formatError = pageErrors.getFirst();
         assertEquals(expectedParagraphText, formatError.getParagraphText());
-        assertEquals(STRUCTURAL_ELEMENT_LOCATION, formatError.getCategory());
+        assertEquals(STRUCTURAL_ELEMENT, formatError.getCategory());
         assertEquals("warning", formatError.getSeverity());
     }
 
@@ -115,7 +115,7 @@ public class StructuralElementCheckerTest extends BaseTest {
 
         FormatError formatError = errorsWithExpectedText.getFirst();
         assertEquals(expectedParagraphText, formatError.getParagraphText());
-        assertEquals(STRUCTURAL_ELEMENT_LOCATION, formatError.getCategory());
+        assertEquals(STRUCTURAL_ELEMENT, formatError.getCategory());
         assertEquals("warning", formatError.getSeverity());
     }
 
@@ -136,7 +136,7 @@ public class StructuralElementCheckerTest extends BaseTest {
 
         FormatError formatError = errorsWithExpectedText.getFirst();
         assertEquals(expectedParagraphText, formatError.getParagraphText());
-        assertEquals(STRUCTURAL_ELEMENT_LOCATION, formatError.getCategory());
+        assertEquals(STRUCTURAL_ELEMENT, formatError.getCategory());
         assertEquals("warning", formatError.getSeverity());
     }
 
@@ -158,7 +158,7 @@ public class StructuralElementCheckerTest extends BaseTest {
 
         FormatError formatError = errorsWithExpectedId.getFirst();
         assertEquals(expectedParagraphText, formatError.getParagraphText());
-        assertEquals(STRUCTURAL_ELEMENT_LOCATION, formatError.getCategory());
+        assertEquals(STRUCTURAL_ELEMENT, formatError.getCategory());
         assertEquals("error", formatError.getSeverity());
     }
 
@@ -179,7 +179,7 @@ public class StructuralElementCheckerTest extends BaseTest {
                                                                         "for the five structural elements that are not bold.");
 
         FormatError formatError = errorsWithExpectedId.getFirst();
-        assertEquals(STRUCTURAL_ELEMENT_LOCATION, formatError.getCategory());
+        assertEquals(STRUCTURAL_ELEMENT, formatError.getCategory());
         assertEquals("error", formatError.getSeverity());
     }
 
@@ -201,7 +201,7 @@ public class StructuralElementCheckerTest extends BaseTest {
 
         FormatError formatError = errorsWithExpectedId.getFirst();
         assertEquals(expectedParagraphText, formatError.getParagraphText());
-        assertEquals(STRUCTURAL_ELEMENT_LOCATION, formatError.getCategory());
+        assertEquals(STRUCTURAL_ELEMENT, formatError.getCategory());
         assertEquals("error", formatError.getSeverity());
     }
 
@@ -223,7 +223,7 @@ public class StructuralElementCheckerTest extends BaseTest {
 
         FormatError formatError = errorsWithExpectedId.getFirst();
         assertEquals(expectedParagraphText, formatError.getParagraphText());
-        assertEquals(STRUCTURAL_ELEMENT_LOCATION, formatError.getCategory());
+        assertEquals(STRUCTURAL_ELEMENT, formatError.getCategory());
         assertEquals("error", formatError.getSeverity());
     }
 
@@ -245,7 +245,7 @@ public class StructuralElementCheckerTest extends BaseTest {
 
         FormatError formatError = errorsWithExpectedId.getFirst();
         assertEquals(expectedParagraphText, formatError.getParagraphText());
-        assertEquals(STRUCTURAL_ELEMENT_LOCATION, formatError.getCategory());
+        assertEquals(STRUCTURAL_ELEMENT, formatError.getCategory());
         assertEquals("error", formatError.getSeverity());
     }
 }
