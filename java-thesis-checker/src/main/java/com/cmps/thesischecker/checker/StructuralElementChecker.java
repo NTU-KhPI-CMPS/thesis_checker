@@ -5,13 +5,8 @@ import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.requirements.RequirementsHolder;
 import com.cmps.thesischecker.utils.MainContentUtils;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBrType;
+import org.apache.poi.xwpf.usermodel.*;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -29,7 +24,7 @@ import java.util.Set;
  * (currently "РЕФЕРАТ", "ПЕРЕЛІК ПОЗНАК ТА СКОРОЧЕНЬ", "ДОДАТОК") are only checked
  * if they are actually present in the document.
  */
-public class StructuralElementLocationChecker implements Checker {
+public class StructuralElementChecker implements Checker {
 
     private static final String APPENDIX_TITLE = "ДОДАТОК";
 
@@ -66,6 +61,7 @@ public class StructuralElementLocationChecker implements Checker {
             allErrors.addAll(checkMissingRequired(foundHeadings, expectedHeaders));
             allErrors.addAll(checkOrder(foundHeadings, expectedHeaders));
             allErrors.addAll(checkStartsOnNewPage(foundHeadings));
+            allErrors.addAll(checkHeadingFormatting(paragraphs, foundHeadings));
         } catch (Exception e) {
             allErrors.add(buildException(e));
         }
@@ -95,7 +91,8 @@ public class StructuralElementLocationChecker implements Checker {
         List<FoundHeading> found = new ArrayList<>();
 
         for (int i = 0; i < paragraphs.size(); i++) {
-            String text = paragraphs.get(i).getText().trim();
+            XWPFParagraph paragraph = paragraphs.get(i);
+            String text = paragraph.getText().trim();
             if (text.isEmpty()) {
                 continue;
             }
@@ -110,30 +107,241 @@ public class StructuralElementLocationChecker implements Checker {
     }
 
     /**
-     * Matches paragraph text to a structural heading.
+     * Matches paragraph text to a structural heading, stripping any trailing dots
+     * or leading numbers.
      *
      * @param text paragraph text
      * @param expectedHeaders expected structural elements
      * @return matched header or {@code null}
      */
     private DocumentHeader matchHeader(String text, List<DocumentHeader> expectedHeaders) {
-        boolean isUpperCase = text.equals(text.toUpperCase(Locale.ROOT));
-        if (!isUpperCase) {
-            return null;
+        String cleanText = text.trim();
+
+        String textWithoutNumber = cleanText.replaceFirst("^\\s*\\d+([.\\s)]+\\d*)*[.\\s)]*", "").trim();
+        String upperText = textWithoutNumber.toUpperCase(Locale.ROOT);
+
+        if (upperText.endsWith(".")) {
+            upperText = upperText.substring(0, upperText.length() - 1).trim();
         }
 
         for (DocumentHeader header : expectedHeaders) {
             String title = header.getTitle();
             if (title.equals(APPENDIX_TITLE)) {
-                if (text.equals(title) || text.startsWith(title + " ")) {
+                if (upperText.equals(title) || upperText.startsWith(title + " ")) {
                     return header;
                 }
-            } else if (text.equals(title)) {
+            } else if (upperText.equals(title)) {
                 return header;
             }
         }
 
         return null;
+    }
+
+    /**
+     * Checks detailed text formatting of the structural headings (uppercase, bold,
+     * no trailing dot, no underline, and no numbering).
+     *
+     * @param paragraphs document paragraphs
+     * @param found found structural headings
+     * @return list of detected formatting errors
+     */
+    private List<FormatError> checkHeadingFormatting(List<XWPFParagraph> paragraphs, List<FoundHeading> found) {
+        List<FormatError> errors = new ArrayList<>();
+
+        for (FoundHeading heading : found) {
+            XWPFParagraph paragraph = paragraphs.get(heading.index());
+            String text = heading.paragraphText().trim();
+
+            if (!text.equals(text.toUpperCase(Locale.ROOT))) {
+                errors.add(buildUppercaseError(heading));
+            }
+
+            if (text.endsWith(".")) {
+                errors.add(buildTrailingDotError(heading));
+            }
+
+            if (!isBold(paragraph)) {
+                errors.add(buildBoldError(heading));
+            }
+
+            if (isUnderlined(paragraph)) {
+                errors.add(buildUnderlineError(heading));
+            }
+
+            if (isItalic(paragraph)) {
+                errors.add(buildItalicError(heading));
+            }
+
+            if (isNumbered(paragraph, text)) {
+                errors.add(buildNumberedError(heading));
+            }
+
+            if(!isCentred(paragraph)){
+                errors.add(buildCenteredError(heading));
+            }
+        }
+
+        return errors;
+    }
+
+    /**
+     * Checks if the paragraph text is set to bold either via direct run formatting
+     * or inherited from paragraph styles.
+     *
+     * @param paragraph paragraph to inspect
+     * @return {@code true} if bold
+     */
+    private boolean isBold(XWPFParagraph paragraph) {
+        for (XWPFRun run : paragraph.getRuns()) {
+            if (run.getText(0) != null && !run.getText(0).trim().isEmpty()) {
+                if (run.isBold()) {
+                    return true;
+                }
+            }
+        }
+
+        if (paragraph.getDocument() != null && paragraph.getStyleID() != null) {
+            XWPFStyles styles = paragraph.getDocument().getStyles();
+            if (styles != null) {
+                String styleId = paragraph.getStyleID();
+                while (styleId != null) {
+                    XWPFStyle style = styles.getStyle(styleId);
+                    if (style != null && style.getCTStyle() != null) {
+                        CTRPr rPr = style.getCTStyle().getRPr();
+                        if (rPr != null && !rPr.getBList().isEmpty()) {
+                            CTOnOff b = rPr.getBList().getFirst();
+                            return isOnOffEnabled(b);
+                        }
+                        if (style.getCTStyle().isSetBasedOn() && style.getCTStyle().getBasedOn() != null) {
+                            styleId = style.getCTStyle().getBasedOn().getVal();
+                        } else {
+                            break;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if the paragraph text is set to italic either via direct run formatting
+     * or inherited from paragraph styles.
+     *
+     * @param paragraph paragraph to inspect
+     * @return {@code true} if italic
+     */
+    private boolean isItalic(XWPFParagraph paragraph) {
+        for (XWPFRun run : paragraph.getRuns()) {
+            if (run.getText(0) != null && !run.getText(0).trim().isEmpty()) {
+                if (run.isItalic()) {
+                    return true;
+                }
+            }
+        }
+
+        if (paragraph.getDocument() != null && paragraph.getStyleID() != null) {
+            XWPFStyles styles = paragraph.getDocument().getStyles();
+            if (styles != null) {
+                String styleId = paragraph.getStyleID();
+                while (styleId != null) {
+                    XWPFStyle style = styles.getStyle(styleId);
+                    if (style != null && style.getCTStyle() != null) {
+                        CTRPr rPr = style.getCTStyle().getRPr();
+                        if (rPr != null && !rPr.getIList().isEmpty()) {
+                            CTOnOff i = rPr.getIList().getFirst();
+                            return isOnOffEnabled(i);
+                        }
+                        if (style.getCTStyle().isSetBasedOn() && style.getCTStyle().getBasedOn() != null) {
+                            styleId = style.getCTStyle().getBasedOn().getVal();
+                        } else {
+                            break;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if any run in the paragraph or its style is underlined.
+     *
+     * @param paragraph paragraph to inspect
+     * @return {@code true} if underlined
+     */
+    private boolean isUnderlined(XWPFParagraph paragraph) {
+        for (XWPFRun run : paragraph.getRuns()) {
+            if (run.getUnderline() != null && run.getUnderline() != UnderlinePatterns.NONE) {
+                return true;
+            }
+        }
+
+        if (paragraph.getDocument() != null && paragraph.getStyleID() != null) {
+            XWPFStyles styles = paragraph.getDocument().getStyles();
+            if (styles != null) {
+                String styleId = paragraph.getStyleID();
+                while (styleId != null) {
+                    XWPFStyle style = styles.getStyle(styleId);
+                    if (style != null && style.getCTStyle() != null) {
+                        CTRPr rPr = style.getCTStyle().getRPr();
+                        if (rPr != null && !rPr.getUList().isEmpty()) {
+                            var u = rPr.getUList().getFirst();
+                            if (u.getVal() != null && u.getVal() != STUnderline.NONE) {
+                                return true;
+                            }
+                        }
+                        if (style.getCTStyle().isSetBasedOn() && style.getCTStyle().getBasedOn() != null) {
+                            styleId = style.getCTStyle().getBasedOn().getVal();
+                        } else {
+                            break;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks whether the paragraph has list numbering attached (XML)
+     * or manually typed number at the beginning (e.g. "1 ВСТУП", "1. ВСТУП").
+     *
+     * @param paragraph paragraph to inspect
+     * @param text paragraph text
+     * @return {@code true} if numbered
+     */
+    private boolean isNumbered(XWPFParagraph paragraph, String text) {
+        if (paragraph.getNumID() != null) {
+            return true;
+        }
+        return text != null && text.trim().matches("^\\s*\\d+([.\\s)]+\\d*)*[.\\s)].*");
+    }
+
+    /**
+     * Checks whether the paragraph is centered, either via direct formatting or inherited from styles.
+     *
+     * @param paragraph paragraph to inspect
+     * @return {@code true} if centered
+     */
+    private boolean isCentred(XWPFParagraph paragraph) {
+        String alignment = AlignmentChecker.getAlignmentFromPPr(paragraph.getCTP().getPPr());
+
+        if (alignment == null) {
+            alignment = AlignmentChecker.getAlignmentFromStyles(paragraph);
+        }
+
+        return alignment != null && alignment.equalsIgnoreCase(RequirementsHolder.getHeadingAlignment());
     }
 
     /**
@@ -385,6 +593,119 @@ public class StructuralElementLocationChecker implements Checker {
         error.setTitle("Структурний елемент \"" + heading.header().getTitle() + "\" не починається з нової сторінки");
         error.setParagraphText(heading.paragraphText());
         error.setExpected("Розрив сторінки перед елементом");
+        return error;
+    }
+
+    /**
+     * Creates an error when a structural element is not in uppercase.
+     *
+     * @param heading structural heading
+     * @return format error
+     */
+    private FormatError buildUppercaseError(FoundHeading heading) {
+        FormatError error = new FormatError();
+        error.setId("err_structural_element_uppercase");
+        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT_LOCATION);
+        error.setSeverity("error");
+        error.setTitle("Заголовок структурного елемента має бути великими літерами");
+        error.setParagraphText(heading.paragraphText());
+        error.setExpected(heading.paragraphText().toUpperCase(Locale.ROOT));
+        return error;
+    }
+
+    /**
+     * Creates an error when a structural element ends with a dot.
+     *
+     * @param heading structural heading
+     * @return format error
+     */
+    private FormatError buildTrailingDotError(FoundHeading heading) {
+        FormatError error = new FormatError();
+        error.setId("err_structural_element_trailing_dot");
+        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT_LOCATION);
+        error.setSeverity("error");
+        error.setTitle("Заголовок структурного елемента не повинен містити крапку в кінці");
+        error.setParagraphText(heading.paragraphText());
+        error.setExpected(heading.paragraphText().substring(0, heading.paragraphText().length() - 1));
+        return error;
+    }
+
+    /**
+     * Creates an error when a structural element is not bold.
+     *
+     * @param heading structural heading
+     * @return format error
+     */
+    private FormatError buildBoldError(FoundHeading heading) {
+        FormatError error = new FormatError();
+        error.setId("err_structural_element_bold");
+        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT_LOCATION);
+        error.setSeverity("error");
+        error.setTitle("Заголовок структурного елемента має бути напівжирним");
+        error.setParagraphText(heading.paragraphText());
+        error.setExpected("Напівжирний шрифт");
+        return error;
+    }
+
+    /**
+     * Creates an error when a structural element is underlined.
+     *
+     * @param heading structural heading
+     * @return format error
+     */
+    private FormatError buildUnderlineError(FoundHeading heading) {
+        FormatError error = new FormatError();
+        error.setId("err_structural_element_underline");
+        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT_LOCATION);
+        error.setSeverity("error");
+        error.setTitle("Заголовок структурного елемента не повинен бути підкресленим");
+        error.setParagraphText(heading.paragraphText());
+        error.setExpected("Без підкреслення");
+        return error;
+    }
+
+    /**
+     * Creates an error when a structural element is numbered.
+     *
+     * @param heading structural heading
+     * @return format error
+     */
+    private FormatError buildNumberedError(FoundHeading heading) {
+        FormatError error = new FormatError();
+        error.setId("err_structural_element_numbered");
+        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT_LOCATION);
+        error.setSeverity("error");
+        error.setTitle("Заголовок структурного елемента не повинен бути нумерованим");
+        error.setParagraphText(heading.paragraphText());
+        error.setExpected("Без нумерації");
+        return error;
+    }
+
+    /**
+     * Creates an error when a structural element is italicized.
+     *
+     * @param heading structural heading
+     * @return format error
+     */
+    private FormatError buildItalicError(FoundHeading heading) {
+        FormatError error = new FormatError();
+        error.setId("err_structural_element_italic");
+        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT_LOCATION);
+        error.setSeverity("error");
+        error.setTitle("Заголовок структурного елемента не повинен бути курсивом");
+        error.setParagraphText(heading.paragraphText());
+        error.setExpected("Без курсиву");
+        return error;
+    }
+
+    private FormatError buildCenteredError(FoundHeading heading) {
+        FormatError error = new FormatError();
+        error.setId("err_structural_element_not_centered");
+        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT_LOCATION);
+        error.setSeverity("error");
+        error.setTitle("Заголовок структурного елемента повинен бути вирівняний по центру");
+        error.setParagraphText(heading.paragraphText());
+        error.setExpected("Вирівнювання по лівому краю");
         return error;
     }
 
