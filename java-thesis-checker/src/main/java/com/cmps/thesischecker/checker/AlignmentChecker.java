@@ -187,7 +187,7 @@ public class AlignmentChecker implements Checker {
      * @param paragraph the paragraph to inspect
      * @return the resolved alignment value, or {@code null} if none is available
      */
-    String getAlignmentFromStyles(XWPFParagraph paragraph) {
+    static String getAlignmentFromStyles(XWPFParagraph paragraph) {
         XWPFStyles styles = paragraph.getDocument().getStyles();
         if (styles == null) {
             return null;
@@ -228,7 +228,7 @@ public class AlignmentChecker implements Checker {
      * @param pPr the base paragraph properties
      * @return true if alignment is absent, false otherwise
      */
-    boolean isAlignmentMissing(CTPPrBase pPr) {
+    static boolean isAlignmentMissing(CTPPrBase pPr) {
         return pPr == null || !pPr.isSetJc() || pPr.getJc() == null || pPr.getJc().getVal() == null;
     }
 
@@ -238,7 +238,7 @@ public class AlignmentChecker implements Checker {
      * @param pPr the paragraph properties
      * @return the resolved alignment value, or {@code null} if not present
      */
-    String getAlignmentFromPPr(CTPPr pPr) {
+    static String getAlignmentFromPPr(CTPPr pPr) {
         if (isAlignmentMissing(pPr)) {
             return null;
         }
@@ -251,7 +251,7 @@ public class AlignmentChecker implements Checker {
      * @param pPr the general paragraph properties
      * @return the resolved alignment value, or {@code null} if not present
      */
-    String getAlignmentFromPPr(CTPPrGeneral pPr) {
+    static String getAlignmentFromPPr(CTPPrGeneral pPr) {
         if (isAlignmentMissing(pPr)) {
             return null;
         }
