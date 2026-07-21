@@ -5,6 +5,7 @@ import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.requirements.RequirementsHolder;
 import com.cmps.thesischecker.utils.FormulaUtils;
 import com.cmps.thesischecker.utils.MainContentUtils;
+import com.cmps.thesischecker.utils.StyleUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.w3c.dom.Document;
@@ -73,7 +74,7 @@ public class FormulaChecker implements Checker {
             for (int i = 0; i < paragraphs.size(); i++) {
                 XWPFParagraph paragraph = paragraphs.get(i);
 
-                if (isHeading1(paragraph)) {
+                if (StyleUtils.isHeading1(paragraph)) {
                     updateChapter(paragraph, currentChapter, expectedNumberInChapter);
                     continue;
                 }
@@ -181,17 +182,6 @@ public class FormulaChecker implements Checker {
                     formulaText,
                     "Порожній рядок після формули"));
         }
-    }
-
-    /**
-     * Checks if the specified paragraph uses the Heading1 style.
-     *
-     * @param paragraph the paragraph to check
-     * @return true if the paragraph is a Heading1, false otherwise
-     */
-    private boolean isHeading1(XWPFParagraph paragraph) {
-        String styleId = paragraph.getStyle();
-        return styleId != null && (styleId.equalsIgnoreCase("Heading1") || styleId.equalsIgnoreCase("1"));
     }
 
     /**
