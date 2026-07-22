@@ -79,7 +79,7 @@ public class FormulaChecker implements Checker {
             for (int i = 0; i < paragraphs.size(); i++) {
                 XWPFParagraph paragraph = paragraphs.get(i);
 
-                if (isHeading1(paragraph)) {
+                if (StyleUtils.isHeading1(paragraph)) {
                     updateChapter(paragraph, currentChapter, expectedNumberInChapter);
                     continue;
                 }

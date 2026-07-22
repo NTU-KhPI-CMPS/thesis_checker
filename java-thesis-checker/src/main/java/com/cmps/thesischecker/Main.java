@@ -3,15 +3,7 @@ package com.cmps.thesischecker;
 import com.cmps.thesischecker.argparser.FilePathParser;
 import com.cmps.thesischecker.argparser.Parser;
 import com.cmps.thesischecker.argparser.ResultDirectoryParser;
-import com.cmps.thesischecker.checker.AlignmentChecker;
-import com.cmps.thesischecker.checker.Checker;
-import com.cmps.thesischecker.checker.FontChecker;
-import com.cmps.thesischecker.checker.FormulaChecker;
-import com.cmps.thesischecker.checker.LineSpaceChecker;
-import com.cmps.thesischecker.checker.ListChecker;
-import com.cmps.thesischecker.checker.ParagraphSpacingChecker;
-import com.cmps.thesischecker.checker.SizeChecker;
-import com.cmps.thesischecker.checker.ParagraphIndentationChecker;
+import com.cmps.thesischecker.checker.*;
 import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.model.Report;
@@ -41,6 +33,7 @@ public class Main {
             new AlignmentChecker(),
             new ListChecker(),
             new ParagraphSpacingChecker(),
+            new StructuralElementChecker(),
             new SizeChecker(),
             new ParagraphIndentationChecker()
     );
