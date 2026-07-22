@@ -26,6 +26,13 @@ import java.util.Set;
  */
 public class StructuralElementChecker implements Checker {
 
+    /**
+     * The standard title for an appendix structural element ("ДОДАТОК").
+     * <p>
+     * Appendices differ from other structural elements because they usually contain
+     * an identifier suffix (e.g., "ДОДАТОК А", "ДОДАТОК 1"). This constant is used
+     * to handle prefix-based matching for appendix headings instead of requiring an exact string match.
+     */
     private static final String APPENDIX_TITLE = "ДОДАТОК";
 
     /**
@@ -54,12 +61,11 @@ public class StructuralElementChecker implements Checker {
              XWPFDocument doc = new XWPFDocument(fis)) {
 
             List<XWPFParagraph> paragraphs = MainContentUtils.getMainContentParagraphs(doc);
-            List<DocumentHeader> expectedHeaders = RequirementsHolder.getOrderStructuredElements();
 
-            List<FoundHeading> foundHeadings = collectHeadings(paragraphs, expectedHeaders);
+            List<FoundHeading> foundHeadings = collectHeadings(paragraphs);
 
-            allErrors.addAll(checkMissingRequired(foundHeadings, expectedHeaders));
-            allErrors.addAll(checkOrder(foundHeadings, expectedHeaders));
+            allErrors.addAll(checkMissingRequired(foundHeadings));
+            allErrors.addAll(checkOrder(foundHeadings));
             allErrors.addAll(checkStartsOnNewPage(foundHeadings));
         } catch (Exception e) {
             allErrors.add(buildException(e));
@@ -83,10 +89,10 @@ public class StructuralElementChecker implements Checker {
      * Collects structural headings found in the document.
      *
      * @param paragraphs document paragraphs
-     * @param expectedHeaders expected structural elements
      * @return list of found headings
      */
-    private List<FoundHeading> collectHeadings(List<XWPFParagraph> paragraphs, List<DocumentHeader> expectedHeaders) {
+    private List<FoundHeading> collectHeadings(List<XWPFParagraph> paragraphs) {
+        List<DocumentHeader> expectedHeaders = RequirementsHolder.getOrderStructuredElements();
         List<FoundHeading> found = new ArrayList<>();
 
         for (int i = 0; i < paragraphs.size(); i++) {
@@ -141,10 +147,10 @@ public class StructuralElementChecker implements Checker {
      * Checks that all required structural elements are present.
      *
      * @param found found structural headings
-     * @param expectedHeaders expected structural elements
      * @return list of errors
      */
-    private List<FormatError> checkMissingRequired(List<FoundHeading> found, List<DocumentHeader> expectedHeaders) {
+    private List<FormatError> checkMissingRequired(List<FoundHeading> found) {
+        List<DocumentHeader> expectedHeaders = RequirementsHolder.getOrderStructuredElements();
         List<FormatError> errors = new ArrayList<>();
 
         Set<String> foundTitles = new LinkedHashSet<>();
@@ -165,10 +171,10 @@ public class StructuralElementChecker implements Checker {
      * Checks the order of structural elements.
      *
      * @param found found structural headings
-     * @param expectedHeaders expected structural elements
      * @return list of errors
      */
-    private List<FormatError> checkOrder(List<FoundHeading> found, List<DocumentHeader> expectedHeaders) {
+    private List<FormatError> checkOrder(List<FoundHeading> found) {
+        List<DocumentHeader> expectedHeaders = RequirementsHolder.getOrderStructuredElements();
         List<String> expectedOrder = getExpectedOrder(found, expectedHeaders);
 
         // Actual order, collapsing consecutive repeats (e.g. several "ДОДАТОК Х" in a row
