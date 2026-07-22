@@ -8,9 +8,7 @@ import com.cmps.thesischecker.utils.MainContentUtils;
 import com.cmps.thesischecker.utils.StyleUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFStyle;
 import org.apache.poi.xwpf.usermodel.XWPFStyles;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -20,9 +18,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.FileInputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -94,17 +90,6 @@ public class FormulaChecker implements Checker {
             allErrors.add(buildException(e));
         }
         return allErrors;
-    }
-
-    /**
-     * Checks if the specified paragraph uses the Heading1 style.
-     *
-     * @param paragraph the paragraph to check
-     * @return true if the paragraph is a Heading1, false otherwise
-     */
-    private boolean isHeading1(XWPFParagraph paragraph) {
-        String styleId = paragraph.getStyle();
-        return styleId != null && (styleId.equalsIgnoreCase("Heading1") || styleId.equalsIgnoreCase("1"));
     }
 
     /**
@@ -335,45 +320,7 @@ public class FormulaChecker implements Checker {
             styleId = StyleUtils.getNormalStyleId(styles);
         }
 
-        return getFontSizeFromParagraphStyle(document, styleId);
-    }
-
-    /**
-     * Looks up the font size (in points) declared directly on a style, recursively walking
-     * up the "basedOn" style inheritance chain when the style itself doesn't declare a size.
-     *
-     * @param document the document the style belongs to
-     * @param styleId  the ID of the style to inspect
-     * @return the resolved font size in points, or 12.0 (Word's default) if none is found
-     *         anywhere in the chain
-     */
-    private double getFontSizeFromParagraphStyle(XWPFDocument document, String styleId) {
-        XWPFStyle style = document.getStyles().getStyle(styleId);
-
-        if (style == null) {
-            return 12.0;
-        }
-
-        var ctStyle = style.getCTStyle();
-        var sizeList = Optional
-                .ofNullable(ctStyle.getRPr())
-                .map(CTRPr::getSzList)
-                .orElse(Collections.emptyList());
-
-        if (!sizeList.isEmpty()) {
-            var sz = sizeList.getFirst();
-            if (sz.getVal() != null) {
-                int size = Integer.parseInt(sz.getVal().toString());
-                return size / 2.0;
-            }
-        }
-
-        if (ctStyle.isSetBasedOn() && ctStyle.getBasedOn() != null) {
-            String baseStyle = ctStyle.getBasedOn().getVal();
-            return getFontSizeFromParagraphStyle(document, baseStyle);
-        }
-
-        return 12.0;
+        return StyleUtils.getFontSizeFromParagraphStyle(document, styleId);
     }
 
     /**
