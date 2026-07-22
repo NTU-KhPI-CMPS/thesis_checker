@@ -1,9 +1,14 @@
 package com.cmps.thesischecker.utils;
 
 import com.cmps.thesischecker.model.Style;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
 import org.apache.poi.xwpf.usermodel.XWPFStyles;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
+
+import java.util.Collections;
+import java.util.Optional;
 
 
 /**
@@ -54,5 +59,41 @@ public class StyleUtils {
         }
 
         return false;
+    }
+
+    /**
+     * Retrieves the font size for a given paragraph style by checking its properties and any base styles recursively.
+     *
+     * @param document the XWPFDocument containing the styles
+     * @param styleId  the style ID to evaluate
+     * @return the font size in points, or 12.0 if not specified
+     */
+    public static double getFontSizeFromParagraphStyle(XWPFDocument document, String styleId) {
+        XWPFStyle style = document.getStyles().getStyle(styleId);
+
+        if (style == null) {
+            return 12.0;
+        }
+
+        var ctStyle = style.getCTStyle();
+        var sizeList = Optional
+                .ofNullable(ctStyle.getRPr())
+                .map(CTRPr::getSzList)
+                .orElse(Collections.emptyList());
+
+        if (!sizeList.isEmpty()) {
+            var sz = sizeList.getFirst();
+            if (sz.getVal() != null) {
+                int size = Integer.parseInt(sz.getVal().toString());
+                return size / 2.0;
+            }
+        }
+
+        if (ctStyle.isSetBasedOn() && ctStyle.getBasedOn() != null) {
+            String baseStyle = ctStyle.getBasedOn().getVal();
+            return getFontSizeFromParagraphStyle(document, baseStyle);
+        }
+
+        return 12.0;
     }
 }

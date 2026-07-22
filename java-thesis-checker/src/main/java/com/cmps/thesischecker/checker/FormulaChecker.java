@@ -8,6 +8,7 @@ import com.cmps.thesischecker.utils.MainContentUtils;
 import com.cmps.thesischecker.utils.StyleUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFStyles;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -122,7 +123,8 @@ public class FormulaChecker implements Checker {
         List<String> formulaXmls = FormulaUtils.getFormulaXmls(formulaParagraph);
         int[] markerCount = {0};
         for (String formulaXml : formulaXmls) {
-            checkFormulaXml(formulaXml, formulaText, currentChapter, expectedNumberInChapter, markerCount, allErrors);
+            checkFormulaXml(formulaXml, formulaText, formulaParagraph, currentChapter, expectedNumberInChapter,
+                    markerCount, allErrors);
         }
 
         if (formulaXmls.size() > 1 || markerCount[0] > 1) {
@@ -209,14 +211,18 @@ public class FormulaChecker implements Checker {
      *
      * @param formulaXml               raw XML of the OMath element
      * @param paragraphText            text of the paragraph containing the formula
+     * @param formulaParagraph         the paragraph that contains the formula, used to resolve
+     *                                 the effective font size (via its style) when a run doesn't
+     *                                 declare its own size
      * @param currentChapter           the current chapter number, from the last Heading1
      * @param expectedNumberInChapter  mutable holder for the expected next formula number
      * @param markerCount              mutable counter of numbering markers found, used to
      *                                 detect multiple formulas sharing one paragraph
      * @param allErrors                accumulator for found errors
      */
-    private void checkFormulaXml(String formulaXml, String paragraphText, int currentChapter,
-                                 int[] expectedNumberInChapter, int[] markerCount, List<FormatError> allErrors) {
+    private void checkFormulaXml(String formulaXml, String paragraphText, XWPFParagraph formulaParagraph,
+                                 int currentChapter, int[] expectedNumberInChapter, int[] markerCount,
+                                 List<FormatError> allErrors) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setNamespaceAware(false);
@@ -228,7 +234,7 @@ public class FormulaChecker implements Checker {
                 Element run = (Element) runs.item(i);
                 String text = getRunText(run);
                 if (text.isBlank()) continue;
-                checkRunSize(run, text, paragraphText, allErrors);
+                checkRunSize(run, text, paragraphText, formulaParagraph, allErrors);
             }
 
             NodeList texts = document.getElementsByTagName("m:t");
@@ -264,26 +270,57 @@ public class FormulaChecker implements Checker {
 
     /**
      * Checks if the run size inside the formula matches the expected document font size.
+     * <p>
+     * The size is resolved in steps: first the run's own explicit "w:sz" property is used;
+     * if the run doesn't declare one, the size falls back to the formula paragraph's applied
+     * style, and if that style doesn't declare a size either, recursively up the style's
+     * "basedOn" inheritance chain. If no size is found anywhere, Word's standard 12pt default
+     * is used.
      *
-     * @param run           the XML Element containing run properties
-     * @param text          the text fragment inside the run
-     * @param paragraphText the text of the entire paragraph
-     * @param allErrors     accumulator for found errors
+     * @param run              the XML Element containing run properties
+     * @param text             the text fragment inside the run
+     * @param paragraphText    the text of the entire paragraph
+     * @param formulaParagraph the paragraph that contains the formula, used to resolve the
+     *                         font size from its style when the run doesn't set one
+     * @param allErrors        accumulator for found errors
      */
-    private void checkRunSize(Element run, String text, String paragraphText, List<FormatError> allErrors) {
+    private void checkRunSize(Element run, String text, String paragraphText, XWPFParagraph formulaParagraph,
+                              List<FormatError> allErrors) {
         NodeList sizes = run.getElementsByTagName("w:sz");
 
-        double sizePt = 12.0;
+        double sizePt;
 
         if (sizes.getLength() > 0) {
             Element sz = (Element) sizes.item(0);
             int raw = Integer.parseInt(sz.getAttribute("w:val"));
             sizePt = raw / 2.0;
+        } else {
+            sizePt = getEffectiveParagraphFontSize(formulaParagraph);
         }
 
         if (sizePt != expectedFontSize) {
             allErrors.add(buildFontSizeError(paragraphText, text, sizePt));
         }
+    }
+
+    /**
+     * Resolves the font size that applies to a paragraph when a formula run doesn't declare
+     * its own size: first the paragraph's own style is checked, then - if that style doesn't
+     * declare a size either - the lookup walks recursively up the style's "basedOn" chain.
+     *
+     * @param paragraph the paragraph to resolve the effective font size for
+     * @return the resolved font size in points, or 12.0 (Word's default) if none is found
+     */
+    private double getEffectiveParagraphFontSize(XWPFParagraph paragraph) {
+        XWPFDocument document = paragraph.getDocument();
+        XWPFStyles styles = document.getStyles();
+        String styleId = paragraph.getStyleID();
+
+        if (styleId == null) {
+            styleId = StyleUtils.getNormalStyleId(styles);
+        }
+
+        return StyleUtils.getFontSizeFromParagraphStyle(document, styleId);
     }
 
     /**
