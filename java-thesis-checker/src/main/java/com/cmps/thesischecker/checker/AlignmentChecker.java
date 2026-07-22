@@ -2,7 +2,6 @@ package com.cmps.thesischecker.checker;
 
 import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
-import com.cmps.thesischecker.model.Style;
 import com.cmps.thesischecker.utils.MainContentUtils;
 import com.cmps.thesischecker.utils.StyleUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -67,7 +66,7 @@ public class AlignmentChecker implements Checker {
                 }
                 Optional<String> incorrectAlignment = validate(paragraph);
                 if (incorrectAlignment.isPresent()) {
-                    String expectedRaw = isHeading(paragraph)
+                    String expectedRaw = StyleUtils.isHeading1(paragraph)
                             ? RequirementsHolder.getHeadingAlignment()
                             : RequirementsHolder.getMainTextAlignment();
 
@@ -80,18 +79,6 @@ public class AlignmentChecker implements Checker {
         }
 
         return allErrors;
-    }
-
-    /**
-     * Determines whether the given paragraph is formatted as a heading.
-     * Validates against standard English ("Heading1") style names.
-     *
-     * @param paragraph the paragraph to inspect
-     * @return true if the paragraph is a heading, false otherwise
-     */
-    private boolean isHeading(XWPFParagraph paragraph) {
-        String styleId = paragraph.getStyle();
-        return Style.HEADING_1.matches(styleId);
     }
 
     /**
@@ -157,7 +144,7 @@ public class AlignmentChecker implements Checker {
     Optional<String> validate(XWPFParagraph paragraph) {
         String actualAlignment = getAlignment(paragraph);
 
-        if (isHeading(paragraph)) {
+        if (StyleUtils.isHeading1(paragraph)) {
             if (!actualAlignment.equals(RequirementsHolder.getHeadingAlignment())) {
                 return Optional.of(actualAlignment);
             }
