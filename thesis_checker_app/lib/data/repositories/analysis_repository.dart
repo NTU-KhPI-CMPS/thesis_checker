@@ -79,7 +79,7 @@ class AnalysisRepository {
     }
 
     for (final type in AvailableCheckTypes.checkTypes) {
-      if (type.checks.isEmpty) {
+      if (type.isFallback) {
         return type;
       }
     }

@@ -8,11 +8,15 @@ class CheckTypeInfo extends Equatable{
   final List<Check> checks;
   final String iconPath;
 
+  /// Marks the category that unknown/unmatched check codes fall back to.
+  final bool isFallback;
+
   const CheckTypeInfo({
     required this.title,
     required this.description,
     required this.checks,
     required this.iconPath,
+    this.isFallback = false,
   });
 
   @override

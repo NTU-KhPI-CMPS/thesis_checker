@@ -38,6 +38,7 @@ class AvailableCheckTypes {
         Check.indentation
       ],
       iconPath: 'assets/images/other_checks.png',
+      isFallback: true
     )
   ];
 }
