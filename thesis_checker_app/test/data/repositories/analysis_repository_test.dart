@@ -70,7 +70,10 @@ void main() {
       final mockRunner = MockRunnerJavaService();
       final repository = AnalysisRepository.forTest(runnerJavaService: mockRunner);
       final filePath = ['tmp', 'empty.docx'].join(Platform.pathSeparator);
-      final otherType = AvailableCheckTypes.checkTypes.firstWhere((type) => type.title == 'Інші');
+      final otherType = AvailableCheckTypes.checkTypes.firstWhere(
+        (type) => type.checks.contains(Check.other),
+        orElse: () => AvailableCheckTypes.checkTypes.last
+      );
 
       when(mockRunner.checkFile(filePath, selectedChecks: [otherType])).thenAnswer(
         (_) async => const ReportApi(errors: []),
@@ -84,7 +87,7 @@ void main() {
 
       expect(result.fileName, 'empty.docx');
       expect(result.totalErrors, 0);
-      expect(result.errorsByCategory.length, 4);
+      expect(result.errorsByCategory.length, AvailableCheckTypes.checkTypes.length);
       expect(result.errorsByCategory.every((item) => item.errors.isEmpty), isTrue);
       expect(result.selectedChecks, [otherType]);
       verify(mockRunner.checkFile(filePath, selectedChecks: [otherType])).called(1);
