@@ -124,9 +124,8 @@ public class SizeChecker implements Checker {
             if (fragmentText == null) continue;
 
             Double effectiveSize = getEffectiveFontSize(run, document);
-            Double expectedSizeDouble = Double.parseDouble(RequirementsHolder.getFontSize());
 
-            if (!effectiveSize.equals(expectedSizeDouble))
+            if (!effectiveSize.equals(expectedSize))
                 incorrectSizes.add(String.format("%.1fpt", effectiveSize));
             }
 
