@@ -9,7 +9,8 @@ enum Check {
   indentation('INDENTATION'),
   // firstLineIndentation('FIRST_LINE_INDENTATION'), need to add this code when the checker will be implemented
   structuralElement('STRUCTURAL_ELEMENT'),
-  formula('FORMULA');
+  formula('FORMULA'),
+  other('OTHER');
 
   final String name;
   const Check(this.name);
