@@ -125,4 +125,25 @@ public class ListCheckerTest extends BaseTest {
         assertEquals(Set.of(NumberingFormat.UPPER_ROMAN.getDisplayName()), formatError.getFound());
         assertEquals(RequirementsHolder.getListAllowedMarkerFormats(), formatError.getExpected());
     }
+
+    @Test
+    @DisplayName("Should detect warning when list builded manually")
+    void check_incorrectFormatting_manualList() {
+        // GIVEN
+        String firstExpectedParagraphText = "1) Ручне форматування списку, перше";
+        String secondExpectedParagraphText = "2. Ручне форматування списку, друге";
+        String thirdExpectedParagraphText = "а) Ручне, форматування списку, третє";
+
+        // WHEN
+        List<FormatError> result = checker.check("src/test/resources/incorrect_list_formatting.docx");
+
+        // THEN
+        List<FormatError> errorsWithExpectedText
+                = result.stream()
+                .filter(fe -> Objects.equals(fe.getParagraphText(), firstExpectedParagraphText)
+                        || Objects.equals(fe.getParagraphText(), secondExpectedParagraphText)
+                        || Objects.equals(fe.getParagraphText(), thirdExpectedParagraphText))
+                .toList();
+        assertEquals(3, errorsWithExpectedText.size(), "Three warnings with expected text should be found.");
+    }
 }
