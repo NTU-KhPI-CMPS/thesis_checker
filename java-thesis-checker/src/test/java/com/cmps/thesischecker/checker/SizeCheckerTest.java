@@ -15,14 +15,14 @@ public class SizeCheckerTest extends BaseTest {
         List<FormatError> result = checker.check("src/test/resources/incorrect_font_size.docx");
         assertFalse(result.isEmpty(), "Expected errors in document with incorrect font sizes");
 
-        assertEquals(12, result.size(), "Should find 12 size errors in test document");
+        assertEquals(12.0, result.size(), "Should find 12.0 size errors in test document");
     }
 
     @Test
     void check_fontSize_noErrorsForCorrectSize() {
         SizeChecker checker = new SizeChecker();
         List<FormatError> result = checker.check("src/test/resources/correct_font_size.docx");
-        assertTrue(result.isEmpty(), "Expected no errors in document where all text has correct size (14 pt)");
+        assertTrue(result.isEmpty(), "Expected no errors in document where all text has correct size (14.0 pt)");
     }
 
     @Test
@@ -31,11 +31,11 @@ public class SizeCheckerTest extends BaseTest {
         List<FormatError> errors = checker.check("src/test/resources/incorrect_font_size.docx");
         assertFalse(errors.isEmpty(), "Expected errors in test document");
         
-        FormatError firstError = errors.get(0);
+        FormatError firstError = errors.getFirst();
         assertNotNull(firstError);
         assertEquals("FONT_SIZE", firstError.getCategory().toString());
         assertNotNull(firstError.getFound());
         assertFalse(firstError.getFound().isEmpty());
-        assertEquals("14pt", firstError.getExpected());
+        assertEquals("14.0pt", firstError.getExpected());
     }
 }

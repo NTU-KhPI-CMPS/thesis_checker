@@ -4,7 +4,6 @@ import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.requirements.RequirementsHolder;
 import org.apache.poi.xwpf.usermodel.*;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import com.cmps.thesischecker.utils.MainContentUtils;
 import com.cmps.thesischecker.utils.StyleUtils;
 
@@ -13,10 +12,10 @@ import java.util.*;
 
 public class SizeChecker implements Checker {
 
-    private final int expectedSize;
+    private final double expectedSize;
 
     public SizeChecker() {
-        this.expectedSize = Integer.parseInt(RequirementsHolder.getFontSize());
+        this.expectedSize = Double.parseDouble(RequirementsHolder.getFontSize());
     }
 
     /**
@@ -41,6 +40,7 @@ public class SizeChecker implements Checker {
                 String paragraphText = paragraph.getText().trim();
                 if (paragraphText.isEmpty()) continue;
                 Set<String> incorrectSizes = validate(paragraph);
+
                 if (!incorrectSizes.isEmpty()) {
                     allErrors.add(buildFontSizeError("err_font_size", "Неправильний розмір шрифта у параграфі", 
                                                       paragraphText, incorrectSizes, expectedSize));
@@ -101,7 +101,7 @@ public class SizeChecker implements Checker {
         return allErrors;
     }
 
-    private static FormatError buildFontSizeError(String id, String title, String text, Set<String> incorrectSizes, int expectedSize) {
+    private static FormatError buildFontSizeError(String id, String title, String text, Set<String> incorrectSizes, double expectedSize) {
         FormatError err = new FormatError();
         err.setId(id);
         err.setCategory(ErrorCategory.FONT_SIZE);
@@ -123,62 +123,31 @@ public class SizeChecker implements Checker {
             String fragmentText = run.getText(0);
             if (fragmentText == null) continue;
 
-            Integer effectiveSize = getEffectiveFontSize(run, paragraph, document);
-            if (effectiveSize != null && !effectiveSize.equals(expectedSize)) {
-                incorrectSizes.add(effectiveSize + "pt");
+            Double effectiveSize = getEffectiveFontSize(run, document);
+
+            if (!effectiveSize.equals(expectedSize))
+                incorrectSizes.add(String.format("%.1fpt", effectiveSize));
             }
-        }
+
         return incorrectSizes;
     }
 
-    private Integer getEffectiveFontSize(XWPFRun run, XWPFParagraph paragraph, XWPFDocument document) {
-        Integer size = run.getFontSize();
+    private Double getEffectiveFontSize(XWPFRun run, XWPFDocument document) {
+        Double size = run.getFontSizeAsDouble();
         if (size != null && size > 0) {
             return size;
         }
 
         Object parent = run.getParent();
-        if (!(parent instanceof XWPFParagraph)) {
-            return 12;
+        if (!(parent instanceof XWPFParagraph paragraphFromParent)) {
+            return 12.0; // Default size if the parent is not a paragraph
         }
-        XWPFParagraph paragraphFromParent = (XWPFParagraph) parent;
+
         String styleId = paragraphFromParent.getStyleID();
         if (styleId == null) {
-            return getFontSizeFromParagraphStyle(document, StyleUtils.getNormalStyleId(document.getStyles()));
-        }
-        return getFontSizeFromParagraphStyle(document, styleId);
-    }
-
-    private Integer getFontSizeFromParagraphStyle(XWPFDocument document, String styleId) {
-        XWPFStyle style = document.getStyles().getStyle(styleId);
-
-        if (style == null) {
-            return 12; // Повертріємо 12 коли стилю нема бо це розмір за замовчуванням
+            return StyleUtils.getFontSizeFromParagraphStyle(document, StyleUtils.getNormalStyleId(document.getStyles()));
         }
 
-        var ctStyle = style.getCTStyle();
-        var sizeList = Optional
-                // якщо rPr == null -> orElse, інакше -> map
-                .ofNullable(ctStyle.getRPr())
-                // якщо getRFontsList == null -> orElse, інакше -> повертаємо результат
-                .map(CTRPr::getSzList)
-                // повертаємо пустий список, якщо в попередніх кроках був null
-                .orElse(Collections.emptyList());
-
-        if (!sizeList.isEmpty()) {
-            var rFonts = sizeList.getFirst();
-            if (rFonts.getVal() != null) {
-                int size = Integer.parseInt(rFonts.getVal().toString());
-                return size / 2; // вимірюється пів пунктрами, тобто якщо розмір 14, то поверне 28
-            }
-        }
-
-        if (style.getCTStyle().isSetBasedOn() || style.getCTStyle().getBasedOn() != null) {
-            String baseStyle = style.getCTStyle().getBasedOn().getVal();
-            // Рекурсивно дістаємо розмір з базового стилю
-            return getFontSizeFromParagraphStyle(document, baseStyle);
-        }
-
-        return 12; // Повертріємо 12 коли розмір ніде не вказаний бо це розмір за замовчуванням
+        return StyleUtils.getFontSizeFromParagraphStyle(document, styleId);
     }
 }
