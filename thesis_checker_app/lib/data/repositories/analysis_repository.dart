@@ -64,7 +64,7 @@ class AnalysisRepository {
       }
     }
 
-    return null;
+    return Check.other;
   }
 
   static CheckTypeInfo _resolveTypeByError(FormatErrorApi error) {
@@ -78,12 +78,11 @@ class AnalysisRepository {
       }
     }
 
-    for (final type in AvailableCheckTypes.checkTypes) {
-      if (type.checks.isEmpty) {
-        return type;
-      }
-    }
-
-    return AvailableCheckTypes.checkTypes.first;
+    return _fallbackType;
   }
+
+  static final CheckTypeInfo _fallbackType = AvailableCheckTypes.checkTypes.firstWhere(
+    (type) => type.checks.contains(Check.other),
+    orElse: () => AvailableCheckTypes.checkTypes.last,
+  );
 }
