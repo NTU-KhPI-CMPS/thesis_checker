@@ -29,8 +29,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 public class ListChecker implements Checker {
+
+    private static final Pattern MANUAL_LIST_PATTERN = Pattern.compile(
+            "^\\s*(?:\\d+[.)]|[а-яА-ЯіїєґІЇЄҐa-zA-Z][.)]|[-–—•*])\\s+"
+    );
+
+    private static final Pattern PLACEHOLDER_DOT_PATTERN = Pattern.compile(".*%\\d+\\.$");
+
+    private static final Pattern PLACEHOLDER_BRACKET_PATTERN = Pattern.compile(".*%\\d+\\)$");
 
     /**
      * Returns the error category for this instance.
@@ -61,6 +70,11 @@ public class ListChecker implements Checker {
             for (XWPFParagraph paragraph : MainContentUtils.getMainContentParagraphs(doc)) {
                 String paragraphText = paragraph.getText().trim();
                 if (paragraphText.isEmpty()) {
+                    continue;
+                }
+
+                if (isManualList(paragraphText)) {
+                    allErrors.add(buildManualListWarning(paragraphText));
                     continue;
                 }
 
@@ -95,11 +109,23 @@ public class ListChecker implements Checker {
                     }
                 }
             }
+
         } catch (Exception e) {
             allErrors.add(buildException(e));
         }
 
         return allErrors;
+    }
+
+    /**
+     * Checks whether a paragraph appears to be manually formatted as a list <br>
+     * (e.g., starting with a bullet character) instead of using Word's built-in numbering features.
+     *
+     * @param paragraphText text of the paragraph to check
+     * @return true if the paragraph appears to be manually formatted as a list, false otherwise
+     */
+    private boolean isManualList(String paragraphText) {
+        return MANUAL_LIST_PATTERN.matcher(paragraphText).find();
     }
 
     /**
@@ -138,7 +164,7 @@ public class ListChecker implements Checker {
      * @param allErrors      list of errors to append to if a format mismatch is detected
      */
     private void checkFormatConsistency(String paragraphText, BigInteger ilvl, String resolvedFormat,
-                                         ListLevelState state, List<FormatError> allErrors) {
+                                        ListLevelState state, List<FormatError> allErrors) {
         String expectedFormat = state.getExpectedFormat(ilvl);
         if (expectedFormat == null) {
             state.recordFormat(ilvl, resolvedFormat);
@@ -290,9 +316,9 @@ public class ListChecker implements Checker {
         } else {
             String t = foundLvlText.trim();
             // If level text is a placeholder pattern like "%1." extract the punctuation only
-            if (t.matches(".*%\\d+\\.$")) {
+            if (PLACEHOLDER_DOT_PATTERN.matcher(t).matches()) {
                 displayedFound = ".";
-            } else if (t.matches(".*%\\d+\\)$")) {
+            } else if (PLACEHOLDER_BRACKET_PATTERN.matcher(t).matches()) {
                 displayedFound = ")";
             } else if (t.length() == 1) {
                 displayedFound = t;
@@ -328,6 +354,23 @@ public class ListChecker implements Checker {
         error.setParagraphText(paragraphText);
         error.setFound(Set.of(foundChar));
         error.setExpected(RequirementsHolder.getListBulletChar());
+        return error;
+    }
+
+    /**
+     * Builds the warning reported when a paragraph appears to be manually formatted as a list <br>
+     * (e.g., starting with a bullet character) instead of using Word's built-in numbering features
+     *
+     * @param paragraphText text of the paragraph where the manual formatting can be detected
+     * @return a format error describing the manual formatting warning
+     */
+    private static FormatError buildManualListWarning(String paragraphText) {
+        FormatError error = new FormatError();
+        error.setId("warn_list_manual");
+        error.setCategory(ErrorCategory.LIST_FORMATTING);
+        error.setSeverity("warning");
+        error.setTitle("Виявлено ручне форматування переліку (не використовується вбудована нумерація)");
+        error.setParagraphText(paragraphText);
         return error;
     }
 
