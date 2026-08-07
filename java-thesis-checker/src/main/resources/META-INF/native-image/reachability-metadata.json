@@ -364,6 +364,14 @@
       ]
     },
     {
+      "type": "org.openxmlformats.schemas.wordprocessingml.x2006.main.STBrType$Enum",
+      "fields": [
+        {
+          "name": "table"
+        }
+      ]
+    },
+    {
       "type": "org.openxmlformats.schemas.wordprocessingml.x2006.main.STFldCharType$Enum",
       "fields": [
         {
@@ -389,6 +397,14 @@
     },
     {
       "type": "org.openxmlformats.schemas.wordprocessingml.x2006.main.STLineSpacingRule$Enum",
+      "fields": [
+        {
+          "name": "table"
+        }
+      ]
+    },
+    {
+      "type": "org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat$Enum",
       "fields": [
         {
           "name": "table"
@@ -430,6 +446,17 @@
     },
     {
       "type": "org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTBrImpl",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "org.apache.xmlbeans.SchemaType"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTDecimalNumberImpl",
       "methods": [
         {
           "name": "<init>",
@@ -583,6 +610,17 @@
       ]
     },
     {
+      "type": "org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTIndImpl",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "org.apache.xmlbeans.SchemaType"
+          ]
+        }
+      ]
+    },
+    {
       "type": "org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTJcImpl",
       "methods": [
         {
@@ -605,6 +643,28 @@
       ]
     },
     {
+      "type": "org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTLevelTextImpl",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "org.apache.xmlbeans.SchemaType"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTLvlImpl",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "org.apache.xmlbeans.SchemaType"
+          ]
+        }
+      ]
+    },
+    {
       "type": "org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTMarkupRangeImpl",
       "methods": [
         {
@@ -616,7 +676,29 @@
       ]
     },
     {
+      "type": "org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTNumFmtImpl",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "org.apache.xmlbeans.SchemaType"
+          ]
+        }
+      ]
+    },
+    {
       "type": "org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTNumImpl",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "org.apache.xmlbeans.SchemaType"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTNumPrImpl",
       "methods": [
         {
           "name": "<init>",
@@ -1001,6 +1083,28 @@
       ]
     },
     {
+      "type": "org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.STBrTypeImpl",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "org.apache.xmlbeans.SchemaType"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.STDecimalNumberImpl",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "org.apache.xmlbeans.SchemaType"
+          ]
+        }
+      ]
+    },
+    {
       "type": "org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.STFldCharTypeImpl",
       "methods": [
         {
@@ -1046,6 +1150,17 @@
     },
     {
       "type": "org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.STLineSpacingRuleImpl",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "org.apache.xmlbeans.SchemaType"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.STNumberFormatImpl",
       "methods": [
         {
           "name": "<init>",
@@ -1199,6 +1314,9 @@
       "glob": "org/apache/poi/schemas/ooxml/system/ooxml/ctchartspacef9b4type.xsb"
     },
     {
+      "glob": "org/apache/poi/schemas/ooxml/system/ooxml/ctdecimalnumbera518type.xsb"
+    },
+    {
       "glob": "org/apache/poi/schemas/ooxml/system/ooxml/ctdocdefaults2ea8type.xsb"
     },
     {
@@ -1244,6 +1362,9 @@
       "glob": "org/apache/poi/schemas/ooxml/system/ooxml/cthyperlink38actype.xsb"
     },
     {
+      "glob": "org/apache/poi/schemas/ooxml/system/ooxml/ctind4b93type.xsb"
+    },
+    {
       "glob": "org/apache/poi/schemas/ooxml/system/ooxml/ctinline5726type.xsb"
     },
     {
@@ -1251,6 +1372,12 @@
     },
     {
       "glob": "org/apache/poi/schemas/ooxml/system/ooxml/ctlatentstyles2e3atype.xsb"
+    },
+    {
+      "glob": "org/apache/poi/schemas/ooxml/system/ooxml/ctleveltext0621type.xsb"
+    },
+    {
+      "glob": "org/apache/poi/schemas/ooxml/system/ooxml/ctlvlf630type.xsb"
     },
     {
       "glob": "org/apache/poi/schemas/ooxml/system/ooxml/ctmarkuprangeba3dtype.xsb"
@@ -1263,6 +1390,12 @@
     },
     {
       "glob": "org/apache/poi/schemas/ooxml/system/ooxml/ctnume94ctype.xsb"
+    },
+    {
+      "glob": "org/apache/poi/schemas/ooxml/system/ooxml/ctnumfmt00e1type.xsb"
+    },
+    {
+      "glob": "org/apache/poi/schemas/ooxml/system/ooxml/ctnumpr16aatype.xsb"
     },
     {
       "glob": "org/apache/poi/schemas/ooxml/system/ooxml/ctobject47c9type.xsb"
@@ -1397,6 +1530,12 @@
       "glob": "org/apache/poi/schemas/ooxml/system/ooxml/stborderd7ectype.xsb"
     },
     {
+      "glob": "org/apache/poi/schemas/ooxml/system/ooxml/stbrtypeb52etype.xsb"
+    },
+    {
+      "glob": "org/apache/poi/schemas/ooxml/system/ooxml/stdecimalnumber8d28type.xsb"
+    },
+    {
       "glob": "org/apache/poi/schemas/ooxml/system/ooxml/stdrawingelementid75a4type.xsb"
     },
     {
@@ -1413,6 +1552,9 @@
     },
     {
       "glob": "org/apache/poi/schemas/ooxml/system/ooxml/stlinespacingrule6237type.xsb"
+    },
+    {
+      "glob": "org/apache/poi/schemas/ooxml/system/ooxml/stnumberformat0fb8type.xsb"
     },
     {
       "glob": "org/apache/poi/schemas/ooxml/system/ooxml/stonoff18ddbtype.xsb"
