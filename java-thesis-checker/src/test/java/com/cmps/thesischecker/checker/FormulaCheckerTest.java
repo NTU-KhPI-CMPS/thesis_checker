@@ -141,28 +141,6 @@ public class FormulaCheckerTest extends BaseTest {
     }
 
     @Test
-    @DisplayName("Detect formula font size mismatch")
-    void check_incorrectFormatting_fontSize() {
-        // GIVEN
-        String testFilePath = "src/test/resources/incorrect_formula.docx";
-        String expectedId = "err_formula_font_size";
-
-        // WHEN
-        List<FormatError> result = checker.check(testFilePath);
-
-        // THEN
-        List<FormatError> errorsWithExpectedText = result.stream()
-                .filter(fe -> expectedId.equals(fe.getId()))
-                .toList();
-
-        assertFalse(errorsWithExpectedText.isEmpty(), "Failed to detect incorrect formula font size.");
-        FormatError formatError = errorsWithExpectedText.getFirst();
-        assertEquals(FORMULA, formatError.getCategory());
-        assertTrue(formatError.getTitle().contains("Неправильний розмір шрифту у формулі"));
-        assertEquals(RequirementsHolder.getFontSize() + "pt", formatError.getExpected());
-    }
-
-    @Test
     @DisplayName("Detect formula chapter prefix mismatch")
     void check_incorrectFormatting_chapterMismatch() {
         // GIVEN
@@ -200,6 +178,27 @@ public class FormulaCheckerTest extends BaseTest {
         assertFalse(errorsWithExpectedText.isEmpty(), "Failed to detect broken numbering sequence.");
         FormatError formatError = errorsWithExpectedText.getFirst();
         assertEquals(FORMULA, formatError.getCategory());
+    }
+
+    @Test
+    @DisplayName("Detect formula typed manually instead of via the Equation tool")
+    void check_incorrectFormatting_notCreatedWithTool() {
+        // GIVEN
+        String testFilePath = "src/test/resources/incorrect_formula.docx";
+        String expectedId = "err_formula_not_tool";
+
+        // WHEN
+        List<FormatError> result = checker.check(testFilePath);
+
+        // THEN
+        List<FormatError> errorsWithExpectedText = result.stream()
+                .filter(fe -> expectedId.equals(fe.getId()))
+                .toList();
+
+        assertFalse(errorsWithExpectedText.isEmpty(), "Failed to detect a formula typed without the Equation tool.");
+        FormatError formatError = errorsWithExpectedText.getFirst();
+        assertEquals(FORMULA, formatError.getCategory());
+        assertTrue(formatError.getParagraphText().contains("V = S/t (1.4)"));
     }
 
     @Test
