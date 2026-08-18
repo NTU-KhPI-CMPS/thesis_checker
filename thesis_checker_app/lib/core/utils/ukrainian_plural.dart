@@ -22,4 +22,9 @@ class UkrainePlural {
     final word = ukrainianPlural(count, 'помилка', 'помилки', 'помилок');
     return '$count $word';
   }
+
+  static String formatWarningCount(int count) {
+    final word = ukrainianPlural(count, 'попередження', 'попередження', 'попереджень');
+    return '$count $word';
+  }
 }
