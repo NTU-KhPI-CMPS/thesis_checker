@@ -25,9 +25,10 @@ class ErrorCountBadge extends StatelessWidget {
     final hasErrors = errorCount > 0;
 
     // Warning visuals
-    final warnBg = isLightTheme ? AppColors.warn.withAlpha(31) : AppColors.warn.withAlpha(56);
     final warnTextColor = AppColors.warn;
     final hasWarnings = warnCount > 0;
+    final warnAlpha = isLightTheme ? 31 : 56;
+    final warnBg = AppColors.warn.withAlpha(warnAlpha);
 
     final errorBadge = AnimatedContainer(
       duration: const Duration(milliseconds: 200),
@@ -56,7 +57,7 @@ class ErrorCountBadge extends StatelessWidget {
       decoration: BoxDecoration(
         color: hasWarnings ? warnBg : Colors.transparent,
         borderRadius: BorderRadius.circular(8.0),
-        border: hasWarnings ? Border.all(color: warnTextColor.withAlpha(isLightTheme ? 31 : 56)) : null,
+        border: hasWarnings ? Border.all(color: warnTextColor.withAlpha(warnAlpha)) : null,
       ),
       child: Text(
         warnText,
