@@ -198,7 +198,28 @@ public class FormulaCheckerTest extends BaseTest {
         assertFalse(errorsWithExpectedText.isEmpty(), "Failed to detect a formula typed without the Equation tool.");
         FormatError formatError = errorsWithExpectedText.getFirst();
         assertEquals(FORMULA, formatError.getCategory());
-        assertTrue(formatError.getParagraphText().contains("V = S/t (1.4)"));
+        assertTrue(formatError.getParagraphText().contains("V = S/t (1.5)"));
+    }
+
+    @Test
+    @DisplayName("Detect formula with missing number")
+    void check_incorrectFormatting_missingNumber() {
+        // GIVEN
+        String testFilePath = "src/test/resources/incorrect_formula.docx";
+        String expectedId = "err_formula_sequence";
+        String expectedParagraphText = "Швидкість тіла визначається за формулою V = S/t (1.5).";
+
+        // WHEN
+        List<FormatError> result = checker.check(testFilePath);
+
+        // THEN
+        List<FormatError> errorsWithExpectedText = result.stream()
+                .filter(fe -> expectedId.equals(fe.getId()) && expectedParagraphText.equals(fe.getParagraphText()))
+                .toList();
+
+        assertFalse(errorsWithExpectedText.isEmpty(), "Failed to detect a formula with missing number.");
+        FormatError formatError = errorsWithExpectedText.getFirst();
+        assertEquals(FORMULA, formatError.getCategory());
     }
 
     @Test

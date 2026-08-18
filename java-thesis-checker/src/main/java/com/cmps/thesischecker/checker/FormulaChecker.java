@@ -39,7 +39,7 @@ public class FormulaChecker implements Checker {
     private static final Pattern HEADING_NUMBER_PATTERN = Pattern.compile("^\\s*(\\d+)");
     private static final Pattern NUMBER_ONLY_PATTERN = Pattern.compile("^\\d+\\.\\d+$");
     private static final Pattern PLAIN_FORMULA_NUMBER_PATTERN = Pattern.compile("\\(\\s*\\d+\\.\\d+\\s*\\)[.,;]?\\s*$");
-    private static final Pattern TRAILING_LITERAL_PAREN_PATTERN = Pattern.compile("\\(([^()]*)\\)\\s*$");
+    private static final Pattern TRAILING_LITERAL_PAREN_PATTERN = Pattern.compile("\\(([^()]*)\\)[.,;]?\\s*$");
 
     private final double expectedFontSize = Double.parseDouble(RequirementsHolder.getFontSize());
 
@@ -79,7 +79,7 @@ public class FormulaChecker implements Checker {
                 }
 
                 if (!FormulaUtils.isFormulaOnlyParagraph(paragraph)) {
-                    checkPlainTextFormulaCandidate(paragraph, allErrors);
+                    checkPlainTextFormulaCandidate(paragraph, currentChapter[0], expectedNumberInChapter, allErrors);
                     continue;
                 }
 
@@ -99,7 +99,7 @@ public class FormulaChecker implements Checker {
      * @param paragraph the non-OMath paragraph to inspect
      * @param allErrors accumulator for found errors
      */
-    private void checkPlainTextFormulaCandidate(XWPFParagraph paragraph, List<FormatError> allErrors) {
+    private void checkPlainTextFormulaCandidate(XWPFParagraph paragraph, int currentChapter, int[] expectedNumberInChapter, List<FormatError> allErrors) {
         String text = paragraph.getText();
         if (text == null) return;
 
@@ -111,6 +111,14 @@ public class FormulaChecker implements Checker {
         }
 
         allErrors.add(buildFormulaToolError(trimmed));
+
+        Matcher literalParen = TRAILING_LITERAL_PAREN_PATTERN.matcher(trimmed);
+        if (literalParen.find()) {
+            String candidate = literalParen.group(1).trim();
+            if (!candidate.isEmpty()) {
+                validateFormulaNumber(candidate, trimmed, currentChapter, expectedNumberInChapter, allErrors);
+            }
+        }
     }
 
     /**
