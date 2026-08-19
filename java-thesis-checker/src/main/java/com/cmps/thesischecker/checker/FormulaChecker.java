@@ -17,11 +17,10 @@ import org.xml.sax.InputSource;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.FileInputStream;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Checks formula formatting per standard:
@@ -229,12 +228,18 @@ public class FormulaChecker implements Checker {
             Document document = factory.newDocumentBuilder()
                     .parse(new InputSource(new StringReader(formulaXml)));
 
+            Map<String, Double> fontIssues = new LinkedHashMap<>();
+
             NodeList runs = document.getElementsByTagName("m:r");
             for (int i = 0; i < runs.getLength(); i++) {
                 Element run = (Element) runs.item(i);
                 String text = getRunText(run);
                 if (text.isBlank()) continue;
-                checkRunSize(run, text, paragraphText, formulaParagraph, allErrors);
+                checkRunSize(run, text, formulaParagraph, fontIssues);
+            }
+
+            if (!fontIssues.isEmpty()) {
+                allErrors.add(buildFontSizeError(paragraphText, fontIssues));
             }
 
             NodeList texts = document.getElementsByTagName("m:t");
@@ -279,17 +284,15 @@ public class FormulaChecker implements Checker {
      *
      * @param run              the XML Element containing run properties
      * @param text             the text fragment inside the run
-     * @param paragraphText    the text of the entire paragraph
      * @param formulaParagraph the paragraph that contains the formula, used to resolve the
      *                         font size from its style when the run doesn't set one
-     * @param allErrors        accumulator for found errors
+*    * @param fontIssues       a map of text fragments to their detected font sizes, used to
      */
-    private void checkRunSize(Element run, String text, String paragraphText, XWPFParagraph formulaParagraph,
-                              List<FormatError> allErrors) {
+    private void checkRunSize(Element run, String text, XWPFParagraph formulaParagraph,
+                              Map<String, Double> fontIssues) {
         NodeList sizes = run.getElementsByTagName("w:sz");
 
         double sizePt;
-
         if (sizes.getLength() > 0) {
             Element sz = (Element) sizes.item(0);
             int raw = Integer.parseInt(sz.getAttribute("w:val"));
@@ -299,7 +302,7 @@ public class FormulaChecker implements Checker {
         }
 
         if (sizePt != expectedFontSize) {
-            allErrors.add(buildFontSizeError(paragraphText, text, sizePt));
+            fontIssues.put(text, sizePt);
         }
     }
 
@@ -465,19 +468,25 @@ public class FormulaChecker implements Checker {
     /**
      * Builds a FormatError object related to font size issues.
      *
-     * @param paragraphText the text content of the paragraph
-     * @param formula      the specific formula text that has the font size issue
-     * @param foundSize     the size measured inside the run
+     * @param paragraphText       the text content of the paragraph
+     * @param fontIssues          a map of text fragments to their detected font sizes
      * @return a constructed FormatError instance
      */
-    private FormatError buildFontSizeError(String paragraphText, String formula, double foundSize) {
+    private FormatError buildFontSizeError(String paragraphText, Map<String, Double> fontIssues) {
         FormatError error = new FormatError();
         error.setId("err_formula_font_size");
         error.setCategory(ErrorCategory.FORMULA);
         error.setSeverity("error");
-        error.setTitle("Неправильний розмір шрифту у формулі \"" + formula + "\"");
-        error.setParagraphText(paragraphText);
-        error.setFound(Set.of(foundSize + "pt"));
+
+        Set<String> foundSizes = fontIssues.values().stream()
+                .map(size -> size + "pt")
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+
+        String fragmentsList = String.join(", ", fontIssues.keySet());
+
+        error.setTitle("Неправильний розмір шрифту у формулі \"" + paragraphText);
+        error.setParagraphText("Фрагменти з неправильним розміром шрифту: " + fragmentsList);
+        error.setFound(foundSizes);
         error.setExpected(expectedFontSize + "pt");
         return error;
     }
