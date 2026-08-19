@@ -5,15 +5,21 @@ import 'package:thesis_checker/features/analysis_options_dialog/widgets/option_c
 class ClickableOptionCard extends StatefulWidget {
   final List<Widget> children;
   final VoidCallback onTap;
+  final bool isSelectedFirst;
 
-  const ClickableOptionCard({super.key, required this.children, required this.onTap});
+  const ClickableOptionCard({
+    super.key,
+    required this.children,
+    required this.onTap,
+    this.isSelectedFirst = false,
+  });
   @override
   State<ClickableOptionCard> createState() => _ClickableOptionCardState();
 }
 
 class _ClickableOptionCardState extends State<ClickableOptionCard> {
   bool isHovered = false;
-  bool isChecked = false;
+  late bool isChecked = widget.isSelectedFirst;
 
   @override
   Widget build(BuildContext context) {

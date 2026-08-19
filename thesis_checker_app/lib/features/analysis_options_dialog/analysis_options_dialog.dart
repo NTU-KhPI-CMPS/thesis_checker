@@ -32,7 +32,7 @@ class _AnalysisOptionsDialogState extends State<AnalysisOptionsDialog> with Sing
   late final AnimationController _animationController;
   late final Animation<double> _shakeAnim;
 
-  final Set<CheckTypeInfo> selectedChecks = {};
+  final Set<CheckTypeInfo> selectedChecks = AvailableCheckTypes.checkTypes.toSet();
 
   @override
   void initState() {
@@ -227,6 +227,7 @@ class _AnalysisOptionsDialogState extends State<AnalysisOptionsDialog> with Sing
                             itemBuilder: (context, index) {
                               final option = AvailableCheckTypes.checkTypes[index];
                               return ClickableOptionCard(
+                                isSelectedFirst: true,
                                 children: [
                                   Image.asset(
                                     option.iconPath,
