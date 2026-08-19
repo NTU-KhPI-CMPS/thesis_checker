@@ -45,12 +45,12 @@ public class FormulaCheckerTest extends BaseTest {
         List<FormatError> result = checker.check(testFilePath);
 
         // THEN
-        List<FormatError> errorsWithExpectedText = result.stream()
+        List<FormatError> errorsWithExpectedId = result.stream()
                 .filter(fe -> expectedErrorId.equals(fe.getId()))
                 .toList();
 
-        assertFalse(errorsWithExpectedText.isEmpty(), "Failed to detect missing spacing before the formula.");
-        FormatError formatError = errorsWithExpectedText.getFirst();
+        assertFalse(errorsWithExpectedId.isEmpty(), "Failed to detect missing spacing before the formula.");
+        FormatError formatError = errorsWithExpectedId.getFirst();
         assertEquals(FORMULA, formatError.getCategory());
         assertEquals("Порожній рядок перед формулою", formatError.getExpected());
     }
@@ -66,12 +66,12 @@ public class FormulaCheckerTest extends BaseTest {
         List<FormatError> result = checker.check(testFilePath);
 
         // THEN
-        List<FormatError> errorsWithExpectedText = result.stream()
+        List<FormatError> errorsWithExpectedId = result.stream()
                 .filter(fe -> expectedErrorId.equals(fe.getId()))
                 .toList();
 
-        assertFalse(errorsWithExpectedText.isEmpty(), "Failed to detect missing spacing after the formula.");
-        FormatError formatError = errorsWithExpectedText.getFirst();
+        assertFalse(errorsWithExpectedId.isEmpty(), "Failed to detect missing spacing after the formula.");
+        FormatError formatError = errorsWithExpectedId.getFirst();
         assertEquals(FORMULA, formatError.getCategory());
         assertEquals("Порожній рядок після формули", formatError.getExpected());
     }
@@ -87,12 +87,12 @@ public class FormulaCheckerTest extends BaseTest {
         List<FormatError> result = checker.check(testFilePath);
 
         // THEN
-        List<FormatError> errorsWithExpectedText = result.stream()
+        List<FormatError> errorsWithExpectedId = result.stream()
                 .filter(fe -> expectedErrorId.equals(fe.getId()))
                 .toList();
 
-        assertFalse(errorsWithExpectedText.isEmpty(), "Failed to detect missing spacing after the notation block.");
-        FormatError formatError = errorsWithExpectedText.getFirst();
+        assertFalse(errorsWithExpectedId.isEmpty(), "Failed to detect missing spacing after the notation block.");
+        FormatError formatError = errorsWithExpectedId.getFirst();
         assertEquals(FORMULA, formatError.getCategory());
         assertEquals("Порожній рядок після блоку пояснень", formatError.getExpected());
     }
@@ -108,12 +108,12 @@ public class FormulaCheckerTest extends BaseTest {
         List<FormatError> result = checker.check(testFilePath);
 
         // THEN
-        List<FormatError> errorsWithExpectedText = result.stream()
+        List<FormatError> errorsWithExpectedId = result.stream()
                 .filter(fe -> Objects.equals(fe.getTitle(), expectedTitle))
                 .toList();
 
-        assertFalse(errorsWithExpectedText.isEmpty(), "Failed to detect incorrect formula alignment.");
-        FormatError formatError = errorsWithExpectedText.getFirst();
+        assertFalse(errorsWithExpectedId.isEmpty(), "Failed to detect incorrect formula alignment.");
+        FormatError formatError = errorsWithExpectedId.getFirst();
         assertEquals(FORMULA, formatError.getCategory());
         assertEquals(Set.of("LEFT"), formatError.getFound());
         assertEquals(RequirementsHolder.getFormulaAlignment(), formatError.getExpected());
@@ -130,12 +130,12 @@ public class FormulaCheckerTest extends BaseTest {
         List<FormatError> result = checker.check(testFilePath);
 
         // THEN
-        List<FormatError> errorsWithExpectedText = result.stream()
+        List<FormatError> errorsWithExpectedId = result.stream()
                 .filter(fe -> Objects.equals(fe.getTitle(), expectedTitle))
                 .toList();
 
-        assertFalse(errorsWithExpectedText.isEmpty(), "Failed to detect multiple formulas in one line.");
-        FormatError formatError = errorsWithExpectedText.getFirst();
+        assertFalse(errorsWithExpectedId.isEmpty(), "Failed to detect multiple formulas in one line.");
+        FormatError formatError = errorsWithExpectedId.getFirst();
         assertEquals(FORMULA, formatError.getCategory());
         assertEquals(RequirementsHolder.getFormulaMultiplePerLine(), formatError.getExpected());
     }
@@ -151,12 +151,12 @@ public class FormulaCheckerTest extends BaseTest {
         List<FormatError> result = checker.check(testFilePath);
 
         // THEN
-        List<FormatError> errorsWithExpectedText = result.stream()
+        List<FormatError> errorsWithExpectedId = result.stream()
                 .filter(fe -> expectedId.equals(fe.getId()))
                 .toList();
 
-        assertFalse(errorsWithExpectedText.isEmpty(), "Failed to detect incorrect formula font size.");
-        FormatError formatError = errorsWithExpectedText.getFirst();
+        assertFalse(errorsWithExpectedId.isEmpty(), "Failed to detect incorrect formula font size.");
+        FormatError formatError = errorsWithExpectedId.getFirst();
         assertEquals(FORMULA, formatError.getCategory());
         assertTrue(formatError.getTitle().contains("Неправильний розмір шрифту у формулі"));
         assertEquals(RequirementsHolder.getFontSize() + "pt", formatError.getExpected());
@@ -173,12 +173,12 @@ public class FormulaCheckerTest extends BaseTest {
         List<FormatError> result = checker.check(testFilePath);
 
         // THEN
-        List<FormatError> errorsWithExpectedText = result.stream()
+        List<FormatError> errorsWithExpectedId = result.stream()
                 .filter(fe -> expectedId.equals(fe.getId()))
                 .toList();
 
-        assertFalse(errorsWithExpectedText.isEmpty(), "Failed to detect formula and active chapter mismatch.");
-        FormatError formatError = errorsWithExpectedText.getFirst();
+        assertFalse(errorsWithExpectedId.isEmpty(), "Failed to detect formula and active chapter mismatch.");
+        FormatError formatError = errorsWithExpectedId.getFirst();
         assertEquals(FORMULA, formatError.getCategory());
     }
 
@@ -193,12 +193,12 @@ public class FormulaCheckerTest extends BaseTest {
         List<FormatError> result = checker.check(testFilePath);
 
         // THEN
-        List<FormatError> errorsWithExpectedText = result.stream()
+        List<FormatError> errorsWithExpectedId = result.stream()
                 .filter(fe -> expectedId.equals(fe.getId()))
                 .toList();
 
-        assertFalse(errorsWithExpectedText.isEmpty(), "Failed to detect broken numbering sequence.");
-        FormatError formatError = errorsWithExpectedText.getFirst();
+        assertFalse(errorsWithExpectedId.isEmpty(), "Failed to detect broken numbering sequence.");
+        FormatError formatError = errorsWithExpectedId.getFirst();
         assertEquals(FORMULA, formatError.getCategory());
     }
 
@@ -213,12 +213,12 @@ public class FormulaCheckerTest extends BaseTest {
         List<FormatError> result = checker.check(testFilePath);
 
         // THEN
-        List<FormatError> errorsWithExpectedText = result.stream()
+        List<FormatError> errorsWithExpectedId = result.stream()
                 .filter(fe -> expectedId.equals(fe.getId()))
                 .toList();
 
-        assertFalse(errorsWithExpectedText.isEmpty(), "Failed to detect incorrect formula number format.");
-        FormatError formatError = errorsWithExpectedText.getFirst();
+        assertFalse(errorsWithExpectedId.isEmpty(), "Failed to detect incorrect formula number format.");
+        FormatError formatError = errorsWithExpectedId.getFirst();
         assertEquals(FORMULA, formatError.getCategory());
     }
 }
