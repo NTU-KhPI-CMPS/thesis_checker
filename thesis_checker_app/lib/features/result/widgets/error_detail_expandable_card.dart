@@ -139,7 +139,7 @@ class _ErrorDetailExpandableCardState extends State<ErrorDetailExpandableCard> {
                                   color: sectionBackground,
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                child: Text(
+                                child: SelectableText(
                                   widget.quote,
                                   style: TextStyle(
                                     fontFamily: 'FunnelSans',
