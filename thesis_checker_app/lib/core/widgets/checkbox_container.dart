@@ -8,16 +8,18 @@ class CheckboxContainer extends StatefulWidget {
   final bool isSelected;
   final double borderWidth;
   final Color? bottomStripeColor;
+  final Gradient? bottomStripeGradient;
   final double indicatorHeight;
 
   const CheckboxContainer({
-    super.key, 
-    required this.children, 
+    super.key,
+    required this.children,
     required this.onTap,
     required this.rightWidget,
     this.isSelected = false,
     this.borderWidth = 1.0,
     this.bottomStripeColor,
+    this.bottomStripeGradient,
     this.indicatorHeight = 4.0,
   });
 
@@ -57,11 +59,22 @@ class _CheckboxContainerState extends State<CheckboxContainer> {
           ),
           child: Stack(
             children: [
-              Column(
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: widget.children,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: widget.children,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 12.0),
+                    child: widget.rightWidget,
+                  ),
+                ],
               ),
-              if (widget.bottomStripeColor != null)
+              if (widget.bottomStripeColor != null || widget.bottomStripeGradient != null)
                 Positioned(
                   left: 0,
                   right: 0,
@@ -69,16 +82,12 @@ class _CheckboxContainerState extends State<CheckboxContainer> {
                   child: Container(
                     height: widget.indicatorHeight,
                     decoration: BoxDecoration(
-                      color: widget.bottomStripeColor,
+                      color: widget.bottomStripeGradient == null ? widget.bottomStripeColor : null,
+                      gradient: widget.bottomStripeGradient,
                       borderRadius: BorderRadius.all(Radius.circular(8.0)),
                     ),
                   ),
                 ),
-              Positioned(
-                top: 0,
-                right: 0,
-                child: widget.rightWidget,
-              ),
             ],
           ),
         ),

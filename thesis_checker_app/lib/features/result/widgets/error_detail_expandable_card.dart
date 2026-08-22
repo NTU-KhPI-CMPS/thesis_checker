@@ -5,6 +5,7 @@ import 'package:thesis_checker/core/constants/app_colors.dart';
 class ErrorDetailExpandableCard extends StatefulWidget {
   final String title;
   final String quote;
+  final String severity;
   final String foundValue;
   final String expectedValue;
   final String iconAsset;
@@ -13,6 +14,7 @@ class ErrorDetailExpandableCard extends StatefulWidget {
     super.key,
     required this.title,
     required this.quote,
+    required this.severity,
     required this.foundValue,
     required this.expectedValue,
     this.iconAsset = 'assets/images/abc.png', // replace with some universal image
@@ -44,7 +46,9 @@ class _ErrorDetailExpandableCardState extends State<ErrorDetailExpandableCard> {
     final quoteColor = theme.textTheme.bodyLarge?.color;
     final chipTextColor = isLightTheme ? AppColors.error : AppColors.errorLight;
     final expectedChipTextColor = AppColors.ok;
-    final highlightBackgroundColor = theme.colorScheme.errorContainer;
+    final highlightBackgroundErrorColor = theme.colorScheme.errorContainer;
+    final highlightBackgroundWarningColor = isLightTheme ? AppColors.warn.withAlpha(75) :
+                                            AppColors.warn.withAlpha(95);
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
@@ -74,7 +78,7 @@ class _ErrorDetailExpandableCardState extends State<ErrorDetailExpandableCard> {
                         width: 36.0,
                         height: 36.0,
                         decoration: BoxDecoration(
-                          color: highlightBackgroundColor,
+                          color: widget.severity == 'error' ? highlightBackgroundErrorColor : highlightBackgroundWarningColor,
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         child: Padding(
@@ -132,14 +136,16 @@ class _ErrorDetailExpandableCardState extends State<ErrorDetailExpandableCard> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
+                              AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                curve: Curves.easeInOut,
                                 width: double.infinity,
                                 padding: const EdgeInsets.all(12.0),
                                 decoration: BoxDecoration(
                                   color: sectionBackground,
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                child: Text(
+                                child: SelectableText(
                                   widget.quote,
                                   style: TextStyle(
                                     fontFamily: 'FunnelSans',
@@ -198,7 +204,9 @@ class _ErrorDetailExpandableCardState extends State<ErrorDetailExpandableCard> {
     required Color background,
     required Color? textColor,
   }) {
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeInOut,
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
       decoration: BoxDecoration(
         color: background,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:thesis_checker/core/constants/available_check_types.dart';
 import 'package:thesis_checker/core/constants/app_colors.dart';
-import 'package:thesis_checker/core/utils/ukrainian_plural.dart';
 import 'package:thesis_checker/core/widgets/checkbox_container.dart';
 import 'package:thesis_checker/core/widgets/hint_text.dart';
 import 'package:thesis_checker/features/home/widgets/custom_animated_button.dart';
@@ -32,6 +31,7 @@ class _ResultViewState extends State<ResultView> {
     final fileNameTextColor = Theme.of(context).textTheme.bodyLarge?.color;
     final subTextColor = Theme.of(context).textTheme.bodyMedium?.color;
     final activeTextColor = isLightTheme ? AppColors.errorDark : AppColors.errorLight;
+    final warnColor = AppColors.warn;
 
     return BlocBuilder<ResultCubit, ResultState>(
       builder: (context, state) {
@@ -60,6 +60,8 @@ class _ResultViewState extends State<ResultView> {
 
         final selectedCategoryTitle = selectedType.title;
         final filteredErrors = selectedCategory?.errors ?? const [];
+        final totalWarnings = result.errorsByCategory.fold<int>(0, (sum, item) =>
+            sum + item.errors.where((e) => e.severity.toLowerCase() == 'warning').length);
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,15 +94,14 @@ class _ResultViewState extends State<ResultView> {
                         overflow: TextOverflow.ellipsis,
                         maxLines: 3,
                       ),
-                      Text(
-                        'Знайдено: ${UkrainePlural.formatErrorCount(result.totalErrors)}',
-                        style: TextStyle(
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'FunnelSans',
-                          color: subTextColor,
-                        ),
-                        overflow: TextOverflow.ellipsis,
+                      const SizedBox(height: 6.0),
+                      Row(
+                        children: [
+                          ErrorCountBadge(
+                            errorCount: result.totalErrors,
+                            warnCount: totalWarnings,
+                          ),
+                        ],
                       )
                     ],
                   ),
@@ -144,16 +145,26 @@ class _ResultViewState extends State<ResultView> {
                   ),
                   itemBuilder: (context, index) {
                     final type = visibleCheckTypes[index];
-                    final count = categoriesByTitle[type.title]?.count ?? 0;
+                    final category = categoriesByTitle[type.title];
+                    final warnCount = category?.errors.where((e) => e.severity.toLowerCase() == 'warning').length ?? 0;
+                    final errorCount = category?.errors.where((e) => e.severity.toLowerCase() != 'warning').length ?? 0;
 
                     return CheckboxContainer(
                       isSelected: (activeCategoryIndex < visibleCheckTypes.length
                               ? activeCategoryIndex
                               : 0) == index,
                       onTap: () => setState(() => activeCategoryIndex = index),
-                      bottomStripeColor: count > 0 ? AppColors.error : AppColors.ok,
+                      bottomStripeColor: (errorCount > 0 && warnCount == 0)
+                          ? AppColors.error
+                          : (errorCount == 0 && warnCount > 0)
+                              ? warnColor
+                              : (errorCount == 0 && warnCount == 0 ? AppColors.ok : null),
+                      bottomStripeGradient: (errorCount > 0 && warnCount > 0)
+                          ? LinearGradient(colors: [AppColors.error, warnColor])
+                          : null,
                       rightWidget: ErrorCountBadge(
-                        count: count,
+                        errorCount: errorCount,
+                        warnCount: warnCount,
                       ),
                       children: [
                         Text(
@@ -212,6 +223,7 @@ class _ResultViewState extends State<ResultView> {
                     quote: (paragraphText == null || paragraphText.isEmpty)
                         ? 'Фрагмент тексту відсутній.'
                         : paragraphText,
+                    severity: error.severity,
                     foundValue: error.found,
                     expectedValue: error.expected,
                   );
