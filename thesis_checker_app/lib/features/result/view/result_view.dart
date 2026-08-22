@@ -223,6 +223,7 @@ class _ResultViewState extends State<ResultView> {
                     quote: (paragraphText == null || paragraphText.isEmpty)
                         ? 'Фрагмент тексту відсутній.'
                         : paragraphText,
+                    severity: error.severity,
                     foundValue: error.found,
                     expectedValue: error.expected,
                   );
