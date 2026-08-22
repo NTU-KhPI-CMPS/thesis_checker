@@ -227,7 +227,7 @@ class _AnalysisOptionsDialogState extends State<AnalysisOptionsDialog> with Sing
                             itemBuilder: (context, index) {
                               final option = AvailableCheckTypes.checkTypes[index];
                               return ClickableOptionCard(
-                                isSelectedFirst: true,
+                                checked: selectedChecks.contains(option),
                                 children: [
                                   Image.asset(
                                     option.iconPath,
@@ -260,12 +260,12 @@ class _AnalysisOptionsDialogState extends State<AnalysisOptionsDialog> with Sing
                                     ),
                                   ),
                                 ],
-                                onTap: () {
+                                onChanged: (checked) {
                                   setState(() {
-                                    if (selectedChecks.contains(option)) {
-                                      selectedChecks.remove(option);
-                                    } else {
+                                    if (checked) {
                                       selectedChecks.add(option);
+                                    } else {
+                                      selectedChecks.remove(option);
                                     }
                                   });
                                 },

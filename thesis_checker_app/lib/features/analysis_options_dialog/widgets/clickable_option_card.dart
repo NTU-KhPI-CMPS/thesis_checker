@@ -4,14 +4,14 @@ import 'package:thesis_checker/features/analysis_options_dialog/widgets/option_c
 /// Clickable option card with hover state and an anchored checkbox.
 class ClickableOptionCard extends StatefulWidget {
   final List<Widget> children;
-  final VoidCallback onTap;
-  final bool isSelectedFirst;
+  final ValueChanged<bool> onChanged;
+  final bool checked;
 
   const ClickableOptionCard({
     super.key,
     required this.children,
-    required this.onTap,
-    this.isSelectedFirst = false,
+    required this.onChanged,
+    this.checked = false,
   });
   @override
   State<ClickableOptionCard> createState() => _ClickableOptionCardState();
@@ -19,7 +19,6 @@ class ClickableOptionCard extends StatefulWidget {
 
 class _ClickableOptionCardState extends State<ClickableOptionCard> {
   bool isHovered = false;
-  late bool isChecked = widget.isSelectedFirst;
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +33,7 @@ class _ClickableOptionCardState extends State<ClickableOptionCard> {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
-          setState(() => isChecked = !isChecked);
-          widget.onTap();
+          widget.onChanged(!widget.checked);
         },
         child: AnimatedContainer(
           width: double.infinity,
@@ -60,9 +58,8 @@ class _ClickableOptionCardState extends State<ClickableOptionCard> {
                 top: 0,
                 right: 0,
                 child: OptionCheckbox(
-                  value: isChecked,
-                  onChanged: (value) => setState(() => isChecked = value),
-                  onTap: () => widget.onTap(),
+                  value: widget.checked,
+                  onChanged: (v) => widget.onChanged(v),
                 ),
               ),
             ],

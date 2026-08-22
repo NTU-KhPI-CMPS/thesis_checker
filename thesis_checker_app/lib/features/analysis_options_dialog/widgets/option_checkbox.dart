@@ -21,7 +21,8 @@ class OptionCheckbox extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        onChanged?.call(!value);
+        final newValue = !value;
+        onChanged?.call(newValue);
         onTap?.call();
       },
       child: AnimatedContainer(
@@ -30,7 +31,7 @@ class OptionCheckbox extends StatelessWidget {
         duration: const Duration(milliseconds: 150),
         decoration: BoxDecoration(
           border: Border.all(
-            color: value? Colors.transparent : borderColor!,
+            color: value ? Colors.transparent : borderColor!,
             width: 2.0,
           ),
           color: value ? checkedBackgroundColor : backgroundColor,
