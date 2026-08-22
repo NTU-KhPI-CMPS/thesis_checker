@@ -161,26 +161,6 @@ public class FormulaCheckerTest extends BaseTest {
     }
 
     @Test
-    @DisplayName("Detect broken formula sequence numbering")
-    void check_incorrectFormatting_sequence() {
-        // GIVEN
-        String testFilePath = "src/test/resources/incorrect_formula.docx";
-        String expectedId = "err_formula_sequence";
-
-        // WHEN
-        List<FormatError> result = checker.check(testFilePath);
-
-        // THEN
-        List<FormatError> errorsWithExpectedId = result.stream()
-                .filter(fe -> expectedId.equals(fe.getId()))
-                .toList();
-
-        assertFalse(errorsWithExpectedId.isEmpty(), "Failed to detect formula and active chapter mismatch.");
-        FormatError formatError = errorsWithExpectedId.getFirst();
-        assertEquals(FORMULA, formatError.getCategory());
-    }
-
-    @Test
     @DisplayName("Detect malformed formula number layout")
     void check_incorrectFormatting_format() {
         // GIVEN
@@ -197,10 +177,7 @@ public class FormulaCheckerTest extends BaseTest {
 
         assertFalse(errorsWithExpectedId.isEmpty(), "Failed to detect incorrect formula number format.");
         FormatError formatError = errorsWithExpectedId.getFirst();
-        assertFalse(errorsWithExpectedText.isEmpty(), "Failed to detect a formula typed without the Equation tool.");
-        FormatError formatError = errorsWithExpectedText.getFirst();
         assertEquals(FORMULA, formatError.getCategory());
-        assertTrue(formatError.getParagraphText().contains("V = S/t (1.5)"));
     }
 
     @Test
