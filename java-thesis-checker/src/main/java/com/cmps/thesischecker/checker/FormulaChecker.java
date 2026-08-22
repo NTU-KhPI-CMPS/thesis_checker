@@ -466,32 +466,6 @@ public class FormulaChecker implements Checker {
     }
 
     /**
-     * Builds a FormatError object related to font size issues.
-     *
-     * @param paragraphText       the text content of the paragraph
-     * @param fontIssues          a map of text fragments to their detected font sizes
-     * @return a constructed FormatError instance
-     */
-    private FormatError buildFontSizeError(String paragraphText, Map<String, Double> fontIssues) {
-        FormatError error = new FormatError();
-        error.setId("err_formula_font_size");
-        error.setCategory(ErrorCategory.FORMULA);
-        error.setSeverity("error");
-
-        Set<String> foundSizes = fontIssues.values().stream()
-                .map(size -> size + "pt")
-                .collect(Collectors.toCollection(LinkedHashSet::new));
-
-        String fragmentsList = String.join(", ", fontIssues.keySet());
-
-        error.setTitle("Неправильний розмір шрифту у формулі \"" + paragraphText);
-        error.setParagraphText("Фрагменти з неправильним розміром шрифту: " + fragmentsList);
-        error.setFound(foundSizes);
-        error.setExpected(expectedFontSize + "pt");
-        return error;
-    }
-
-    /**
      * Builds a FormatError object related to chapter mismatch in formula numbering.
      *
      * @param paragraphText  the text content of the paragraph
@@ -548,6 +522,32 @@ public class FormulaChecker implements Checker {
         error.setParagraphText(paragraphText);
         error.setFound(Set.of(withParens(found)));
         error.setExpected("(" + expected + ")");
+        return error;
+    }
+
+    /**
+     * Builds a FormatError object related to font size issues.
+     *
+     * @param paragraphText       the text content of the paragraph
+     * @param fontIssues          a map of text fragments to their detected font sizes
+     * @return a constructed FormatError instance
+     */
+    private FormatError buildFontSizeError(String paragraphText, Map<String, Double> fontIssues) {
+        FormatError error = new FormatError();
+        error.setId("err_formula_font_size");
+        error.setCategory(ErrorCategory.FORMULA);
+        error.setSeverity("error");
+
+        Set<String> foundSizes = fontIssues.values().stream()
+                .map(size -> size + "pt")
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+
+        String fragmentsList = String.join(", ", fontIssues.keySet());
+
+        error.setTitle("Неправильний розмір шрифту у формулі \"" + paragraphText);
+        error.setParagraphText("Фрагменти з неправильним розміром шрифту: " + fragmentsList);
+        error.setFound(foundSizes);
+        error.setExpected(expectedFontSize + "pt");
         return error;
     }
 
