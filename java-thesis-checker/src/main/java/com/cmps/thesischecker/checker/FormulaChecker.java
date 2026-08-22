@@ -109,7 +109,7 @@ public class FormulaChecker implements Checker {
             return;
         }
 
-        allErrors.add(buildFormulaToolError(trimmed));
+        allErrors.add(buildFormulaToolWarning(trimmed));
 
         Matcher literalParen = TRAILING_LITERAL_PAREN_PATTERN.matcher(trimmed);
         if (literalParen.find()) {
@@ -456,26 +456,6 @@ public class FormulaChecker implements Checker {
     }
 
     /**
-     * Builds a FormatError object related to font size issues.
-     *
-     * @param paragraphText the text content of the paragraph
-     * @param formula      the specific formula text that has the font size issue
-     * @param foundSize     the size measured inside the run
-     * @return a constructed FormatError instance
-     */
-    private FormatError buildFontSizeError(String paragraphText, String formula, double foundSize) {
-        FormatError error = new FormatError();
-        error.setId("err_formula_font_size");
-        error.setCategory(ErrorCategory.FORMULA);
-        error.setSeverity("error");
-        error.setTitle("Неправильний розмір шрифту у формулі \"" + formula + "\"");
-        error.setParagraphText(paragraphText);
-        error.setFound(Set.of(foundSize + "pt"));
-        error.setExpected(expectedFontSize + "pt");
-        return error;
-    }
-
-    /**
      * Builds a FormatError object related to alignment issues.
      *
      * @param paragraphText the text content of the paragraph
@@ -519,7 +499,7 @@ public class FormulaChecker implements Checker {
      * @param paragraphText the text content of the paragraph
      * @return a constructed FormatError instance
      */
-    private static FormatError buildFormulaToolError(String paragraphText) {
+    private static FormatError buildFormulaToolWarning(String paragraphText) {
         FormatError error = new FormatError();
         error.setId("err_formula_not_tool");
         error.setCategory(ErrorCategory.FORMULA);
