@@ -5,6 +5,7 @@ import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.requirements.RequirementsHolder;
 import com.cmps.thesischecker.utils.FormulaUtils;
 import com.cmps.thesischecker.utils.MainContentUtils;
+import com.cmps.thesischecker.utils.ParagraphUtils;
 import com.cmps.thesischecker.utils.StyleUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -37,7 +38,6 @@ public class FormulaChecker implements Checker {
 
     private static final Pattern HEADING_NUMBER_PATTERN = Pattern.compile("^\\s*(\\d+)");
     private static final Pattern NUMBER_ONLY_PATTERN = Pattern.compile("^\\d+\\.\\d+$");
-    private static final Pattern PLAIN_FORMULA_NUMBER_PATTERN = Pattern.compile("\\(\\s*\\d+\\.\\d+\\s*\\)[.,;]?\\s*$");
     private static final Pattern TRAILING_LITERAL_PAREN_PATTERN = Pattern.compile("\\(([^()]*)\\)[.,;]?\\s*$");
 
     private final double expectedFontSize = Double.parseDouble(RequirementsHolder.getFontSize());
@@ -113,20 +113,11 @@ public class FormulaChecker implements Checker {
     private List<FormatError> checkPlainTextFormulaCandidate(XWPFParagraph paragraph, int currentChapter, int[] expectedNumberInChapter) {
         List<FormatError> errorList = new ArrayList<>();
 
-        String text = paragraph.getText();
-        if (text == null) {
+        if (!FormulaUtils.paragraphHasTrailingFormulaNumber(paragraph)) {
             return errorList;
         }
 
-        String trimmed = text.trim();
-        if (trimmed.isEmpty()) {
-            return errorList;
-        }
-
-        if (!PLAIN_FORMULA_NUMBER_PATTERN.matcher(trimmed).find()) {
-            return errorList;
-        }
-
+        String trimmed = ParagraphUtils.getTrimmedText(paragraph);
         errorList.add(buildFormulaToolWarning(trimmed));
 
         Matcher literalParen = TRAILING_LITERAL_PAREN_PATTERN.matcher(trimmed);
@@ -170,6 +161,8 @@ public class FormulaChecker implements Checker {
                     formulaIndex > 0 ? displayText(paragraphs.get(formulaIndex - 1)) : "Початок документу",
                     "Порожній рядок перед формулою"));
         }
+
+        // todo: remove this code if it doesn't need (need to check)
 
         String alignment = new AlignmentChecker().getAlignment(formulaParagraph);
         if (!"CENTER".equalsIgnoreCase(alignment) && !"RIGHT".equalsIgnoreCase(alignment)) {
@@ -258,10 +251,12 @@ public class FormulaChecker implements Checker {
      * @param expectedNumberInChapter the mutable active formula number tracker
      */
     private void updateChapter(XWPFParagraph heading, int[] currentChapter, int[] expectedNumberInChapter) {
-        String text = heading.getText();
-        if (text == null) return;
+        if (ParagraphUtils.isBlank(heading)) {
+            return;
+        }
 
-        Matcher matcher = HEADING_NUMBER_PATTERN.matcher(text.trim());
+        String text = ParagraphUtils.getTrimmedText(heading);
+        Matcher matcher = HEADING_NUMBER_PATTERN.matcher(text);
         if (matcher.find()) {
             currentChapter[0] = Integer.parseInt(matcher.group(1));
             expectedNumberInChapter[0] = 1;
