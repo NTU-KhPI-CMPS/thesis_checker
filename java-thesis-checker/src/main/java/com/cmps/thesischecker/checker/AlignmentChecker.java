@@ -8,6 +8,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
 import org.apache.poi.xwpf.usermodel.XWPFStyles;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrGeneral;
@@ -144,6 +145,14 @@ public class AlignmentChecker implements Checker {
     Optional<String> validate(XWPFParagraph paragraph) {
         String actualAlignment = getAlignment(paragraph);
 
+        // If paragraph contains a drawing, it must be centered
+        if (hasDrawing(paragraph)) {
+            if (!actualAlignment.equals("CENTER")) {
+                return Optional.of(actualAlignment);
+            }
+            return Optional.empty();
+        }
+
         if (StyleUtils.isHeading1(paragraph)) {
             if (!actualAlignment.equals(RequirementsHolder.getHeadingAlignment())) {
                 return Optional.of(actualAlignment);
@@ -255,5 +264,16 @@ public class AlignmentChecker implements Checker {
             return null;
         }
         return pPr.getJc().getVal().toString().toUpperCase();
+    }
+    
+    /**
+     * Checks if the paragraph contains a drawing (figure).
+     *
+     * @param paragraph the paragraph to inspect
+     * @return true if the paragraph contains at least one drawing
+     */
+    private static boolean hasDrawing(XWPFParagraph paragraph) {
+        CTP ctp = paragraph.getCTP();
+        return ctp != null && ctp.xmlText().contains("<w:drawing");
     }
 }
