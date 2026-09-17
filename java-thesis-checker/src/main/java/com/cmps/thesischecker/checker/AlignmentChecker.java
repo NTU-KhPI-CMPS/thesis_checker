@@ -72,7 +72,7 @@ public class AlignmentChecker implements Checker {
 
                     if (StyleUtils.isHeading1(paragraph)) {
                         expectedRaw = RequirementsHolder.getHeadingAlignment();
-                    } else if (FormulaUtils.paragraphIsFormula(paragraph)) {
+                    } else if (FormulaUtils.paragraphHasFormula(paragraph)) {
                         expectedRaw = RequirementsHolder.getFormulaAlignment();
                     } else {
                         expectedRaw = RequirementsHolder.getMainTextAlignment();
@@ -159,7 +159,7 @@ public class AlignmentChecker implements Checker {
             }
             return Optional.empty();
         }
-        if (FormulaUtils.paragraphIsFormula(paragraph)) {
+        if (FormulaUtils.paragraphHasFormula(paragraph)) {
             if (!Arrays.asList(RequirementsHolder.getFormulaAlignment().split(", ")).contains(actualAlignment)) {
                 return Optional.of(actualAlignment);
             }

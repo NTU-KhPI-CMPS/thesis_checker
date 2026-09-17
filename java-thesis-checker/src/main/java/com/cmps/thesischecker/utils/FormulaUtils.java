@@ -116,7 +116,7 @@ public class FormulaUtils {
      * @param paragraph the paragraph to inspect
      * @return true if the paragraph contains a formula number matching the pattern
      */
-    public static boolean paragraphIsFormula(XWPFParagraph paragraph) {
+    public static boolean paragraphHasFormula(XWPFParagraph paragraph) {
         return ParagraphUtils.checkParagraphByPattern(paragraph, PLAIN_FORMULA_NUMBER_PATTERN);
     }
 
