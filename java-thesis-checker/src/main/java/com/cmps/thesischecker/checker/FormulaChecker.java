@@ -162,8 +162,6 @@ public class FormulaChecker implements Checker {
                     "Порожній рядок перед формулою"));
         }
 
-        // todo: remove this code if it doesn't need (need to check)
-
         String alignment = new AlignmentChecker().getAlignment(formulaParagraph);
         if (!"CENTER".equalsIgnoreCase(alignment) && !"RIGHT".equalsIgnoreCase(alignment)) {
             errorList.add(buildAlignmentError(formulaText, alignment));
