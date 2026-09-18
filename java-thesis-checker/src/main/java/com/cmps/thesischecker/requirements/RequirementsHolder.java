@@ -54,7 +54,7 @@ public class RequirementsHolder {
     private static String listBulletChar = "–";
 
     @Getter
-    private static String formulaAlignment = "CENTER або RIGHT";
+    private static String formulaAlignment = "BOTH, RIGHT";
 
     @Getter
     private static String formulaSpacing = "Порожній рядок";

@@ -14,8 +14,12 @@ public class FormulaUtils {
 
     // "symbol – description;" — line-continuation of the block of explanation of symbols (6.3.2.4),
     // e.g. "м — маса;". Short "symbol" (up to 10 characters), dash, and then text.
-    private static final Pattern NOTATION_CONTINUATION_PATTERN =
+    public static final Pattern NOTATION_CONTINUATION_PATTERN =
             Pattern.compile("^[\\p{L}\\p{N}]{1,10}\\s*[–—-]\\s*\\S.*");
+    public static final Pattern PLAIN_FORMULA_NUMBER_PATTERN =
+            Pattern.compile("\\(\\s*\\d+\\.\\d+\\s*\\)[.,;]?\\s*$");
+    public static final Pattern TRAILING_FORMULA_NUMBER_PATTERN =
+            Pattern.compile(".*\\(\\s*\\d+\\.\\d+\\s*\\)[.,;]?\\s*$");
 
     private FormulaUtils() {
     }
@@ -37,9 +41,7 @@ public class FormulaUtils {
      * @return true if the paragraph has no visible text and no formulas
      */
     public static boolean isBlankParagraph(XWPFParagraph paragraph) {
-        String text = paragraph.getText();
-        boolean textIsEmpty = text == null || text.trim().isEmpty();
-        return textIsEmpty && getFormulaXmls(paragraph).isEmpty();
+        return ParagraphUtils.isBlank(paragraph) && getFormulaXmls(paragraph).isEmpty();
     }
 
     /**
@@ -52,12 +54,12 @@ public class FormulaUtils {
      * @return true if the paragraph text starts with "де"
      */
     public static boolean isNotationParagraph(XWPFParagraph paragraph) {
-        String text = paragraph.getText();
-        if (text == null) {
+        if (ParagraphUtils.isBlank(paragraph)) {
             return false;
         }
 
-        String trimmed = text.trim();
+        String trimmed = ParagraphUtils.getTrimmedText(paragraph);
+
         if (trimmed.length() < 2 || !trimmed.regionMatches(true, 0, "де", 0, 2)) {
             return false;
         }
@@ -84,13 +86,7 @@ public class FormulaUtils {
             return true;
         }
 
-        String text = paragraph.getText();
-        if (text == null) {
-            return false;
-        }
-
-        String trimmed = text.trim();
-        return !trimmed.isEmpty() && NOTATION_CONTINUATION_PATTERN.matcher(trimmed).matches();
+        return ParagraphUtils.checkParagraphByPattern(paragraph, NOTATION_CONTINUATION_PATTERN);
     }
 
     /**
@@ -111,5 +107,27 @@ public class FormulaUtils {
                 oMathPara.getOMathList().forEach(oMath -> formulaXmls.add(oMath.xmlText())));
 
         return formulaXmls;
+    }
+
+    /**
+     * Checks whether the given paragraph contains a formula number
+     * matching the expected formula notation pattern, such as "(1.1)".
+     *
+     * @param paragraph the paragraph to inspect
+     * @return true if the paragraph contains a formula number matching the pattern
+     */
+    public static boolean paragraphIsFormula(XWPFParagraph paragraph) {
+        return ParagraphUtils.checkParagraphByPattern(paragraph, PLAIN_FORMULA_NUMBER_PATTERN);
+    }
+
+    /**
+     * Checks whether the given paragraph ends with a formula number like "(1.1)",
+     * even if there is regular text before it.
+     *
+     * @param paragraph the paragraph to inspect
+     * @return true if the paragraph ends with a formula-style number
+     */
+    public static boolean paragraphHasTrailingFormulaNumber(XWPFParagraph paragraph) {
+        return ParagraphUtils.checkParagraphByPattern(paragraph, TRAILING_FORMULA_NUMBER_PATTERN);
     }
 }
