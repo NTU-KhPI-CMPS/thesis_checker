@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("AlignmentChecker Tests for document with typical alignment errors")
 public class AlignmentCheckerTest extends BaseTest {
 
+    private final AlignmentChecker checker = new AlignmentChecker();
     private static final String TEST_FILE = "src/test/resources/incorrect_alignment.docx";
     private static final int EXPECTED_ERROR_COUNT = 5;
     private static final String EXPECTED_FIRST_ALIGNMENT = "По лівому краю";
@@ -28,7 +29,7 @@ public class AlignmentCheckerTest extends BaseTest {
     private static List<FormatError> cachedErrors;
 
     @Override
-    protected Checker getChecker() { return new AlignmentChecker(); }
+    protected Checker getChecker() { return checker; }
 
     @BeforeAll
     static void setUp() {
@@ -126,8 +127,6 @@ public class AlignmentCheckerTest extends BaseTest {
     @DisplayName("Find incorrect formula alignment")
     void check_incorrect_formula_alignment() {
         // We need to rewrite all the tests to match our format!
-        Checker checker = new AlignmentChecker();
-
         String expectedParagraphText = "V = S/t (1.5)";
 
         //WHEN
