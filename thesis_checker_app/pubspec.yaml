@@ -52,6 +52,7 @@ dependencies:
   path_provider: ^2.1.2
   ffi: ^2.2.0
   path: ^1.9.1
+  flutter_localization: ^0.4.1
 
 dev_dependencies:
   flutter_test:
