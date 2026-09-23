@@ -53,6 +53,7 @@ dependencies:
   ffi: ^2.2.0
   path: ^1.9.1
   flutter_localization: ^0.4.1
+  shared_preferences: ^2.5.5
 
 dev_dependencies:
   flutter_test:
