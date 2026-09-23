@@ -7,15 +7,13 @@ import 'package:thesis_checker/data/models/error_by_category.dart';
 import 'package:thesis_checker/data/models/format_error_api.dart';
 
 class AnalysisRepository {
-  AnalysisRepository._internal({RunnerJavaService? runnerJavaService})
-      : _runnerJavaService = runnerJavaService ?? RunnerJavaService();
-  static final AnalysisRepository _instance = AnalysisRepository._internal();
-  factory AnalysisRepository() => _instance;
+  final RunnerJavaService _runnerJavaService;
+
+  AnalysisRepository({required RunnerJavaService runnerJavaService})
+      : _runnerJavaService = runnerJavaService;
 
   AnalysisRepository.forTest({required RunnerJavaService runnerJavaService})
       : _runnerJavaService = runnerJavaService;
-
-  final RunnerJavaService _runnerJavaService;
 
   Future<AnalysisResult> checkFile(
     String filePath, {

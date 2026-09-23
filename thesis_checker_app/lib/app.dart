@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:thesis_checker/app_view.dart';
+import 'package:thesis_checker/core/di/injection_container.dart';
 import 'package:thesis_checker/core/theme/theme_cubit.dart';
 import 'package:thesis_checker/features/home/bloc/file_bloc.dart';
 import 'package:thesis_checker/features/loading_analysis/bloc/analysis_bloc.dart';
-import 'package:thesis_checker/data/repositories/analysis_repository.dart';
 import 'package:thesis_checker/features/result/cubit/result_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,19 +16,16 @@ class App extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create:  (_) => ThemeCubit()
+          create:  (_) => getIt<ThemeCubit>(),
         ),
         BlocProvider(
-          create: (_) => FileBloc(),
+          create: (_) => getIt<FileBloc>(),
         ),
         BlocProvider(
-          create: (_) => ResultCubit(),
+          create: (_) => getIt<ResultCubit>(),
         ),
         BlocProvider(
-          create: (context) => AnalysisBloc(
-            analysisRepository: AnalysisRepository(),
-            resultCubit: context.read<ResultCubit>(),
-          )
+          create: (context) => getIt<AnalysisBloc>()
         ),
       ],
       child: const AppView(),
