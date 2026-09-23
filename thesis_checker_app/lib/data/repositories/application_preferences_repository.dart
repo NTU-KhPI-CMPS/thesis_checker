@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:thesis_checker/data/services/application_preferences_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApplicationPreferencesRepository {
-  final ApplicationPreferencesService _prefService;
+  final SharedPreferences _prefs;
+  final String _themeKey = 'theme';
 
-  const ApplicationPreferencesRepository(this._prefService);
+  const ApplicationPreferencesRepository(this._prefs);
 
   Future<void> saveApplicationTheme(ThemeMode theme) async {
-    String themeValue = _mapThemeModeToString(theme);
-    await _prefService.saveApplicationTheme(themeValue);
+    String themeStringValue = _mapThemeModeToString(theme);
+    await _prefs.setString(_themeKey, themeStringValue);
   }
 
   ThemeMode getApplicationTheme() {
-    return _mapStringToThemeMode(_prefService.getApplicationTheme());
+    return _mapStringToThemeMode(_prefs.getString(_themeKey));
   }
 
   ThemeMode _mapStringToThemeMode(String? theme) {
