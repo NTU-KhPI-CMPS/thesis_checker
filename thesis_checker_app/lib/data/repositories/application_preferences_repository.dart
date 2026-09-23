@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// Manages application settings
 class ApplicationPreferencesRepository {
   final SharedPreferences _prefs;
   final String _themeKey = 'theme';
