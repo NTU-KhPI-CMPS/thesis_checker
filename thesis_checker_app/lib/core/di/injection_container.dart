@@ -10,21 +10,21 @@ import 'package:thesis_checker/features/result/cubit/result_cubit.dart';
 GetIt getIt = GetIt.instance;
 
 void setupLocator() {
-  // init BLoC's and Cubit's
-  getIt.registerLazySingleton<ThemeCubit>(() => ThemeCubit());
-  getIt.registerLazySingleton<ResultCubit>(() => ResultCubit());
-
-  getIt.registerFactory<FileBloc>(() => FileBloc());
-  getIt.registerFactory<AnalysisBloc>(() => AnalysisBloc(
-      analysisRepository: getIt<AnalysisRepository>(),
-      resultCubit: getIt<ResultCubit>()));
+  // init services
+  getIt.registerSingleton<ThesisCheckerService>(ThesisCheckerService());
+  getIt.registerSingleton<RunnerJavaService>(RunnerJavaService(
+      thesisCheckerService: getIt<ThesisCheckerService>()));
 
   // init repositories
-  getIt.registerLazySingleton<AnalysisRepository>(() => AnalysisRepository(
+  getIt.registerSingleton<AnalysisRepository>(AnalysisRepository(
       runnerJavaService: getIt<RunnerJavaService>()));
 
-  // init services
-  getIt.registerLazySingleton<ThesisCheckerService>(() => ThesisCheckerService());
-  getIt.registerLazySingleton<RunnerJavaService>(() => RunnerJavaService(
-      thesisCheckerService: getIt<ThesisCheckerService>()));
+  // init BLoC's and Cubit's
+  getIt.registerSingleton<ThemeCubit>(ThemeCubit());
+  getIt.registerSingleton<ResultCubit>(ResultCubit());
+
+  getIt.registerSingleton<FileBloc>(FileBloc());
+  getIt.registerSingleton<AnalysisBloc>(AnalysisBloc(
+      analysisRepository: getIt<AnalysisRepository>(),
+      resultCubit: getIt<ResultCubit>()));
 }

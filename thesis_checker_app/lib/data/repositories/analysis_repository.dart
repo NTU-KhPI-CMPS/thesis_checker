@@ -12,9 +12,6 @@ class AnalysisRepository {
   AnalysisRepository({required RunnerJavaService runnerJavaService})
       : _runnerJavaService = runnerJavaService;
 
-  AnalysisRepository.forTest({required RunnerJavaService runnerJavaService})
-      : _runnerJavaService = runnerJavaService;
-
   Future<AnalysisResult> checkFile(
     String filePath, {
     required String fileName,
