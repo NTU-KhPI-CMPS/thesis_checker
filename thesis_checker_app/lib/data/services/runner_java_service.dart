@@ -8,11 +8,10 @@ import 'package:thesis_checker/data/services/thesis_checker_service.dart';
 import 'package:thesis_checker/models/check_type_info.dart';
 
 class RunnerJavaService {
-  RunnerJavaService._internal();
-  static final RunnerJavaService _instance = RunnerJavaService._internal();
-  factory RunnerJavaService() => _instance;
+  final ThesisCheckerService checkerService;
 
-  final checkerService = ThesisCheckerService();
+  RunnerJavaService({required ThesisCheckerService thesisCheckerService})
+      : checkerService = thesisCheckerService;
 
   Future<ReportApi> checkFile(String filePath, {required List<CheckTypeInfo> selectedChecks}) async {
     try {

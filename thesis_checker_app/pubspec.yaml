@@ -50,6 +50,7 @@ dependencies:
   file_picker: ^10.3.10
   window_manager: ^0.5.1
   path_provider: ^2.1.2
+  get_it: ^9.3.0
   ffi: ^2.2.0
   path: ^1.9.1
   flutter_localization: ^0.4.1
