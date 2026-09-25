@@ -14,3 +14,6 @@ final class ThemeLight extends ThemeState {}
 
 /// State representing dark theme mode.
 final class ThemeDark extends ThemeState {}
+
+/// State representing system theme mode.
+final class ThemeSystem extends ThemeState {}

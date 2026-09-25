@@ -15,7 +15,11 @@ class AppView extends StatelessWidget {
         return MaterialApp(
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
-          themeMode: state is ThemeLight ? ThemeMode.light : ThemeMode.dark,
+          themeMode: switch (state) {
+            ThemeLight() => ThemeMode.light,
+            ThemeDark() => ThemeMode.dark,
+            ThemeSystem() => ThemeMode.system,
+          },
           debugShowCheckedModeBanner: false,
           home: const HomeView(),
         );
