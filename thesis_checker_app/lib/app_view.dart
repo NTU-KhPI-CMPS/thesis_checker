@@ -10,12 +10,12 @@ class AppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ThemeCubit, ThemeState>(
+    return BlocBuilder<ThemeCubit, ThemeMode>(
       builder: (context, state) {
         return MaterialApp(
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
-          themeMode: state is ThemeLight ? ThemeMode.light : ThemeMode.dark,
+          themeMode: state,
           debugShowCheckedModeBanner: false,
           home: const HomeView(),
         );

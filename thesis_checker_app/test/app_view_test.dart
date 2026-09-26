@@ -54,8 +54,8 @@ void main() {
   group('AppView tests', () {
     testWidgets('AppView builds MaterialApp with correct theme mode (Light mode)', (WidgetTester tester) async {
       // 1. Arrange: Set up the ThemeCubit to emit a light theme state
-      when(() => mockThemeCubit.state).thenReturn(ThemeLight());
-      when(() => mockThemeCubit.stream).thenAnswer((_) => Stream.value(ThemeLight()));
+      when(() => mockThemeCubit.state).thenReturn(ThemeMode.light);
+      when(() => mockThemeCubit.stream).thenAnswer((_) => Stream.value(ThemeMode.light));
 
       // 2. Act: Pump the AppView widget
       await pumpAppView(tester);
@@ -70,8 +70,8 @@ void main() {
 
     testWidgets('AppView builds MaterialApp with correct theme mode (Dark mode)', (WidgetTester tester) async {
       // 1. Arrange: Set up the ThemeCubit to emit a dark theme state
-      when(() => mockThemeCubit.state).thenReturn(ThemeDark());
-      when(() => mockThemeCubit.stream).thenAnswer((_) => Stream.value(ThemeDark()));
+      when(() => mockThemeCubit.state).thenReturn(ThemeMode.dark);
+      when(() => mockThemeCubit.stream).thenAnswer((_) => Stream.value(ThemeMode.dark));
 
       // 2. Act: Pump the AppView widget
       await pumpAppView(tester);

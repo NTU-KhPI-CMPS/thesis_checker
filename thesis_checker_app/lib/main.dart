@@ -8,7 +8,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
 
-  setupLocator();
+  await setupLocator();
 
   WindowOptions windowOptions = const WindowOptions(
     size: Size(800, 600),

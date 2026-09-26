@@ -109,7 +109,6 @@ class _HomeViewState extends State<HomeView> {
 
   AppBar _buildCustomAppBar(BuildContext context) {
     final theme = Theme.of(context);
-    final isLight = theme.brightness == Brightness.light;
     final textColor = theme.textTheme.bodyLarge?.color;
     final accentColor = theme.primaryColor;
     final borderColor = theme.dividerColor;
@@ -153,52 +152,60 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ],
             ),
-            MouseRegion(
-              onEnter: (event) => setState(() => themeButtonIsHovered = true),
-              onExit: (event) => setState(() => themeButtonIsHovered = false),
-              child: GestureDetector(
-                onTap: () {
-                  context.read<ThemeCubit>().toggleTheme();
-                },
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 6.0,
-                    horizontal: 14.0,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: themeButtonIsHovered ? accentColor : borderColor,
-                    ),
-                    borderRadius: const BorderRadius.all(Radius.circular(20.0)),
-                    color: surface2Color,
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        isLight
-                            ? 'assets/images/sunny.png'
-                            : 'assets/images/moon.png',
-                        width: 20.0,
-                        height: 20.0,
+            BlocBuilder<ThemeCubit, ThemeMode>(
+              builder: (context, state) {
+                final (icon, label) = switch (state) {
+                  ThemeMode.light => ('assets/images/sunny.png', 'Світла'),
+                  ThemeMode.dark => ('assets/images/moon.png', 'Темна'),
+                  ThemeMode.system => ('assets/images/system_icon.png', 'Системна'),
+                };
+
+                return MouseRegion(
+                  onEnter: (event) => setState(() => themeButtonIsHovered = true),
+                  onExit: (event) => setState(() => themeButtonIsHovered = false),
+                  child: GestureDetector(
+                    onTap: () {
+                      context.read<ThemeCubit>().toggleTheme();
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 6.0,
+                        horizontal: 14.0,
                       ),
-                      const SizedBox(width: 5),
-                      Text(
-                        isLight ? 'Світла' : 'Темна',
-                        style: TextStyle(
-                          color: themeButtonIsHovered
-                              ? accentColor
-                              : textColor2,
-                          fontSize: 13.0,
-                          fontFamily: 'FunnelSans',
-                          fontWeight: FontWeight.w600,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: themeButtonIsHovered ? accentColor : borderColor,
                         ),
+                        borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+                        color: surface2Color,
                       ),
-                    ],
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            icon,
+                            width: 20.0,
+                            height: 20.0,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            label,
+                            style: TextStyle(
+                              color: themeButtonIsHovered
+                                  ? accentColor
+                                  : textColor2,
+                              fontSize: 13.0,
+                              fontFamily: 'FunnelSans',
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
+                );
+              },
             ),
           ],
         ),
