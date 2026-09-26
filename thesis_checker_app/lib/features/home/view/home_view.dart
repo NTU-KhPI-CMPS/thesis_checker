@@ -152,12 +152,12 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ],
             ),
-            BlocBuilder<ThemeCubit, ThemeState>(
+            BlocBuilder<ThemeCubit, ThemeMode>(
               builder: (context, state) {
                 final (icon, label) = switch (state) {
-                  ThemeLight() => ('assets/images/sunny.png', 'Світла'),
-                  ThemeDark() => ('assets/images/moon.png', 'Темна'),
-                  ThemeSystem() => ('assets/images/system_icon.png', 'Системна'),
+                  ThemeMode.light => ('assets/images/sunny.png', 'Світла'),
+                  ThemeMode.dark => ('assets/images/moon.png', 'Темна'),
+                  ThemeMode.system => ('assets/images/system_icon.png', 'Системна'),
                 };
 
                 return MouseRegion(
