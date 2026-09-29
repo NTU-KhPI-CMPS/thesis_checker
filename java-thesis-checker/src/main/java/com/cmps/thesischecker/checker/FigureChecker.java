@@ -33,21 +33,21 @@ public class FigureChecker implements Checker {
                     String figureText = para.getText().trim();
 
                     String alignment = getAlignment(para);
-                    if (!alignment.equalsIgnoreCase("CENTER")) {
-                        errors.add(buildAlignmentError(figureText, alignment, "CENTER",
-                                ErrorCategory.ALIGNMENT,
-                                "Фігура повинна бути вирівняною по центру"));
-                    }
+if (!alignment.equalsIgnoreCase("CENTER")) {
+                         errors.add(buildAlignmentError(figureText, alignment, "CENTER",
+                                 ErrorCategory.ALIGNMENT,
+                                 "Рисунок повинен бути вирівняним по центру"));
+                     }
 
-                    if (i == 0 || !isBlankParagraph(paragraphs.get(i - 1))) {
-                        errors.add(buildBlankLineError(figureText, true,
-                                "Перед фігурою має бути один пустий рядок"));
-                    }
+if (i == 0 || !isBlankParagraph(paragraphs.get(i - 1))) {
+                         errors.add(buildBlankLineError(figureText, true,
+                                 "Перед рисунком має бути один пустий рядок"));
+                     }
 
-                    if (i + 1 >= paragraphs.size()) {
-                        errors.add(buildMissingCaptionError(figureText,
-                                "Після фігурії очікується підпис «Рисунок»"));
-                    } else {
+if (i + 1 >= paragraphs.size()) {
+                         errors.add(buildMissingCaptionError(figureText,
+                                 "Після рисунку очікується підпис «Рисунок»"));
+                     } else {
                         XWPFParagraph captionPara = paragraphs.get(i + 1);
                         String captionText = captionPara.getText().trim();
 
@@ -57,20 +57,20 @@ public class FigureChecker implements Checker {
                         } else {
                             String captionAlignment = getAlignment(captionPara);
                             if (!captionAlignment.equalsIgnoreCase("CENTER")) {
-                                errors.add(buildAlignmentError(captionText, captionAlignment, "CENTER",
-                                        ErrorCategory.ALIGNMENT,
-                                        "Підпис фігури повинен бути вирівняною по центру"));
+errors.add(buildAlignmentError(captionText, captionAlignment, "CENTER",
+                                         ErrorCategory.ALIGNMENT,
+                                         "Підпис рисунка повинен бути вирівняним по центру"));
                             }
 
-                            if (!isValidCaption(captionText)) {
-                                errors.add(buildCaptionFormatError(captionText,
-                                        "Неправильний формат підпису фігури. Очікується: «Рисунок <номер> - <назва>»"));
-                            }
+if (!isValidCaption(captionText)) {
+                                 errors.add(buildCaptionFormatError(captionText,
+                                         "Неправильний формат підпису рисунка. Очікується: «Рисунок <номер> - <назва>»"));
+                             }
 
-                            if (i + 2 >= paragraphs.size() || !isBlankParagraph(paragraphs.get(i + 2))) {
-                                errors.add(buildBlankLineError(captionText, false,
-                                        "Після підпису фігури має бути один пустий рядок"));
-                            }
+if (i + 2 >= paragraphs.size() || !isBlankParagraph(paragraphs.get(i + 2))) {
+                                 errors.add(buildBlankLineError(captionText, false,
+                                         "Після підпису рисунка має бути один пустий рядок"));
+                             }
                         }
                     }
                 }
