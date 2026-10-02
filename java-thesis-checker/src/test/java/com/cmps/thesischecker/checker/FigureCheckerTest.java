@@ -5,10 +5,9 @@ import com.cmps.thesischecker.model.FormatError;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests for FigureChecker.
@@ -25,66 +24,72 @@ public class FigureCheckerTest extends BaseTest {
     private static final String TEST_FILE = "src/test/resources/incorrect_figure.docx";
 
     @Test
-    void testFigureAlignmentError() {
+    void check_incorrectFigureAlignment_errorFound() {
         // GIVEN
-        List<FormatError> errors = checker.check(TEST_FILE);
+        String expectedParagraphText = "Тестовий абзац, що містить рисунок:";
 
         // WHEN
-        List<FormatError> alignmentErrors = errors.stream()
-                .filter(e -> e.getTitle().equals("Рисунок повинен бути вирівняним по центру"))
-                .toList();
+        List<FormatError> errors = checker.check(TEST_FILE);
 
         // THEN
+        List<FormatError> alignmentErrors = errors.stream()
+                .filter(e -> Objects.equals(e.getParagraphText(), expectedParagraphText))
+                .filter(e -> Objects.equals(e.getId(), "err_figure_alignment"))
+                .toList();
         assertEquals(1, alignmentErrors.size(), "Expected exactly one figure alignment error");
         FormatError error = alignmentErrors.getFirst();
         assertEquals(ErrorCategory.ALIGNMENT, error.getCategory());
         assertEquals("CENTER", error.getExpected());
-        assertTrue(error.getFound().size() == 1);
+        assertEquals(1, error.getFound().size());
         String found = error.getFound().iterator().next();
-        assertTrue(!found.equalsIgnoreCase("CENTER"), "Found alignment should not be CENTER");
-        assertTrue(!error.getParagraphText().isEmpty(), "Paragraph text should not be empty");
+        assertEquals("LEFT", found);
+        assertEquals(expectedParagraphText, error.getParagraphText());
     }
 
     @Test
-    void testFigureBlankLineBeforeError() {
+    void check_missingBlankLineBeforeFigure_errorFound() {
         // GIVEN
-        List<FormatError> errors = checker.check(TEST_FILE);
+        String expectedParagraphText = "Тестовий абзац, що містить рисунок:";
 
         // WHEN
-        List<FormatError> blankLineErrors = errors.stream()
-                .filter(e -> e.getTitle().equals("Перед рисунком має бути один пустий рядок"))
-                .toList();
+        List<FormatError> errors = checker.check(TEST_FILE);
 
         // THEN
+        List<FormatError> blankLineErrors = errors.stream()
+                .filter(e -> Objects.equals(e.getParagraphText(), expectedParagraphText))
+                .filter(e -> Objects.equals(e.getId(), "err_figure_blank_line"))
+                .filter(e -> Objects.equals(e.getTitle(), "Перед рисунком має бути один пустий рядок"))
+                .toList();
         assertEquals(1, blankLineErrors.size(), "Expected exactly one missing blank line before figure error");
         FormatError error = blankLineErrors.getFirst();
         assertEquals(ErrorCategory.STRUCTURAL_ELEMENT, error.getCategory());
         assertEquals("один пустий рядок", error.getExpected());
-        assertTrue(error.getFound().size() == 1);
+        assertEquals(1, error.getFound().size());
         String found = error.getFound().iterator().next();
         assertEquals("немає пустого рядка перед", found);
-        assertTrue(!error.getParagraphText().isEmpty(), "Paragraph text should not be empty");
+        assertEquals(expectedParagraphText, error.getParagraphText());
     }
 
     @Test
-    void testFigureCaptionFormatError() {
+    void check_incorrectFigureCaptionFormat_errorFound() {
         // GIVEN
-        List<FormatError> errors = checker.check(TEST_FILE);
+        String expectedParagraphText = "Рис. 1 Неправильний підпис рисунка";
 
         // WHEN
-        List<FormatError> captionFormatErrors = errors.stream()
-                .filter(e -> e.getTitle().equals("Неправильний формат підпису рисунка. Очікується: «Рисунок <номер> - <назва>»"))
-                .toList();
+        List<FormatError> errors = checker.check(TEST_FILE);
 
         // THEN
+        List<FormatError> captionFormatErrors = errors.stream()
+                .filter(e -> Objects.equals(e.getParagraphText(), expectedParagraphText))
+                .filter(e -> Objects.equals(e.getId(), "err_figure_caption_format"))
+                .toList();
         assertEquals(1, captionFormatErrors.size(), "Expected exactly one caption format error");
         FormatError error = captionFormatErrors.getFirst();
         assertEquals(ErrorCategory.STRUCTURAL_ELEMENT, error.getCategory());
         assertEquals("«Рисунок <номер> - <назва>»", error.getExpected());
-        assertTrue(error.getFound().size() == 1);
+        assertEquals(1, error.getFound().size());
         String found = error.getFound().iterator().next();
-        assertFalse(found.isEmpty(), "Found caption text should not be empty");
-        assertTrue(!found.matches("^Рисунок\\s+\\d+\\s*-\\s+.+"), "Caption text should not match the expected pattern");
-        assertTrue(!error.getParagraphText().isEmpty(), "Paragraph text should not be empty");
+        assertEquals(expectedParagraphText, found);
+        assertEquals(expectedParagraphText, error.getParagraphText());
     }
 }

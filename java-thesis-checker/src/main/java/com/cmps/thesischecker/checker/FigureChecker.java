@@ -2,12 +2,10 @@ package com.cmps.thesischecker.checker;
 
 import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
+import com.cmps.thesischecker.utils.AlignmentUtils;
 import com.cmps.thesischecker.utils.MainContentUtils;
-import com.cmps.thesischecker.requirements.RequirementsHolder;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,48 +27,48 @@ public class FigureChecker implements Checker {
 
             for (int i = 0; i < paragraphs.size(); i++) {
                 XWPFParagraph para = paragraphs.get(i);
-                if (hasDrawing(para)) {
+                if (AlignmentUtils.hasDrawing(para)) {
                     String figureText = para.getText().trim();
 
-                    String alignment = getAlignment(para);
-if (!alignment.equalsIgnoreCase("CENTER")) {
-                         errors.add(buildAlignmentError(figureText, alignment, "CENTER",
-                                 ErrorCategory.ALIGNMENT,
-                                 "Рисунок повинен бути вирівняним по центру"));
-                     }
+                    String alignment = AlignmentUtils.getAlignment(para);
+                    if (!alignment.equalsIgnoreCase("CENTER")) {
+                        errors.add(buildAlignmentError(figureText, alignment, "CENTER",
+                                ErrorCategory.ALIGNMENT,
+                                "Рисунок повинен бути вирівняним по центру"));
+                    }
 
-if (i == 0 || !isBlankParagraph(paragraphs.get(i - 1))) {
-                         errors.add(buildBlankLineError(figureText, true,
-                                 "Перед рисунком має бути один пустий рядок"));
-                     }
+                    if (i == 0 || !isBlankParagraph(paragraphs.get(i - 1))) {
+                        errors.add(buildBlankLineError(figureText, true,
+                                "Перед рисунком має бути один пустий рядок"));
+                    }
 
-if (i + 1 >= paragraphs.size()) {
-                         errors.add(buildMissingCaptionError(figureText,
-                                 "Після рисунку очікується підпис «Рисунок»"));
-                     } else {
+                    if (i + 1 >= paragraphs.size()) {
+                        errors.add(buildMissingCaptionError(figureText,
+                                "Після рисунку очікується підпис «Рисунок»"));
+                    } else {
                         XWPFParagraph captionPara = paragraphs.get(i + 1);
                         String captionText = captionPara.getText().trim();
 
-                        if (hasDrawing(captionPara)) {
+                        if (AlignmentUtils.hasDrawing(captionPara)) {
                             errors.add(buildUnexpectedFigureError(figureText,
-                                    "Параграп підпису не повинен містити креслення"));
+                                    "Параграф підпису не повинен містити креслення"));
                         } else {
-                            String captionAlignment = getAlignment(captionPara);
+                            String captionAlignment = AlignmentUtils.getAlignment(captionPara);
                             if (!captionAlignment.equalsIgnoreCase("CENTER")) {
-errors.add(buildAlignmentError(captionText, captionAlignment, "CENTER",
-                                         ErrorCategory.ALIGNMENT,
-                                         "Підпис рисунка повинен бути вирівняним по центру"));
+                                errors.add(buildAlignmentError(captionText, captionAlignment, "CENTER",
+                                        ErrorCategory.ALIGNMENT,
+                                        "Підпис рисунка повинен бути вирівняним по центру"));
                             }
 
-if (!isValidCaption(captionText)) {
-                                 errors.add(buildCaptionFormatError(captionText,
-                                         "Неправильний формат підпису рисунка. Очікується: «Рисунок <номер> - <назва>»"));
-                             }
+                            if (!isValidCaption(captionText)) {
+                                errors.add(buildCaptionFormatError(captionText,
+                                        "Неправильний формат підпису рисунка. Очікується: «Рисунок <номер> - <назва>»"));
+                            }
 
-if (i + 2 >= paragraphs.size() || !isBlankParagraph(paragraphs.get(i + 2))) {
-                                 errors.add(buildBlankLineError(captionText, false,
-                                         "Після підпису рисунка має бути один пустий рядок"));
-                             }
+                            if (i + 2 >= paragraphs.size() || !isBlankParagraph(paragraphs.get(i + 2))) {
+                                errors.add(buildBlankLineError(captionText, false,
+                                        "Після підпису рисунка має бути один пустий рядок"));
+                            }
                         }
                     }
                 }
@@ -82,34 +80,9 @@ if (i + 2 >= paragraphs.size() || !isBlankParagraph(paragraphs.get(i + 2))) {
         return errors;
     }
 
-    private static boolean hasDrawing(XWPFParagraph paragraph) {
-        CTP ctp = paragraph.getCTP();
-        return ctp != null && ctp.xmlText().contains("<w:drawing");
-    }
-
     private static boolean isBlankParagraph(XWPFParagraph paragraph) {
         String text = paragraph.getText();
-        return (text == null || text.trim().isEmpty()) && !hasDrawing(paragraph);
-    }
-
-    private static String getAlignment(XWPFParagraph paragraph) {
-        String alignment = getAlignmentFromPPr(paragraph.getCTP().getPPr());
-        if (alignment != null) {
-            return alignment;
-        }
-        alignment = getAlignmentFromStyles(paragraph);
-        return alignment == null ? "LEFT" : alignment;
-    }
-
-    private static String getAlignmentFromPPr(CTPPr pPr) {
-        if (pPr == null || !pPr.isSetJc() || pPr.getJc() == null || pPr.getJc().getVal() == null) {
-            return null;
-        }
-        return pPr.getJc().getVal().toString().toUpperCase();
-    }
-
-    private static String getAlignmentFromStyles(XWPFParagraph paragraph) {
-        return null; // placeholder
+        return (text == null || text.trim().isEmpty()) && !AlignmentUtils.hasDrawing(paragraph);
     }
 
     private static boolean isValidCaption(String caption) {
@@ -148,7 +121,7 @@ if (i + 2 >= paragraphs.size() || !isBlankParagraph(paragraphs.get(i + 2))) {
         error.setSeverity("error");
         error.setTitle(title);
         error.setParagraphText(figureText);
-        error.setExpected("Параграп з підписом «Рисунок»");
+        error.setExpected("Параграф з підписом «Рисунок»");
         error.setFound(java.util.Set.of("відсутній"));
         return error;
     }
