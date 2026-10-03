@@ -59,11 +59,11 @@ void main() {
       testWidgets(
         'AppView builds MaterialApp with correct theme mode (${theme.name} mode)',
         (WidgetTester tester) async {
-          // 1. Arrange: Set up the ThemeCubit to emit a chose theme state
+          // Arrange: Set up the ThemeCubit to emit a chose theme state
           when(() => mockThemeCubit.state).thenReturn(theme);
           when(() => mockThemeCubit.stream).thenAnswer((_) => Stream.value(theme));
 
-          // 2. Act: Pump the AppView widget
+          // Act: Pump the AppView widget
           await pumpAppView(tester);
 
           // Assert: Verify that a MaterialApp is found and has the correct theme mode
