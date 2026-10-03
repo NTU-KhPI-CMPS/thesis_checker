@@ -53,6 +53,7 @@ dependencies:
   get_it: ^9.3.0
   ffi: ^2.2.0
   path: ^1.9.1
+  parameterized_test: ^2.0.2
   flutter_localization: ^0.4.1
   shared_preferences: ^2.5.5
 

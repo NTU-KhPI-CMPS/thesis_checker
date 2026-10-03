@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:parameterized_test/parameterized_test.dart';
 import 'package:thesis_checker/app_view.dart';
 import 'package:thesis_checker/core/theme/theme_cubit.dart';
 import 'package:thesis_checker/features/home/bloc/file_bloc.dart';
@@ -51,37 +52,27 @@ void main() {
     );
   }
 
-  group('AppView tests', () {
-    testWidgets('AppView builds MaterialApp with correct theme mode (Light mode)', (WidgetTester tester) async {
-      // 1. Arrange: Set up the ThemeCubit to emit a light theme state
-      when(() => mockThemeCubit.state).thenReturn(ThemeLight());
-      when(() => mockThemeCubit.stream).thenAnswer((_) => Stream.value(ThemeLight()));
+  parameterizedGroup(
+    'AppView theme mode tests',
+    ThemeMode.values,
+    (ThemeMode theme) {
+      testWidgets(
+        'AppView builds MaterialApp with correct theme mode (${theme.name} mode)',
+        (WidgetTester tester) async {
+          // Arrange: Set up the ThemeCubit to emit a chose theme state
+          when(() => mockThemeCubit.state).thenReturn(theme);
+          when(() => mockThemeCubit.stream).thenAnswer((_) => Stream.value(theme));
 
-      // 2. Act: Pump the AppView widget
-      await pumpAppView(tester);
+          // Act: Pump the AppView widget
+          await pumpAppView(tester);
 
-      // Assert: Verify that a MaterialApp is found and has the correct theme mode
-      final materialAppFinder = find.byType(MaterialApp);
-      expect(materialAppFinder, findsOneWidget);
+          // Assert: Verify that a MaterialApp is found and has the correct theme mode
+          final materialAppFinder = find.byType(MaterialApp);
+          expect(materialAppFinder, findsOneWidget);
 
-      final materialApp = tester.widget<MaterialApp>(materialAppFinder);
-      expect(materialApp.themeMode, ThemeMode.light);
-    });
-
-    testWidgets('AppView builds MaterialApp with correct theme mode (Dark mode)', (WidgetTester tester) async {
-      // 1. Arrange: Set up the ThemeCubit to emit a dark theme state
-      when(() => mockThemeCubit.state).thenReturn(ThemeDark());
-      when(() => mockThemeCubit.stream).thenAnswer((_) => Stream.value(ThemeDark()));
-
-      // 2. Act: Pump the AppView widget
-      await pumpAppView(tester);
-
-      // Assert: Verify that a MaterialApp is found and has the correct theme mode
-      final materialAppFinder = find.byType(MaterialApp);
-      expect(materialAppFinder, findsOneWidget);
-
-      final materialApp = tester.widget<MaterialApp>(materialAppFinder);
-      expect(materialApp.themeMode, ThemeMode.dark);
-    });
-  });
+          final materialApp = tester.widget<MaterialApp>(materialAppFinder);
+          expect(materialApp.themeMode, theme);
+      });
+    }
+  );
 }
