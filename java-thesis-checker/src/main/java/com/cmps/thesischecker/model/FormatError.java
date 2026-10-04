@@ -1,5 +1,6 @@
 package com.cmps.thesischecker.model;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -12,9 +13,7 @@ import java.util.Set;
  * @author Mariia Borodin (HappyMary16)
  * @since 1.0
  */
-@Getter
-@Setter
-@RequiredArgsConstructor
+@Data
 public class FormatError {
 
     private String id;

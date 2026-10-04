@@ -6,14 +6,18 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
+import static com.cmps.thesischecker.model.ErrorCategory.ALIGNMENT;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("AlignmentChecker Tests for document with typical alignment errors")
 public class AlignmentCheckerTest extends BaseTest {
 
+    private final AlignmentChecker checker = new AlignmentChecker();
     private static final String TEST_FILE = "src/test/resources/incorrect_alignment.docx";
-    private static final int EXPECTED_ERROR_COUNT = 4;
+    private static final int EXPECTED_ERROR_COUNT = 5;
     private static final String EXPECTED_FIRST_ALIGNMENT = "По лівому краю";
     private static final String EXPECTED_SECOND_ALIGNMENT = "По центру";
     private static final String EXPECTED_THIRD_ALIGNMENT = "По правому краю";
@@ -25,7 +29,7 @@ public class AlignmentCheckerTest extends BaseTest {
     private static List<FormatError> cachedErrors;
 
     @Override
-    protected Checker getChecker() { return new AlignmentChecker(); }
+    protected Checker getChecker() { return checker; }
 
     @BeforeAll
     static void setUp() {
@@ -37,7 +41,7 @@ public class AlignmentCheckerTest extends BaseTest {
     @DisplayName("Document contains exactly 4 alignment errors")
     void check_alignment_finds4Errors() {
         assertEquals(EXPECTED_ERROR_COUNT, cachedErrors.size(),
-                "Expected exactly 4 alignment errors in the document");
+                "Expected exactly 5 alignment errors in the document");
     }
 
     @Test
@@ -93,7 +97,7 @@ public class AlignmentCheckerTest extends BaseTest {
     @Test
     @DisplayName("Alignment errors should correctly identify expected values for both 'Justified' and 'Centered' styles")
     void check_alignment_allErrorsHaveCorrectExpectedValue() {
-        assertEquals(4,
+        assertEquals(5,
                 cachedErrors.size(),
                 "Should have detected 4 specific alignment violations"
         );
@@ -117,6 +121,29 @@ public class AlignmentCheckerTest extends BaseTest {
                 HEADING_ALIGNMENT,
                 "Heading level 1 must be centered"
         );
+    }
+
+    @Test
+    @DisplayName("Find incorrect formula alignment")
+    void check_incorrect_formula_alignment() {
+        // We need to rewrite all the tests to match our format!
+        String expectedParagraphText = "V = S/t (1.5)";
+
+        //WHEN
+        List<FormatError> result = checker.check(TEST_FILE);
+
+        // THEN
+        List<FormatError> errorsWithExpectedText
+                = result.stream()
+                .filter(fe -> Objects.equals(fe.getParagraphText(), expectedParagraphText))
+                .toList();
+        assertEquals(1, errorsWithExpectedText.size(), "Only one error with expected text should be found.");
+
+        FormatError formatError = errorsWithExpectedText.getFirst();
+        assertEquals(expectedParagraphText, formatError.getParagraphText());
+        assertEquals(ALIGNMENT, formatError.getCategory());
+        assertEquals(Set.of("По лівому краю"), formatError.getFound());
+        assertEquals("По ширині або правому краю", formatError.getExpected());
     }
 
     private void assertAlignmentError(FormatError error, String expected, String ruleDescription) {

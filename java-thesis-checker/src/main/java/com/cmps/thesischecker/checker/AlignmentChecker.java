@@ -4,6 +4,7 @@ import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.requirements.RequirementsHolder;
 import com.cmps.thesischecker.utils.AlignmentUtils;
+import com.cmps.thesischecker.utils.FormulaUtils;
 import com.cmps.thesischecker.utils.MainContentUtils;
 import com.cmps.thesischecker.utils.StyleUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -11,6 +12,7 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -25,7 +27,8 @@ public class AlignmentChecker implements Checker {
         LEFT("По лівому краю"),
         RIGHT("По правому краю"),
         CENTER("По центру"),
-        BOTH("По ширині");
+        BOTH("По ширині"),
+        FORMULA_ALIGNMENT("По ширині або правому краю");
 
         final String name;
 
@@ -65,9 +68,15 @@ public class AlignmentChecker implements Checker {
                 }
                 Optional<String> incorrectAlignment = validate(paragraph);
                 if (incorrectAlignment.isPresent()) {
-                    String expectedRaw = StyleUtils.isHeading1(paragraph)
-                            ? RequirementsHolder.getHeadingAlignment()
-                            : RequirementsHolder.getMainTextAlignment();
+                    String expectedRaw;
+
+                    if (StyleUtils.isHeading1(paragraph)) {
+                        expectedRaw = RequirementsHolder.getHeadingAlignment();
+                    } else if (FormulaUtils.paragraphIsFormula(paragraph)) {
+                        expectedRaw = RequirementsHolder.getFormulaAlignment();
+                    } else {
+                        expectedRaw = RequirementsHolder.getMainTextAlignment();
+                    }
 
                     String expectedLocalized = mapToLocalized(expectedRaw);
                     allErrors.add(buildAlignmentError(paragraphText, incorrectAlignment.get(), expectedLocalized));
@@ -130,6 +139,7 @@ public class AlignmentChecker implements Checker {
             case "RIGHT" -> Alignment.RIGHT.name;
             case "CENTER" -> Alignment.CENTER.name;
             case "BOTH" -> Alignment.BOTH.name;
+            case "BOTH, RIGHT" -> Alignment.FORMULA_ALIGNMENT.name;
             default -> align;
         };
     }
@@ -157,7 +167,12 @@ public class AlignmentChecker implements Checker {
             }
             return Optional.empty();
         }
-
+        if (FormulaUtils.paragraphIsFormula(paragraph)) {
+            if (!Arrays.asList(RequirementsHolder.getFormulaAlignment().split(", ")).contains(actualAlignment)) {
+                return Optional.of(actualAlignment);
+            }
+            return Optional.empty();
+        }
         if (!actualAlignment.equals(RequirementsHolder.getMainTextAlignment())) {
             return Optional.of(actualAlignment);
         }

@@ -29,7 +29,7 @@ void main() {
   group('AnalysisRepository.checkFile', () {
     test('groups known and unknown checks using mocked runner', () async {
       final mockRunner = MockRunnerJavaService();
-      final repository = AnalysisRepository.forTest(runnerJavaService: mockRunner);
+      final repository = AnalysisRepository(runnerJavaService: mockRunner);
       const filePath = 'nested/thesis.docx';
       final fontType = AvailableCheckTypes.checkTypes.firstWhere((type) => type.title == 'Шрифт');
 
@@ -68,7 +68,7 @@ void main() {
 
     test('keeps all categories with empty report', () async {
       final mockRunner = MockRunnerJavaService();
-      final repository = AnalysisRepository.forTest(runnerJavaService: mockRunner);
+      final repository = AnalysisRepository(runnerJavaService: mockRunner);
       final filePath = ['tmp', 'empty.docx'].join(Platform.pathSeparator);
       final otherType = AvailableCheckTypes.checkTypes.firstWhere(
         (type) => type.checks.contains(Check.other),
