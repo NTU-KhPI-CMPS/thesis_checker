@@ -35,7 +35,8 @@ public class Main {
             new ParagraphSpacingChecker(),
             new StructuralElementChecker(),
             new SizeChecker(),
-            new ParagraphIndentationChecker()
+            new ParagraphIndentationChecker(),
+            new FigureChecker()
     );
 
     static void main(String[] args) {

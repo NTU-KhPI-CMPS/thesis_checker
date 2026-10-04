@@ -13,9 +13,11 @@ import java.util.regex.Pattern;
 
 public class FigureChecker implements Checker {
 
+    private static final Pattern CAPTION_PATTERN = Pattern.compile("^Рисунок\\s+\\d+(?:\\.\\d+)?\\s*[–-]\\s+.+");
+
     @Override
     public ErrorCategory getErrorCategory() {
-        return ErrorCategory.STRUCTURAL_ELEMENT;
+        return ErrorCategory.FIGURE;
     }
 
     @Override
@@ -26,14 +28,14 @@ public class FigureChecker implements Checker {
             List<XWPFParagraph> paragraphs = MainContentUtils.getMainContentParagraphs(doc);
 
             for (int i = 0; i < paragraphs.size(); i++) {
-                XWPFParagraph para = paragraphs.get(i);
-                if (AlignmentUtils.hasDrawing(para)) {
-                    String figureText = para.getText().trim();
+                XWPFParagraph figureParagraph = paragraphs.get(i);
+                if (AlignmentUtils.hasDrawing(figureParagraph)) {
+                    String figureText = figureParagraph.getText().trim();
 
-                    String alignment = AlignmentUtils.getAlignment(para);
+                    String alignment = AlignmentUtils.getAlignment(figureParagraph);
                     if (!alignment.equalsIgnoreCase("CENTER")) {
                         errors.add(buildAlignmentError(figureText, alignment, "CENTER",
-                                ErrorCategory.ALIGNMENT,
+                                ErrorCategory.FIGURE,
                                 "Рисунок повинен бути вирівняним по центру"));
                     }
 
@@ -42,32 +44,39 @@ public class FigureChecker implements Checker {
                                 "Перед рисунком має бути один пустий рядок"));
                     }
 
-                    if (i + 1 >= paragraphs.size()) {
-                        errors.add(buildMissingCaptionError(figureText,
-                                "Після рисунку очікується підпис «Рисунок»"));
+                    if (isValidCaption(figureText)) {
+                        if (i + 1 >= paragraphs.size() || !isBlankParagraph(paragraphs.get(i + 1))) {
+                            errors.add(buildBlankLineError(figureText, false,
+                                    "Після підпису рисунка має бути один пустий рядок"));
+                        }
                     } else {
-                        XWPFParagraph captionPara = paragraphs.get(i + 1);
-                        String captionText = captionPara.getText().trim();
-
-                        if (AlignmentUtils.hasDrawing(captionPara)) {
-                            errors.add(buildUnexpectedFigureError(figureText,
-                                    "Параграф підпису не повинен містити креслення"));
+                        if (i + 1 >= paragraphs.size()) {
+                            errors.add(buildMissingCaptionError(figureText,
+                                    "Після рисунку очікується підпис «Рисунок»"));
                         } else {
-                            String captionAlignment = AlignmentUtils.getAlignment(captionPara);
-                            if (!captionAlignment.equalsIgnoreCase("CENTER")) {
-                                errors.add(buildAlignmentError(captionText, captionAlignment, "CENTER",
-                                        ErrorCategory.ALIGNMENT,
-                                        "Підпис рисунка повинен бути вирівняним по центру"));
-                            }
+                            XWPFParagraph captionPara = paragraphs.get(i + 1);
+                            String captionText = captionPara.getText().trim();
 
-                            if (!isValidCaption(captionText)) {
-                                errors.add(buildCaptionFormatError(captionText,
-                                        "Неправильний формат підпису рисунка. Очікується: «Рисунок <номер> - <назва>»"));
-                            }
+                            if (AlignmentUtils.hasDrawing(captionPara)) {
+                                errors.add(buildUnexpectedFigureError(figureText,
+                                        "Параграф підпису не повинен містити креслення"));
+                            } else {
+                                String captionAlignment = AlignmentUtils.getAlignment(captionPara);
+                                if (!captionAlignment.equalsIgnoreCase("CENTER")) {
+                                    errors.add(buildAlignmentError(captionText, captionAlignment, "CENTER",
+                                            ErrorCategory.FIGURE,
+                                            "Підпис рисунка повинен бути вирівняним по центру"));
+                                }
 
-                            if (i + 2 >= paragraphs.size() || !isBlankParagraph(paragraphs.get(i + 2))) {
-                                errors.add(buildBlankLineError(captionText, false,
-                                        "Після підпису рисунка має бути один пустий рядок"));
+                                if (!isValidCaption(captionText)) {
+                                    errors.add(buildCaptionFormatError(captionText,
+                                            "Неправильний формат підпису рисунка. Очікується: «Рисунок <номер> - <назва>»"));
+                                }
+
+                                if (i + 2 >= paragraphs.size() || !isBlankParagraph(paragraphs.get(i + 2))) {
+                                    errors.add(buildBlankLineError(captionText, false,
+                                            "Після підпису рисунка має бути один пустий рядок"));
+                                }
                             }
                         }
                     }
@@ -86,7 +95,7 @@ public class FigureChecker implements Checker {
     }
 
     private static boolean isValidCaption(String caption) {
-        return Pattern.matches("^Рисунок\\s+\\d+\\s*-\\s+.+", caption);
+        return CAPTION_PATTERN.matcher(caption).matches();
     }
 
     private static FormatError buildAlignmentError(String text, String found, String expected,
@@ -105,7 +114,7 @@ public class FigureChecker implements Checker {
     private static FormatError buildBlankLineError(String text, boolean beforeFigure, String title) {
         FormatError error = new FormatError();
         error.setId("err_figure_blank_line");
-        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT);
+        error.setCategory(ErrorCategory.FIGURE);
         error.setSeverity("error");
         error.setTitle(title);
         error.setParagraphText(text);
@@ -117,7 +126,7 @@ public class FigureChecker implements Checker {
     private static FormatError buildMissingCaptionError(String figureText, String title) {
         FormatError error = new FormatError();
         error.setId("err_figure_missing_caption");
-        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT);
+        error.setCategory(ErrorCategory.FIGURE);
         error.setSeverity("error");
         error.setTitle(title);
         error.setParagraphText(figureText);
@@ -129,7 +138,7 @@ public class FigureChecker implements Checker {
     private static FormatError buildUnexpectedFigureError(String figureText, String title) {
         FormatError error = new FormatError();
         error.setId("err_figure_unexpected_in_caption");
-        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT);
+        error.setCategory(ErrorCategory.FIGURE);
         error.setSeverity("error");
         error.setTitle(title);
         error.setParagraphText(figureText);
@@ -141,7 +150,7 @@ public class FigureChecker implements Checker {
     private static FormatError buildCaptionFormatError(String captionText, String title) {
         FormatError error = new FormatError();
         error.setId("err_figure_caption_format");
-        error.setCategory(ErrorCategory.STRUCTURAL_ELEMENT);
+        error.setCategory(ErrorCategory.FIGURE);
         error.setSeverity("error");
         error.setTitle(title);
         error.setParagraphText(captionText);

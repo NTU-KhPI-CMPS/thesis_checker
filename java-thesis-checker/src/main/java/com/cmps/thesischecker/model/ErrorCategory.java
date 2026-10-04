@@ -11,5 +11,6 @@ public enum ErrorCategory {
     FIRST_LINE_INDENTATION,
     STRUCTURAL_ELEMENT,
     FORMULA,
+    FIGURE,
     FILE
 }

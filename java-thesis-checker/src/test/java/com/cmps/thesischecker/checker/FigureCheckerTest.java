@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests for FigureChecker.
@@ -22,6 +23,7 @@ public class FigureCheckerTest extends BaseTest {
     }
 
     private static final String TEST_FILE = "src/test/resources/incorrect_figure.docx";
+    private static final String CORRECT_FILE = "src/test/resources/correct_figures.docx";
 
     @Test
     void check_incorrectFigureAlignment_errorFound() {
@@ -38,7 +40,7 @@ public class FigureCheckerTest extends BaseTest {
                 .toList();
         assertEquals(1, alignmentErrors.size(), "Expected exactly one figure alignment error");
         FormatError error = alignmentErrors.getFirst();
-        assertEquals(ErrorCategory.ALIGNMENT, error.getCategory());
+        assertEquals(ErrorCategory.FIGURE, error.getCategory());
         assertEquals("CENTER", error.getExpected());
         assertEquals(1, error.getFound().size());
         String found = error.getFound().iterator().next();
@@ -62,7 +64,7 @@ public class FigureCheckerTest extends BaseTest {
                 .toList();
         assertEquals(1, blankLineErrors.size(), "Expected exactly one missing blank line before figure error");
         FormatError error = blankLineErrors.getFirst();
-        assertEquals(ErrorCategory.STRUCTURAL_ELEMENT, error.getCategory());
+        assertEquals(ErrorCategory.FIGURE, error.getCategory());
         assertEquals("один пустий рядок", error.getExpected());
         assertEquals(1, error.getFound().size());
         String found = error.getFound().iterator().next();
@@ -85,11 +87,20 @@ public class FigureCheckerTest extends BaseTest {
                 .toList();
         assertEquals(1, captionFormatErrors.size(), "Expected exactly one caption format error");
         FormatError error = captionFormatErrors.getFirst();
-        assertEquals(ErrorCategory.STRUCTURAL_ELEMENT, error.getCategory());
+        assertEquals(ErrorCategory.FIGURE, error.getCategory());
         assertEquals("«Рисунок <номер> - <назва>»", error.getExpected());
         assertEquals(1, error.getFound().size());
         String found = error.getFound().iterator().next();
         assertEquals(expectedParagraphText, found);
         assertEquals(expectedParagraphText, error.getParagraphText());
+    }
+
+    @Test
+    void check_correctFigures_noErrors() {
+        // WHEN
+        List<FormatError> errors = checker.check(CORRECT_FILE);
+
+        // THEN
+        assertTrue(errors.isEmpty(), "Expected no errors in correct_figures.docx, but found: " + errors);
     }
 }
