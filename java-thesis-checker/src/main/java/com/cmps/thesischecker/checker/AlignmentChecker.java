@@ -2,20 +2,20 @@ package com.cmps.thesischecker.checker;
 
 import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
+import com.cmps.thesischecker.requirements.RequirementsHolder;
+import com.cmps.thesischecker.utils.AlignmentUtils;
 import com.cmps.thesischecker.utils.FormulaUtils;
 import com.cmps.thesischecker.utils.MainContentUtils;
 import com.cmps.thesischecker.utils.StyleUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFStyle;
-import org.apache.poi.xwpf.usermodel.XWPFStyles;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrBase;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrGeneral;
-import com.cmps.thesischecker.requirements.RequirementsHolder;
 
 import java.io.FileInputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 public class AlignmentChecker implements Checker {
 
@@ -151,7 +151,15 @@ public class AlignmentChecker implements Checker {
      * @return an Optional containing the detected alignment value if the paragraph is invalid, or empty otherwise
      */
     Optional<String> validate(XWPFParagraph paragraph) {
-        String actualAlignment = getAlignment(paragraph);
+        String actualAlignment = AlignmentUtils.getAlignment(paragraph);
+
+        // If paragraph contains a drawing, it must be centered
+        if (AlignmentUtils.hasDrawing(paragraph)) {
+            if (!actualAlignment.equals("CENTER")) {
+                return Optional.of(actualAlignment);
+            }
+            return Optional.empty();
+        }
 
         if (StyleUtils.isHeading1(paragraph)) {
             if (!actualAlignment.equals(RequirementsHolder.getHeadingAlignment())) {
@@ -170,104 +178,5 @@ public class AlignmentChecker implements Checker {
         }
 
         return Optional.empty();
-    }
-
-    /**
-     * Resolves the paragraph alignment using paragraph properties or styles.
-     * Priority order: <p>
-     * 1. Explicit alignment in paragraph properties (PPr) <p>
-     * 2. Alignment from paragraph style chain (style → base styles → default style) <p>
-     * <p>
-     * If alignment is not configured anywhere, "LEFT" is returned as default.
-     *
-     * @param paragraph the paragraph to inspect
-     * @return the resolved alignment value (e.g., "LEFT", "RIGHT", "CENTER", "BOTH", "DISTRIBUTE")
-     */
-    String getAlignment(XWPFParagraph paragraph) {
-        String alignment = getAlignmentFromPPr(paragraph.getCTP().getPPr());
-        if (alignment != null) {
-            return alignment;
-        }
-
-        alignment = getAlignmentFromStyles(paragraph);
-        return Objects.requireNonNullElse(alignment, "LEFT");
-
-    }
-
-    /**
-     * Resolves alignment from the paragraph style chain, including the default paragraph style.
-     *
-     * @param paragraph the paragraph to inspect
-     * @return the resolved alignment value, or {@code null} if none is available
-     */
-    String getAlignmentFromStyles(XWPFParagraph paragraph) {
-        XWPFStyles styles = paragraph.getDocument().getStyles();
-        if (styles == null) {
-            return null;
-        }
-
-        String styleId = paragraph.getStyle();
-        if (styleId == null) {
-            styleId = StyleUtils.getNormalStyleId(styles);
-        }
-        while (styleId != null) {
-            XWPFStyle style = styles.getStyle(styleId);
-            if (style == null || style.getCTStyle() == null) {
-                break;
-            }
-
-            String fromStyle = getAlignmentFromPPr(style.getCTStyle().getPPr());
-            if (fromStyle != null) {
-                return fromStyle;
-            }
-
-            if (!style.getCTStyle().isSetBasedOn() || style.getCTStyle().getBasedOn() == null) {
-                break;
-            }
-
-            styleId = style.getCTStyle().getBasedOn().getVal();
-        }
-
-        if (styles.getDefaultParagraphStyle() != null) {
-            return getAlignmentFromPPr(styles.getDefaultParagraphStyle().getPPr());
-        }
-
-        return null;
-    }
-
-    /**
-     * Checks if the paragraph properties or its alignment (Jc) component are missing.
-     *
-     * @param pPr the base paragraph properties
-     * @return true if alignment is absent, false otherwise
-     */
-    boolean isAlignmentMissing(CTPPrBase pPr) {
-        return pPr == null || !pPr.isSetJc() || pPr.getJc() == null || pPr.getJc().getVal() == null;
-    }
-
-    /**
-     * Reads alignment from paragraph properties.
-     *
-     * @param pPr the paragraph properties
-     * @return the resolved alignment value, or {@code null} if not present
-     */
-    String getAlignmentFromPPr(CTPPr pPr) {
-        if (isAlignmentMissing(pPr)) {
-            return null;
-        }
-        return pPr.getJc().getVal().toString().toUpperCase();
-    }
-
-    /**
-     * Reads alignment from general paragraph properties.
-     *
-     * @param pPr the general paragraph properties
-     * @return the resolved alignment value, or {@code null} if not present
-     */
-    String getAlignmentFromPPr(CTPPrGeneral pPr) {
-        if (isAlignmentMissing(pPr)) {
-            return null;
-        }
-        return pPr.getJc().getVal().toString().toUpperCase();
     }
 }

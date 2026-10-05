@@ -3,6 +3,7 @@ package com.cmps.thesischecker.checker;
 import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.requirements.RequirementsHolder;
+import com.cmps.thesischecker.utils.AlignmentUtils;
 import com.cmps.thesischecker.utils.FormulaUtils;
 import com.cmps.thesischecker.utils.MainContentUtils;
 import com.cmps.thesischecker.utils.ParagraphUtils;
@@ -162,7 +163,7 @@ public class FormulaChecker implements Checker {
                     "Порожній рядок перед формулою"));
         }
 
-        String alignment = new AlignmentChecker().getAlignment(formulaParagraph);
+        String alignment = AlignmentUtils.getAlignment(formulaParagraph);
         if (!"CENTER".equalsIgnoreCase(alignment) && !"RIGHT".equalsIgnoreCase(alignment)) {
             errorList.add(buildAlignmentError(formulaText, alignment));
         }
