@@ -116,12 +116,27 @@ public class AlignmentUtils {
 
     /**
      * Checks if the paragraph contains a drawing (figure).
+     * Excludes formulas (OMML, OLE objects, or formula-like paragraphs with numbering) from being considered as drawings.
      *
      * @param paragraph the paragraph to inspect
      * @return true if the paragraph contains at least one drawing
      */
     public static boolean hasDrawing(XWPFParagraph paragraph) {
         CTP ctp = paragraph.getCTP();
-        return ctp != null && ctp.xmlText().contains("<w:drawing");
+        if (ctp == null) {
+            return false;
+        }
+        String xml = ctp.xmlText();
+        if (xml.contains("<w:object") || xml.contains("<m:oMath")) {
+            return false;
+        }
+        if (!xml.contains("<w:drawing")) {
+            return false;
+        }
+        if (FormulaUtils.isFormulaOnlyParagraph(paragraph)
+                || FormulaUtils.paragraphHasTrailingFormulaNumber(paragraph)) {
+            return false;
+        }
+        return true;
     }
 }
