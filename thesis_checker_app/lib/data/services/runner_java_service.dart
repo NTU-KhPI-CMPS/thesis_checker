@@ -8,17 +8,16 @@ import 'package:thesis_checker/data/services/thesis_checker_service.dart';
 import 'package:thesis_checker/models/check_type_info.dart';
 
 class RunnerJavaService {
-  final ThesisCheckerService checkerService;
+  final ThesisCheckerService _checkerService;
 
-  RunnerJavaService({required ThesisCheckerService thesisCheckerService})
-      : checkerService = thesisCheckerService;
+  RunnerJavaService({required this._checkerService});
 
   Future<ReportApi> checkFile(String filePath, {required List<CheckTypeInfo> selectedChecks}) async {
     try {
       final directory = await getApplicationSupportDirectory();
       final resultsRoot = Directory('${directory.path}/results');
 
-      final returnCode = await checkerService.runThesisChecks(
+      final returnCode = await _checkerService.runThesisChecks(
         files: [filePath],
         resultDirectory: resultsRoot.path,
         selectedChecks: selectedChecks,

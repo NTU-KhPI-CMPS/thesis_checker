@@ -19,7 +19,7 @@ Future<void> setupLocator() async {
   // init services
   getIt.registerSingleton<ThesisCheckerService>(ThesisCheckerService());
   getIt.registerSingleton<RunnerJavaService>(RunnerJavaService(
-      thesisCheckerService: getIt<ThesisCheckerService>()));
+      checkerService: getIt<ThesisCheckerService>()));
 
   // init repositories
   getIt.registerSingleton<AnalysisRepository>(AnalysisRepository(

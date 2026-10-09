@@ -9,8 +9,7 @@ import 'package:thesis_checker/data/models/format_error_api.dart';
 class AnalysisRepository {
   final RunnerJavaService _runnerJavaService;
 
-  AnalysisRepository({required RunnerJavaService runnerJavaService})
-      : _runnerJavaService = runnerJavaService;
+  AnalysisRepository({required this._runnerJavaService});
 
   Future<AnalysisResult> checkFile(
     String filePath, {
