@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 public class AlignmentChecker implements Checker {
 
@@ -145,6 +146,22 @@ public class AlignmentChecker implements Checker {
     }
 
     /**
+     * Checks if the paragraph text starts with a figure caption prefix.
+     * Figure captions are handled by {@link FigureChecker} and should not be validated here.
+     *
+     * @param paragraph the paragraph to check
+     * @return true if the paragraph text starts with "Рисунок" or "Рис.", false otherwise
+     */
+    private static boolean isFigureCaption(XWPFParagraph paragraph) {
+        String text = paragraph.getText();
+        if (text == null) {
+            return false;
+        }
+        String trimmed = text.trim();
+        return trimmed.startsWith("Рисунок") || trimmed.startsWith("Рис.");
+    }
+
+    /**
      * Validates a paragraph against the expected alignment.
      *
      * @param paragraph the paragraph to validate
@@ -152,6 +169,10 @@ public class AlignmentChecker implements Checker {
      */
     Optional<String> validate(XWPFParagraph paragraph) {
         String actualAlignment = AlignmentUtils.getAlignment(paragraph);
+
+        if (isFigureCaption(paragraph)) {
+            return Optional.empty();
+        }
 
         // If paragraph contains a drawing, it must be centered
         if (AlignmentUtils.hasDrawing(paragraph)) {
