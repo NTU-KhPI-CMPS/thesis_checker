@@ -68,9 +68,6 @@ class AppLocalizationsUk extends AppLocalizations {
   String get dialogSettingsTitle => 'Налаштування перевірки';
 
   @override
-  String get dialogClose => '✕';
-
-  @override
   String get dialogChooseChecks => 'Оберіть що перевіряти';
 
   @override

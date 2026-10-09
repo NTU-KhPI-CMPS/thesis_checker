@@ -37,7 +37,6 @@
 
   "@@comment_dialogs": "Модальне вікно для запуску повторної перевірки",
   "dialogSettingsTitle": "Налаштування перевірки",
-  "dialogClose": "✕",
   "dialogChooseChecks": "Оберіть що перевіряти",
   "dialogChooseChecksHint": "Можна обрати декілька перевірок одночасно",
   "dialogChooseOneError": "Оберіть хоча б одну перевірку",

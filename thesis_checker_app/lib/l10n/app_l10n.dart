@@ -202,12 +202,6 @@ abstract class AppLocalizations {
   /// **'Налаштування перевірки'**
   String get dialogSettingsTitle;
 
-  /// No description provided for @dialogClose.
-  ///
-  /// In uk, this message translates to:
-  /// **'✕'**
-  String get dialogClose;
-
   /// No description provided for @dialogChooseChecks.
   ///
   /// In uk, this message translates to:
