@@ -54,7 +54,8 @@ dependencies:
   ffi: ^2.2.0
   path: ^1.9.1
   parameterized_test: ^2.0.2
-  flutter_localization: ^0.4.1
+  flutter_localizations:
+    sdk: flutter
   shared_preferences: ^2.5.5
 
 dev_dependencies:
@@ -77,6 +78,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  generate: true
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

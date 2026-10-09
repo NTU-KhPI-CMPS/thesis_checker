@@ -1,0 +1,127 @@
+{
+  "@@locale": "uk",
+  "appTitle": "Thesis checker",
+
+  "@@comment_home": "Головна сторінка",
+  "navHome": "Головна",
+  "homeSectionTitle": "Що перевіряємо",
+  "uploadTitle": "Завантажте документ",
+  "uploadSubtitle": "Перетягніть .docx файл або натисніть щоб обрати",
+  "uploadSelectFile": "+ Обрати файл",
+
+  "@@comment_loading": "Екран аналізу",
+  "navAnalysis": "Аналіз",
+  "loadingNoFile": "Завантажте, будь ласка, документ для аналізу",
+  "loadingAnalyzing": "Аналізую документ...",
+
+  "@@comment_results": "Екран результату",
+  "navResults": "Результати",
+  "retryAnalysis": "Заново",
+  "resultCategories": "Категорії",
+  "resultDetails": "Деталі помилок",
+  "resultNoSelectedCategories": "Немає обраних категорій для відображення",
+  "resultNoErrorsForCategory": "Для категорії \"{category}\" помилки відсутні.",
+  "@resultNoErrorsForCategory": {
+    "description": "Повідомлення, коли для обраної категорії не знайдено помилок",
+    "placeholders": {
+      "category": {
+        "type": "String",
+        "description": "Назва категорії перевірки"
+      }
+    }
+  },
+
+  "@@comment_error_details": "Фрагменти для вказання відсутності або присутності помилки",
+  "errorFragmentMissing": "Фрагмент тексту відсутній.",
+  "errorArrowShouldBe": "→ має бути",
+
+  "@@comment_dialogs": "Модальне вікно для запуску повторної перевірки",
+  "dialogSettingsTitle": "Налаштування перевірки",
+  "dialogClose": "✕",
+  "dialogChooseChecks": "Оберіть що перевіряти",
+  "dialogChooseChecksHint": "Можна обрати декілька перевірок одночасно",
+  "dialogChooseOneError": "Оберіть хоча б одну перевірку",
+  "dialogCancel": "Скасувати",
+  "dialogStartAnalysis": "▶ Почати аналіз",
+
+  "@@comment_theme": "Тема оформлення",
+  "themeLight": "Світла",
+  "themeDark": "Темна",
+  "themeSystem": "Системна",
+
+  "@@comment_snackbar": "Повідомлення у snackbar",
+  "snackbarError": "Виникла помилка: {error}",
+  "@snackbarError": {
+    "description": "Повідомлення про помилку у snackbar",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "Текст помилки"
+      }
+    }
+  },
+
+  "@@comment_java_errors": "Помилки з Java чекерів (визначається за ID помилки)",
+
+  "@@comment_alignment": "ALIGNMENT CHECKER - Вирівнювання",
+  "errAlignment": "Невірне вирівнювання тексту",
+
+  "@@comment_font": "FONT CHECKER - Шрифти",
+  "errFont": "Невірні шрифти у параграфі",
+  "errFontHeader": "Неправильні шрифти в верхньому колонтитулі",
+  "errFontFooter": "Неправильні шрифти в нижньому колонтитулі",
+  "errFontTable": "Невірні шрифти у таблиці",
+
+  "@@comment_size": "SIZE CHECKER - Розмір шрифту",
+  "errFontSize": "Неправильний розмір шрифта у параграфі",
+  "errFontSizeHeader": "Неправильний розмір шрифта в верхньому колонтитулі",
+  "errFontSizeFooter": "Неправильний розмір шрифта в нижньому колонтитулі",
+  "errFontSizeTable": "Неправильний розмір шрифта у таблиці",
+
+  "@@comment_linespacing": "LINE SPACING CHECKER - Міжрядковий інтервал",
+  "errLinespace": "Неправильні інтервали між рядками у параграфі",
+
+  "@@comment_list": "LIST CHECKER - Списки",
+  "errListLevelSkip": "Пропущено рівень вкладеності списку",
+  "errListFormat": "Невідповідний формат нумерації на одному рівні списку",
+  "errListMarkerFormat": "Недозволений формат позначення переліку",
+  "errListMarkerSuffix": "Пункт переліку має закінчуватися дужкою, а не крапкою",
+  "errListBulletChar": "Недозволений символ маркера переліку — має бути тире",
+  "warnListManual": "Виявлено ручне форматування переліку",
+
+  "@@comment_spacing": "PARAGRAPH SPACING CHECKER - Відступи перед/після абзаців",
+  "errSpacingBefore": "Невірний відступ перед абзацом",
+  "errSpacingAfter": "Невірний відступ після абзацу",
+
+  "@@comment_indentation": "PARAGRAPH INDENTATION CHECKER - Індентація абзаців",
+  "errIndentationLeft": "Невірний відступ зліва",
+  "errIndentationRight": "Невірний відступ справа",
+
+  "@@comment_formula": "FORMULA CHECKER - Формули",
+  "errFormulaAlignment": "Формула вирівняна по лівому краю",
+  "errFormulaMultiplePerLine": "Кілька формул в одному рядку",
+  "errFormulaNotTool": "Формула набрана вручну, а не через інструмент \"Формула\"",
+  "errFormulaChapterMismatch": "Формула з неправильним розділом",
+  "errFormulaSequence": "Формула з порушеною послідовністю",
+  "errFormulaFormat": "Формула з неправильним форматом номера",
+  "errFormulaFontSize": "Неправильний розмір шрифту у формулі",
+  "errFormulaSpacingBefore": "Неправильний відступ перед формулою",
+  "errFormulaSpacingAfter": "Неправильний відступ після формули",
+  "errFormulaSpacingBeforeNotation": "Неправильний відступ перед позначенням формули",
+  "errFormulaNotationSpacing": "Неправильний відступ у позначенні формули",
+
+  "@@comment_figure": "FIGURE CHECKER - Рисунки",
+  "errFigureAlignment": "Невірне вирівнювання рисунка",
+  "errFigureBlankLine": "Відсутній пустий рядок перед/після рисунка",
+  "errFigureMissingCaption": "Відсутній підпис рисунка",
+  "errFigureUnexpectedInCaption": "Креслення у підписі",
+  "errFigureCaptionFormat": "Неправильний формат підпису рисунка (очікується: «Рисунок <номер> - <назва>»)",
+
+  "@@comment_structure": "STRUCTURAL ELEMENT CHECKER - Структура документа",
+  "errStructuralElementMissing": "Відсутній обов'язковий структурний елемент",
+  "errStructuralElementOrder": "Порушено порядок структурних елементів документа",
+  "warnStructuralElementNewPage": "Структурний елемент не починається з нової сторінки",
+
+  "@@comment_file_error": "FILE ERROR - Помилка файлу",
+  "err000": "Помилка відкриття файлу"
+}
