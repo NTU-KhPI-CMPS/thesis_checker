@@ -146,6 +146,24 @@ public class AlignmentCheckerTest extends BaseTest {
         assertEquals("По ширині або правому краю", formatError.getExpected());
     }
 
+    @Test
+    @DisplayName("Figure captions in separate paragraphs should not produce alignment errors")
+    void check_figureCaptionSeparateParagraph_noAlignmentError() {
+        // GIVEN
+        String testFile = "src/test/resources/correct_figures.docx";
+
+        // WHEN
+        List<FormatError> errors = checker.check(testFile);
+
+        // THEN
+        assertTrue(
+            errors.stream().noneMatch(e ->
+                e.getParagraphText() != null
+                && e.getParagraphText().trim().startsWith("Рисунок")),
+            "Figure captions in separate paragraphs must not produce alignment errors"
+        );
+    }
+
     private void assertAlignmentError(FormatError error, String expected, String ruleDescription) {
         assertEquals(expected,
                 error.getExpected(),
