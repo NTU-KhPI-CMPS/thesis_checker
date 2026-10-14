@@ -185,7 +185,7 @@
     "description": "Description for the other checks category"
   },
 
-  "@@comment_flutter_errors": "Errors occurring in blocks, repositories, and services",
+  "@@comment_flutter_errors": "Errors occurring in bloc's, repositories, and services",
   "unsupportedFileExtensionError": "File with .{extension} extension is not supported",
   "@unsupportedFileExtensionError": {
     "description": "Error shown when the selected file extension is not supported",
