@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:thesis_checker/core/localization/app_localization_bloc.dart';
 import 'package:thesis_checker/core/theme/theme_cubit.dart';
 import 'package:thesis_checker/data/repositories/analysis_repository.dart';
 import 'package:thesis_checker/data/repositories/application_preferences_repository.dart';
@@ -33,6 +34,7 @@ Future<void> setupLocator() async {
   getIt.registerSingleton<ResultCubit>(ResultCubit());
 
   getIt.registerSingleton<FileBloc>(FileBloc());
+  getIt.registerSingleton<AppLocalizationBloc>(AppLocalizationBloc());
   getIt.registerSingleton<AnalysisBloc>(AnalysisBloc(
       analysisRepository: getIt<AnalysisRepository>(),
       resultCubit: getIt<ResultCubit>()));
