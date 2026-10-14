@@ -135,8 +135,77 @@
     }
   },
 
-  "@@comment_java_errors": "Errors from Java checkers (identified by error ID)",
+  "@@comment_check_types": "Available check categories",
+  "checkTypeFontTitle": "Font",
+  "@checkTypeFontTitle": {
+    "description": "Title for the font check category"
+  },
+  "checkTypeFontDescription": "Font name and size",
+  "@checkTypeFontDescription": {
+    "description": "Description for the font check category"
+  },
+  "checkTypeSpacingTitle": "Spacing",
+  "@checkTypeSpacingTitle": {
+    "description": "Title for the spacing check category"
+  },
+  "checkTypeSpacingDescription": "Line spacing and paragraph spacing",
+  "@checkTypeSpacingDescription": {
+    "description": "Description for the spacing check category"
+  },
+  "checkTypeAlignmentTitle": "Alignment",
+  "@checkTypeAlignmentTitle": {
+    "description": "Title for the alignment check category"
+  },
+  "checkTypeAlignmentDescription": "Paragraph and heading alignment",
+  "@checkTypeAlignmentDescription": {
+    "description": "Description for the alignment check category"
+  },
+  "checkTypeFormulaTitle": "Formulas",
+  "@checkTypeFormulaTitle": {
+    "description": "Title for the formulas check category"
+  },
+  "checkTypeFormulaDescription": "Description, numbering, and spacing around formulas",
+  "@checkTypeFormulaDescription": {
+    "description": "Description for the formulas check category"
+  },
+  "checkTypeListTitle": "Lists",
+  "@checkTypeListTitle": {
+    "description": "Title for the lists check category"
+  },
+  "checkTypeListDescription": "Nesting, markers, and numbering format at each level",
+  "@checkTypeListDescription": {
+    "description": "Description for the lists check category"
+  },
+  "checkTypeOtherTitle": "Other",
+  "@checkTypeOtherTitle": {
+    "description": "Title for the other checks category"
+  },
+  "checkTypeOtherDescription": "Other checks that do not fit into categories",
+  "@checkTypeOtherDescription": {
+    "description": "Description for the other checks category"
+  },
 
+  "@@comment_flutter_errors": "Errors occurring in blocks, repositories, and services",
+  "unsupportedFileExtensionError": "File with .{extension} extension is not supported",
+  "@unsupportedFileExtensionError": {
+    "description": "Error shown when the selected file extension is not supported",
+    "placeholders": {
+      "extension": {
+        "type": "String",
+        "description": "Unsupported file extension"
+      }
+    }
+  },
+  "analysisFinishedWithError": "Analysis finished with an error",
+  "@analysisFinishedWithError": {
+    "description": "Error shown when analysis completes with an error"
+  },
+  "analysisCouldNotComplete": "Could not complete the analysis. Please try again.",
+  "@analysisCouldNotComplete": {
+    "description": "Error shown when analysis cannot be completed"
+  },
+
+  "@@comment_java_errors": "Errors from Java checkers (identified by error ID)",
   "@@comment_alignment": "ALIGNMENT CHECKER - Alignment",
   "errAlignment": "Incorrect text alignment",
   "@errAlignment": {

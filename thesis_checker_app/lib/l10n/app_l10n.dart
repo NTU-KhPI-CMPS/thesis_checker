@@ -260,6 +260,96 @@ abstract class AppLocalizations {
   /// **'An error occurred: {error}'**
   String snackbarError(String error);
 
+  /// Title for the font check category
+  ///
+  /// In en, this message translates to:
+  /// **'Font'**
+  String get checkTypeFontTitle;
+
+  /// Description for the font check category
+  ///
+  /// In en, this message translates to:
+  /// **'Font name and size'**
+  String get checkTypeFontDescription;
+
+  /// Title for the spacing check category
+  ///
+  /// In en, this message translates to:
+  /// **'Spacing'**
+  String get checkTypeSpacingTitle;
+
+  /// Description for the spacing check category
+  ///
+  /// In en, this message translates to:
+  /// **'Line spacing and paragraph spacing'**
+  String get checkTypeSpacingDescription;
+
+  /// Title for the alignment check category
+  ///
+  /// In en, this message translates to:
+  /// **'Alignment'**
+  String get checkTypeAlignmentTitle;
+
+  /// Description for the alignment check category
+  ///
+  /// In en, this message translates to:
+  /// **'Paragraph and heading alignment'**
+  String get checkTypeAlignmentDescription;
+
+  /// Title for the formulas check category
+  ///
+  /// In en, this message translates to:
+  /// **'Formulas'**
+  String get checkTypeFormulaTitle;
+
+  /// Description for the formulas check category
+  ///
+  /// In en, this message translates to:
+  /// **'Description, numbering, and spacing around formulas'**
+  String get checkTypeFormulaDescription;
+
+  /// Title for the lists check category
+  ///
+  /// In en, this message translates to:
+  /// **'Lists'**
+  String get checkTypeListTitle;
+
+  /// Description for the lists check category
+  ///
+  /// In en, this message translates to:
+  /// **'Nesting, markers, and numbering format at each level'**
+  String get checkTypeListDescription;
+
+  /// Title for the other checks category
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get checkTypeOtherTitle;
+
+  /// Description for the other checks category
+  ///
+  /// In en, this message translates to:
+  /// **'Other checks that do not fit into categories'**
+  String get checkTypeOtherDescription;
+
+  /// Error shown when the selected file extension is not supported
+  ///
+  /// In en, this message translates to:
+  /// **'File with .{extension} extension is not supported'**
+  String unsupportedFileExtensionError(String extension);
+
+  /// Error shown when analysis completes with an error
+  ///
+  /// In en, this message translates to:
+  /// **'Analysis finished with an error'**
+  String get analysisFinishedWithError;
+
+  /// Error shown when analysis cannot be completed
+  ///
+  /// In en, this message translates to:
+  /// **'Could not complete the analysis. Please try again.'**
+  String get analysisCouldNotComplete;
+
   /// Error shown when text alignment does not match the requirements
   ///
   /// In en, this message translates to:

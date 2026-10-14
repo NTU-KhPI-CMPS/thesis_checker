@@ -95,6 +95,58 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get checkTypeFontTitle => 'Font';
+
+  @override
+  String get checkTypeFontDescription => 'Font name and size';
+
+  @override
+  String get checkTypeSpacingTitle => 'Spacing';
+
+  @override
+  String get checkTypeSpacingDescription =>
+      'Line spacing and paragraph spacing';
+
+  @override
+  String get checkTypeAlignmentTitle => 'Alignment';
+
+  @override
+  String get checkTypeAlignmentDescription => 'Paragraph and heading alignment';
+
+  @override
+  String get checkTypeFormulaTitle => 'Formulas';
+
+  @override
+  String get checkTypeFormulaDescription =>
+      'Description, numbering, and spacing around formulas';
+
+  @override
+  String get checkTypeListTitle => 'Lists';
+
+  @override
+  String get checkTypeListDescription =>
+      'Nesting, markers, and numbering format at each level';
+
+  @override
+  String get checkTypeOtherTitle => 'Other';
+
+  @override
+  String get checkTypeOtherDescription =>
+      'Other checks that do not fit into categories';
+
+  @override
+  String unsupportedFileExtensionError(String extension) {
+    return 'File with .$extension extension is not supported';
+  }
+
+  @override
+  String get analysisFinishedWithError => 'Analysis finished with an error';
+
+  @override
+  String get analysisCouldNotComplete =>
+      'Could not complete the analysis. Please try again.';
+
+  @override
   String get errAlignment => 'Incorrect text alignment';
 
   @override

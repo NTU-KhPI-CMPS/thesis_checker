@@ -135,8 +135,77 @@
     }
   },
 
-  "@@comment_java_errors": "Помилки з Java чекерів (визначається за ID помилки)",
+  "@@comment_check_types": "Доступні категорії перевірок",
+  "checkTypeFontTitle": "Шрифт",
+  "@checkTypeFontTitle": {
+    "description": "Заголовок категорії перевірки шрифту"
+  },
+  "checkTypeFontDescription": "Назва і розмір шрифту",
+  "@checkTypeFontDescription": {
+    "description": "Опис категорії перевірки шрифту"
+  },
+  "checkTypeSpacingTitle": "Інтервали",
+  "@checkTypeSpacingTitle": {
+    "description": "Заголовок категорії перевірки інтервалів"
+  },
+  "checkTypeSpacingDescription": "Міжрядковий і відступи навколо абзаців",
+  "@checkTypeSpacingDescription": {
+    "description": "Опис категорії перевірки інтервалів"
+  },
+  "checkTypeAlignmentTitle": "Вирівнювання",
+  "@checkTypeAlignmentTitle": {
+    "description": "Заголовок категорії перевірки вирівнювання"
+  },
+  "checkTypeAlignmentDescription": "Вирівнювання абзаців і заголовків",
+  "@checkTypeAlignmentDescription": {
+    "description": "Опис категорії перевірки вирівнювання"
+  },
+  "checkTypeFormulaTitle": "Формули",
+  "@checkTypeFormulaTitle": {
+    "description": "Заголовок категорії перевірки формул"
+  },
+  "checkTypeFormulaDescription": "Опис, нумерація, відступи навколо формул",
+  "@checkTypeFormulaDescription": {
+    "description": "Опис категорії перевірки формул"
+  },
+  "checkTypeListTitle": "Списки",
+  "@checkTypeListTitle": {
+    "description": "Заголовок категорії перевірки списків"
+  },
+  "checkTypeListDescription": "Вкладеність, маркери, формат нумарації на відповідному рівні",
+  "@checkTypeListDescription": {
+    "description": "Опис категорії перевірки списків"
+  },
+  "checkTypeOtherTitle": "Інші",
+  "@checkTypeOtherTitle": {
+    "description": "Заголовок категорії інших перевірок"
+  },
+  "checkTypeOtherDescription": "Інші перевірки, які не входять до категорій",
+  "@checkTypeOtherDescription": {
+    "description": "Опис категорії інших перевірок"
+  },
 
+  "@@comment_flutter_errors": "Помилки, які виникають в блоках, репозиторіях, сервісах",
+  "unsupportedFileExtensionError": "Файл з розширенням .{extension} не підтримується",
+  "@unsupportedFileExtensionError": {
+    "description": "Помилка, коли обране розширення файлу не підтримується",
+    "placeholders": {
+      "extension": {
+        "type": "String",
+        "description": "Непідтримуване розширення файлу"
+      }
+    }
+  },
+  "analysisFinishedWithError": "Аналіз завершився з помилкою",
+  "@analysisFinishedWithError": {
+    "description": "Помилка, коли аналіз завершується з помилкою"
+  },
+  "analysisCouldNotComplete": "Не вдалося виконати аналіз. Спробуйте ще раз.",
+  "@analysisCouldNotComplete": {
+    "description": "Помилка, коли аналіз не вдається завершити"
+  },
+
+  "@@comment_java_errors": "Помилки з Java чекерів (визначається за ID помилки)",
   "@@comment_alignment": "ALIGNMENT CHECKER - Вирівнювання",
   "errAlignment": "Невірне вирівнювання тексту",
   "@errAlignment": {
