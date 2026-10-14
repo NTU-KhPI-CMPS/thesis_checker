@@ -1,0 +1,321 @@
+{
+  "@@locale": "en",
+  "appTitle": "Thesis checker",
+  "@appTitle": {
+    "description": "Application title"
+  },
+
+  "@@comment_home": "Home page",
+  "navHome": "Home",
+  "@navHome": {
+    "description": "Navigation label for the home screen"
+  },
+  "homeSectionTitle": "What we check",
+  "@homeSectionTitle": {
+    "description": "Heading for the section that explains what the app checks"
+  },
+  "uploadTitle": "Upload document",
+  "@uploadTitle": {
+    "description": "Heading for the document upload area"
+  },
+  "uploadSubtitle": "Drag a .docx file or click to choose",
+  "@uploadSubtitle": {
+    "description": "Helper text explaining how to provide a DOCX file"
+  },
+  "uploadSelectFile": "+ Select file",
+  "@uploadSelectFile": {
+    "description": "Button text for opening the file picker"
+  },
+
+  "@@comment_loading": "Analysis screen",
+  "navAnalysis": "Analysis",
+  "@navAnalysis": {
+    "description": "Navigation label for the analysis screen"
+  },
+  "loadingNoFile": "Please upload a document for analysis",
+  "@loadingNoFile": {
+    "description": "Message shown when no document has been uploaded yet"
+  },
+  "loadingAnalyzing": "Analyzing document...",
+  "@loadingAnalyzing": {
+    "description": "Status text shown while the document is being analyzed"
+  },
+
+  "@@comment_results": "Results screen",
+  "navResults": "Results",
+  "@navResults": {
+    "description": "Navigation label for the results screen"
+  },
+  "retryAnalysis": "Retry",
+  "@retryAnalysis": {
+    "description": "Button text for running the analysis again"
+  },
+  "resultCategories": "Categories",
+  "@resultCategories": {
+    "description": "Heading for the list of result categories"
+  },
+  "resultDetails": "Error details",
+  "@resultDetails": {
+    "description": "Heading for the detailed error list"
+  },
+  "resultNoSelectedCategories": "No categories selected to display",
+  "@resultNoSelectedCategories": {
+    "description": "Message shown when no categories are selected"
+  },
+  "resultNoErrorsForCategory": "No errors found for category \"{category}\".",
+  "@resultNoErrorsForCategory": {
+    "description": "Message when no errors are found for the chosen category",
+    "placeholders": {
+      "category": {
+        "type": "String",
+        "description": "Name of the check category"
+      }
+    }
+  },
+
+  "@@comment_error_details": "Fragments indicating absence or presence of an error",
+  "errorFragmentMissing": "Text fragment is missing.",
+  "@errorFragmentMissing": {
+    "description": "Message shown when a text fragment is missing in error"
+  },
+  "errorArrowShouldBe": "→ should be",
+  "@errorArrowShouldBe": {
+    "description": "Label used in error fragments to show the expected text"
+  },
+
+  "@@comment_dialogs": "Modal for starting re-analysis",
+  "dialogSettingsTitle": "Analysis settings",
+  "@dialogSettingsTitle": {
+    "description": "Title of the analysis settings dialog"
+  },
+  "dialogChooseChecks": "Choose checks to run",
+  "@dialogChooseChecks": {
+    "description": "Prompt asking the user to choose checks to run"
+  },
+  "dialogChooseChecksHint": "You may select multiple checks at once",
+  "@dialogChooseChecksHint": {
+    "description": "Helper text explaining that multiple checks can be selected"
+  },
+  "dialogChooseOneError": "Please select at least one check",
+  "@dialogChooseOneError": {
+    "description": "Validation message shown when no checks are selected"
+  },
+  "dialogCancel": "Cancel",
+  "@dialogCancel": {
+    "description": "Button text for closing the dialog without changes"
+  },
+  "dialogStartAnalysis": "▶ Start analysis",
+  "@dialogStartAnalysis": {
+    "description": "Button text for starting analysis from the dialog"
+  },
+
+  "@@comment_theme": "Theme",
+  "themeLight": "Light",
+  "@themeLight": {
+    "description": "Label for the light theme option"
+  },
+  "themeDark": "Dark",
+  "@themeDark": {
+    "description": "Label for the dark theme option"
+  },
+  "themeSystem": "System",
+  "@themeSystem": {
+    "description": "Label for the system theme option"
+  },
+
+  "@@comment_snackbar": "Snackbar messages",
+  "snackbarError": "An error occurred: {error}",
+  "@snackbarError": {
+    "description": "Error message shown in a snackbar",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "Error text"
+      }
+    }
+  },
+
+  "@@comment_java_errors": "Errors from Java checkers (identified by error ID)",
+
+  "@@comment_alignment": "ALIGNMENT CHECKER - Alignment",
+  "errAlignment": "Incorrect text alignment",
+  "@errAlignment": {
+    "description": "Error shown when text alignment does not match the requirements"
+  },
+
+  "@@comment_font": "FONT CHECKER - Fonts",
+  "errFont": "Incorrect fonts in paragraph",
+  "@errFont": {
+    "description": "Error shown when paragraph fonts do not match the requirements"
+  },
+  "errFontHeader": "Incorrect fonts in header",
+  "@errFontHeader": {
+    "description": "Error shown when header fonts do not match the requirements"
+  },
+  "errFontFooter": "Incorrect fonts in footer",
+  "@errFontFooter": {
+    "description": "Error shown when footer fonts do not match the requirements"
+  },
+  "errFontTable": "Incorrect fonts in table",
+  "@errFontTable": {
+    "description": "Error shown when table fonts do not match the requirements"
+  },
+
+  "@@comment_size": "SIZE CHECKER - Font size",
+  "errFontSize": "Incorrect font size in paragraph",
+  "@errFontSize": {
+    "description": "Error shown when paragraph font size does not match the requirements"
+  },
+  "errFontSizeHeader": "Incorrect font size in header",
+  "@errFontSizeHeader": {
+    "description": "Error shown when header font size does not match the requirements"
+  },
+  "errFontSizeFooter": "Incorrect font size in footer",
+  "@errFontSizeFooter": {
+    "description": "Error shown when footer font size does not match the requirements"
+  },
+  "errFontSizeTable": "Incorrect font size in table",
+  "@errFontSizeTable": {
+    "description": "Error shown when table font size does not match the requirements"
+  },
+
+  "@@comment_linespacing": "LINE SPACING CHECKER - Line spacing",
+  "errLinespace": "Incorrect line spacing in paragraph",
+  "@errLinespace": {
+    "description": "Error shown when paragraph line spacing does not match the requirements"
+  },
+
+  "@@comment_list": "LIST CHECKER - Lists",
+  "errListLevelSkip": "Skipped list nesting level",
+  "@errListLevelSkip": {
+    "description": "Error shown when a list nesting level is skipped"
+  },
+  "errListFormat": "Inconsistent numbering format on one list level",
+  "@errListFormat": {
+    "description": "Error shown when numbering is inconsistent within one list level"
+  },
+  "errListMarkerFormat": "Disallowed list marker format",
+  "@errListMarkerFormat": {
+    "description": "Error shown when a list marker uses a disallowed format"
+  },
+  "errListMarkerSuffix": "List item should end with a parenthesis, not a period",
+  "@errListMarkerSuffix": {
+    "description": "Error shown when a list item ends with a period instead of a parenthesis"
+  },
+  "errListBulletChar": "Disallowed list bullet character — should be a dash",
+  "@errListBulletChar": {
+    "description": "Error shown when a list bullet character is not a dash"
+  },
+  "warnListManual": "Manual list formatting detected",
+  "@warnListManual": {
+    "description": "Warning shown when manual list formatting is detected"
+  },
+
+  "@@comment_spacing": "PARAGRAPH SPACING CHECKER - Paragraph spacing before/after",
+  "errSpacingBefore": "Incorrect spacing before paragraph",
+  "@errSpacingBefore": {
+    "description": "Error shown when spacing before a paragraph does not match the requirements"
+  },
+  "errSpacingAfter": "Incorrect spacing after paragraph",
+  "@errSpacingAfter": {
+    "description": "Error shown when spacing after a paragraph does not match the requirements"
+  },
+
+  "@@comment_indentation": "PARAGRAPH INDENTATION CHECKER - Paragraph indentation",
+  "errIndentationLeft": "Incorrect left indentation",
+  "@errIndentationLeft": {
+    "description": "Error shown when left indentation does not match the requirements"
+  },
+  "errIndentationRight": "Incorrect right indentation",
+  "@errIndentationRight": {
+    "description": "Error shown when right indentation does not match the requirements"
+  },
+
+  "@@comment_formula": "FORMULA CHECKER - Formulas",
+  "errFormulaAlignment": "Formula aligned to the left",
+  "@errFormulaAlignment": {
+    "description": "Error shown when a formula is aligned to the left"
+  },
+  "errFormulaMultiplePerLine": "Multiple formulas in one line",
+  "@errFormulaMultiplePerLine": {
+    "description": "Error shown when more than one formula appears on a line"
+  },
+  "errFormulaNotTool": "Formula entered manually rather than using the \"Formula\" tool",
+  "@errFormulaNotTool": {
+    "description": "Error shown when a formula is typed manually instead of using the Formula tool"
+  },
+  "errFormulaChapterMismatch": "Formula in incorrect chapter",
+  "@errFormulaChapterMismatch": {
+    "description": "Error shown when a formula appears in the wrong chapter"
+  },
+  "errFormulaSequence": "Formula with broken sequence",
+  "@errFormulaSequence": {
+    "description": "Error shown when a formula numbering sequence is broken"
+  },
+  "errFormulaFormat": "Formula with incorrect numbering format",
+  "@errFormulaFormat": {
+    "description": "Error shown when formula numbering format does not match the requirements"
+  },
+  "errFormulaFontSize": "Incorrect font size in formula",
+  "@errFormulaFontSize": {
+    "description": "Error shown when formula font size does not match the requirements"
+  },
+  "errFormulaSpacingBefore": "Incorrect spacing before formula",
+  "@errFormulaSpacingBefore": {
+    "description": "Error shown when spacing before a formula does not match the requirements"
+  },
+  "errFormulaSpacingAfter": "Incorrect spacing after formula",
+  "@errFormulaSpacingAfter": {
+    "description": "Error shown when spacing after a formula does not match the requirements"
+  },
+  "errFormulaSpacingBeforeNotation": "Incorrect spacing before formula notation",
+  "@errFormulaSpacingBeforeNotation": {
+    "description": "Error shown when spacing before formula notation does not match the requirements"
+  },
+  "errFormulaNotationSpacing": "Incorrect spacing in formula notation",
+  "@errFormulaNotationSpacing": {
+    "description": "Error shown when spacing inside formula notation does not match the requirements"
+  },
+
+  "@@comment_figure": "FIGURE CHECKER - Figures",
+  "errFigureAlignment": "Incorrect figure alignment",
+  "@errFigureAlignment": {
+    "description": "Error shown when figure alignment does not match the requirements"
+  },
+  "errFigureBlankLine": "Missing blank line before/after figure",
+  "@errFigureBlankLine": {
+    "description": "Error shown when blank lines before or after a figure are missing"
+  },
+  "errFigureMissingCaption": "Missing figure caption",
+  "@errFigureMissingCaption": {
+    "description": "Error shown when a figure caption is missing"
+  },
+  "errFigureUnexpectedInCaption": "Drawing inside caption",
+  "@errFigureUnexpectedInCaption": {
+    "description": "Error shown when drawing content appears inside a figure caption"
+  },
+  "errFigureCaptionFormat": "Incorrect figure caption format (expected: «Figure <number> - <title>»)",
+  "@errFigureCaptionFormat": {
+    "description": "Error shown when a figure caption does not match the required format"
+  },
+
+  "@@comment_structure": "STRUCTURAL ELEMENT CHECKER - Document structure",
+  "errStructuralElementMissing": "Required structural element is missing",
+  "@errStructuralElementMissing": {
+    "description": "Error shown when a required structural element is missing"
+  },
+  "errStructuralElementOrder": "Document structural elements order violated",
+  "@errStructuralElementOrder": {
+    "description": "Error shown when the document structural elements are in the wrong order"
+  },
+  "warnStructuralElementNewPage": "Structural element does not start on a new page",
+  "@warnStructuralElementNewPage": {
+    "description": "Warning shown when a structural element does not start on a new page"
+  },
+
+  "@@comment_file_error": "FILE ERROR - File error",
+  "err000": "File open error",
+  "@err000": {
+    "description": "Error shown when the file cannot be opened"
+  }
+}

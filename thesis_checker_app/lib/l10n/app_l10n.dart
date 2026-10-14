@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_l10n_en.dart';
 import 'app_l10n_uk.dart';
 
 // ignore_for_file: type=lint
@@ -92,408 +93,411 @@ abstract class AppLocalizations {
       ];
 
   /// A list of this localizations delegate's supported locales.
-  static const List<Locale> supportedLocales = <Locale>[Locale('uk')];
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('en'),
+    Locale('uk'),
+  ];
 
-  /// No description provided for @appTitle.
+  /// Application title
   ///
-  /// In uk, this message translates to:
+  /// In en, this message translates to:
   /// **'Thesis checker'**
   String get appTitle;
 
-  /// No description provided for @navHome.
+  /// Navigation label for the home screen
   ///
-  /// In uk, this message translates to:
-  /// **'Головна'**
+  /// In en, this message translates to:
+  /// **'Home'**
   String get navHome;
 
-  /// No description provided for @homeSectionTitle.
+  /// Heading for the section that explains what the app checks
   ///
-  /// In uk, this message translates to:
-  /// **'Що перевіряємо'**
+  /// In en, this message translates to:
+  /// **'What we check'**
   String get homeSectionTitle;
 
-  /// No description provided for @uploadTitle.
+  /// Heading for the document upload area
   ///
-  /// In uk, this message translates to:
-  /// **'Завантажте документ'**
+  /// In en, this message translates to:
+  /// **'Upload document'**
   String get uploadTitle;
 
-  /// No description provided for @uploadSubtitle.
+  /// Helper text explaining how to provide a DOCX file
   ///
-  /// In uk, this message translates to:
-  /// **'Перетягніть .docx файл або натисніть щоб обрати'**
+  /// In en, this message translates to:
+  /// **'Drag a .docx file or click to choose'**
   String get uploadSubtitle;
 
-  /// No description provided for @uploadSelectFile.
+  /// Button text for opening the file picker
   ///
-  /// In uk, this message translates to:
-  /// **'+ Обрати файл'**
+  /// In en, this message translates to:
+  /// **'+ Select file'**
   String get uploadSelectFile;
 
-  /// No description provided for @navAnalysis.
+  /// Navigation label for the analysis screen
   ///
-  /// In uk, this message translates to:
-  /// **'Аналіз'**
+  /// In en, this message translates to:
+  /// **'Analysis'**
   String get navAnalysis;
 
-  /// No description provided for @loadingNoFile.
+  /// Message shown when no document has been uploaded yet
   ///
-  /// In uk, this message translates to:
-  /// **'Завантажте, будь ласка, документ для аналізу'**
+  /// In en, this message translates to:
+  /// **'Please upload a document for analysis'**
   String get loadingNoFile;
 
-  /// No description provided for @loadingAnalyzing.
+  /// Status text shown while the document is being analyzed
   ///
-  /// In uk, this message translates to:
-  /// **'Аналізую документ...'**
+  /// In en, this message translates to:
+  /// **'Analyzing document...'**
   String get loadingAnalyzing;
 
-  /// No description provided for @navResults.
+  /// Navigation label for the results screen
   ///
-  /// In uk, this message translates to:
-  /// **'Результати'**
+  /// In en, this message translates to:
+  /// **'Results'**
   String get navResults;
 
-  /// No description provided for @retryAnalysis.
+  /// Button text for running the analysis again
   ///
-  /// In uk, this message translates to:
-  /// **'Заново'**
+  /// In en, this message translates to:
+  /// **'Retry'**
   String get retryAnalysis;
 
-  /// No description provided for @resultCategories.
+  /// Heading for the list of result categories
   ///
-  /// In uk, this message translates to:
-  /// **'Категорії'**
+  /// In en, this message translates to:
+  /// **'Categories'**
   String get resultCategories;
 
-  /// No description provided for @resultDetails.
+  /// Heading for the detailed error list
   ///
-  /// In uk, this message translates to:
-  /// **'Деталі помилок'**
+  /// In en, this message translates to:
+  /// **'Error details'**
   String get resultDetails;
 
-  /// No description provided for @resultNoSelectedCategories.
+  /// Message shown when no categories are selected
   ///
-  /// In uk, this message translates to:
-  /// **'Немає обраних категорій для відображення'**
+  /// In en, this message translates to:
+  /// **'No categories selected to display'**
   String get resultNoSelectedCategories;
 
-  /// Повідомлення, коли для обраної категорії не знайдено помилок
+  /// Message when no errors are found for the chosen category
   ///
-  /// In uk, this message translates to:
-  /// **'Для категорії \"{category}\" помилки відсутні.'**
+  /// In en, this message translates to:
+  /// **'No errors found for category \"{category}\".'**
   String resultNoErrorsForCategory(String category);
 
-  /// No description provided for @errorFragmentMissing.
+  /// Message shown when a text fragment is missing in error
   ///
-  /// In uk, this message translates to:
-  /// **'Фрагмент тексту відсутній.'**
+  /// In en, this message translates to:
+  /// **'Text fragment is missing.'**
   String get errorFragmentMissing;
 
-  /// No description provided for @errorArrowShouldBe.
+  /// Label used in error fragments to show the expected text
   ///
-  /// In uk, this message translates to:
-  /// **'→ має бути'**
+  /// In en, this message translates to:
+  /// **'→ should be'**
   String get errorArrowShouldBe;
 
-  /// No description provided for @dialogSettingsTitle.
+  /// Title of the analysis settings dialog
   ///
-  /// In uk, this message translates to:
-  /// **'Налаштування перевірки'**
+  /// In en, this message translates to:
+  /// **'Analysis settings'**
   String get dialogSettingsTitle;
 
-  /// No description provided for @dialogChooseChecks.
+  /// Prompt asking the user to choose checks to run
   ///
-  /// In uk, this message translates to:
-  /// **'Оберіть що перевіряти'**
+  /// In en, this message translates to:
+  /// **'Choose checks to run'**
   String get dialogChooseChecks;
 
-  /// No description provided for @dialogChooseChecksHint.
+  /// Helper text explaining that multiple checks can be selected
   ///
-  /// In uk, this message translates to:
-  /// **'Можна обрати декілька перевірок одночасно'**
+  /// In en, this message translates to:
+  /// **'You may select multiple checks at once'**
   String get dialogChooseChecksHint;
 
-  /// No description provided for @dialogChooseOneError.
+  /// Validation message shown when no checks are selected
   ///
-  /// In uk, this message translates to:
-  /// **'Оберіть хоча б одну перевірку'**
+  /// In en, this message translates to:
+  /// **'Please select at least one check'**
   String get dialogChooseOneError;
 
-  /// No description provided for @dialogCancel.
+  /// Button text for closing the dialog without changes
   ///
-  /// In uk, this message translates to:
-  /// **'Скасувати'**
+  /// In en, this message translates to:
+  /// **'Cancel'**
   String get dialogCancel;
 
-  /// No description provided for @dialogStartAnalysis.
+  /// Button text for starting analysis from the dialog
   ///
-  /// In uk, this message translates to:
-  /// **'▶ Почати аналіз'**
+  /// In en, this message translates to:
+  /// **'▶ Start analysis'**
   String get dialogStartAnalysis;
 
-  /// No description provided for @themeLight.
+  /// Label for the light theme option
   ///
-  /// In uk, this message translates to:
-  /// **'Світла'**
+  /// In en, this message translates to:
+  /// **'Light'**
   String get themeLight;
 
-  /// No description provided for @themeDark.
+  /// Label for the dark theme option
   ///
-  /// In uk, this message translates to:
-  /// **'Темна'**
+  /// In en, this message translates to:
+  /// **'Dark'**
   String get themeDark;
 
-  /// No description provided for @themeSystem.
+  /// Label for the system theme option
   ///
-  /// In uk, this message translates to:
-  /// **'Системна'**
+  /// In en, this message translates to:
+  /// **'System'**
   String get themeSystem;
 
-  /// Повідомлення про помилку у snackbar
+  /// Error message shown in a snackbar
   ///
-  /// In uk, this message translates to:
-  /// **'Виникла помилка: {error}'**
+  /// In en, this message translates to:
+  /// **'An error occurred: {error}'**
   String snackbarError(String error);
 
-  /// No description provided for @errAlignment.
+  /// Error shown when text alignment does not match the requirements
   ///
-  /// In uk, this message translates to:
-  /// **'Невірне вирівнювання тексту'**
+  /// In en, this message translates to:
+  /// **'Incorrect text alignment'**
   String get errAlignment;
 
-  /// No description provided for @errFont.
+  /// Error shown when paragraph fonts do not match the requirements
   ///
-  /// In uk, this message translates to:
-  /// **'Невірні шрифти у параграфі'**
+  /// In en, this message translates to:
+  /// **'Incorrect fonts in paragraph'**
   String get errFont;
 
-  /// No description provided for @errFontHeader.
+  /// Error shown when header fonts do not match the requirements
   ///
-  /// In uk, this message translates to:
-  /// **'Неправильні шрифти в верхньому колонтитулі'**
+  /// In en, this message translates to:
+  /// **'Incorrect fonts in header'**
   String get errFontHeader;
 
-  /// No description provided for @errFontFooter.
+  /// Error shown when footer fonts do not match the requirements
   ///
-  /// In uk, this message translates to:
-  /// **'Неправильні шрифти в нижньому колонтитулі'**
+  /// In en, this message translates to:
+  /// **'Incorrect fonts in footer'**
   String get errFontFooter;
 
-  /// No description provided for @errFontTable.
+  /// Error shown when table fonts do not match the requirements
   ///
-  /// In uk, this message translates to:
-  /// **'Невірні шрифти у таблиці'**
+  /// In en, this message translates to:
+  /// **'Incorrect fonts in table'**
   String get errFontTable;
 
-  /// No description provided for @errFontSize.
+  /// Error shown when paragraph font size does not match the requirements
   ///
-  /// In uk, this message translates to:
-  /// **'Неправильний розмір шрифта у параграфі'**
+  /// In en, this message translates to:
+  /// **'Incorrect font size in paragraph'**
   String get errFontSize;
 
-  /// No description provided for @errFontSizeHeader.
+  /// Error shown when header font size does not match the requirements
   ///
-  /// In uk, this message translates to:
-  /// **'Неправильний розмір шрифта в верхньому колонтитулі'**
+  /// In en, this message translates to:
+  /// **'Incorrect font size in header'**
   String get errFontSizeHeader;
 
-  /// No description provided for @errFontSizeFooter.
+  /// Error shown when footer font size does not match the requirements
   ///
-  /// In uk, this message translates to:
-  /// **'Неправильний розмір шрифта в нижньому колонтитулі'**
+  /// In en, this message translates to:
+  /// **'Incorrect font size in footer'**
   String get errFontSizeFooter;
 
-  /// No description provided for @errFontSizeTable.
+  /// Error shown when table font size does not match the requirements
   ///
-  /// In uk, this message translates to:
-  /// **'Неправильний розмір шрифта у таблиці'**
+  /// In en, this message translates to:
+  /// **'Incorrect font size in table'**
   String get errFontSizeTable;
 
-  /// No description provided for @errLinespace.
+  /// Error shown when paragraph line spacing does not match the requirements
   ///
-  /// In uk, this message translates to:
-  /// **'Неправильні інтервали між рядками у параграфі'**
+  /// In en, this message translates to:
+  /// **'Incorrect line spacing in paragraph'**
   String get errLinespace;
 
-  /// No description provided for @errListLevelSkip.
+  /// Error shown when a list nesting level is skipped
   ///
-  /// In uk, this message translates to:
-  /// **'Пропущено рівень вкладеності списку'**
+  /// In en, this message translates to:
+  /// **'Skipped list nesting level'**
   String get errListLevelSkip;
 
-  /// No description provided for @errListFormat.
+  /// Error shown when numbering is inconsistent within one list level
   ///
-  /// In uk, this message translates to:
-  /// **'Невідповідний формат нумерації на одному рівні списку'**
+  /// In en, this message translates to:
+  /// **'Inconsistent numbering format on one list level'**
   String get errListFormat;
 
-  /// No description provided for @errListMarkerFormat.
+  /// Error shown when a list marker uses a disallowed format
   ///
-  /// In uk, this message translates to:
-  /// **'Недозволений формат позначення переліку'**
+  /// In en, this message translates to:
+  /// **'Disallowed list marker format'**
   String get errListMarkerFormat;
 
-  /// No description provided for @errListMarkerSuffix.
+  /// Error shown when a list item ends with a period instead of a parenthesis
   ///
-  /// In uk, this message translates to:
-  /// **'Пункт переліку має закінчуватися дужкою, а не крапкою'**
+  /// In en, this message translates to:
+  /// **'List item should end with a parenthesis, not a period'**
   String get errListMarkerSuffix;
 
-  /// No description provided for @errListBulletChar.
+  /// Error shown when a list bullet character is not a dash
   ///
-  /// In uk, this message translates to:
-  /// **'Недозволений символ маркера переліку — має бути тире'**
+  /// In en, this message translates to:
+  /// **'Disallowed list bullet character — should be a dash'**
   String get errListBulletChar;
 
-  /// No description provided for @warnListManual.
+  /// Warning shown when manual list formatting is detected
   ///
-  /// In uk, this message translates to:
-  /// **'Виявлено ручне форматування переліку'**
+  /// In en, this message translates to:
+  /// **'Manual list formatting detected'**
   String get warnListManual;
 
-  /// No description provided for @errSpacingBefore.
+  /// Error shown when spacing before a paragraph does not match the requirements
   ///
-  /// In uk, this message translates to:
-  /// **'Невірний відступ перед абзацом'**
+  /// In en, this message translates to:
+  /// **'Incorrect spacing before paragraph'**
   String get errSpacingBefore;
 
-  /// No description provided for @errSpacingAfter.
+  /// Error shown when spacing after a paragraph does not match the requirements
   ///
-  /// In uk, this message translates to:
-  /// **'Невірний відступ після абзацу'**
+  /// In en, this message translates to:
+  /// **'Incorrect spacing after paragraph'**
   String get errSpacingAfter;
 
-  /// No description provided for @errIndentationLeft.
+  /// Error shown when left indentation does not match the requirements
   ///
-  /// In uk, this message translates to:
-  /// **'Невірний відступ зліва'**
+  /// In en, this message translates to:
+  /// **'Incorrect left indentation'**
   String get errIndentationLeft;
 
-  /// No description provided for @errIndentationRight.
+  /// Error shown when right indentation does not match the requirements
   ///
-  /// In uk, this message translates to:
-  /// **'Невірний відступ справа'**
+  /// In en, this message translates to:
+  /// **'Incorrect right indentation'**
   String get errIndentationRight;
 
-  /// No description provided for @errFormulaAlignment.
+  /// Error shown when a formula is aligned to the left
   ///
-  /// In uk, this message translates to:
-  /// **'Формула вирівняна по лівому краю'**
+  /// In en, this message translates to:
+  /// **'Formula aligned to the left'**
   String get errFormulaAlignment;
 
-  /// No description provided for @errFormulaMultiplePerLine.
+  /// Error shown when more than one formula appears on a line
   ///
-  /// In uk, this message translates to:
-  /// **'Кілька формул в одному рядку'**
+  /// In en, this message translates to:
+  /// **'Multiple formulas in one line'**
   String get errFormulaMultiplePerLine;
 
-  /// No description provided for @errFormulaNotTool.
+  /// Error shown when a formula is typed manually instead of using the Formula tool
   ///
-  /// In uk, this message translates to:
-  /// **'Формула набрана вручну, а не через інструмент \"Формула\"'**
+  /// In en, this message translates to:
+  /// **'Formula entered manually rather than using the \"Formula\" tool'**
   String get errFormulaNotTool;
 
-  /// No description provided for @errFormulaChapterMismatch.
+  /// Error shown when a formula appears in the wrong chapter
   ///
-  /// In uk, this message translates to:
-  /// **'Формула з неправильним розділом'**
+  /// In en, this message translates to:
+  /// **'Formula in incorrect chapter'**
   String get errFormulaChapterMismatch;
 
-  /// No description provided for @errFormulaSequence.
+  /// Error shown when a formula numbering sequence is broken
   ///
-  /// In uk, this message translates to:
-  /// **'Формула з порушеною послідовністю'**
+  /// In en, this message translates to:
+  /// **'Formula with broken sequence'**
   String get errFormulaSequence;
 
-  /// No description provided for @errFormulaFormat.
+  /// Error shown when formula numbering format does not match the requirements
   ///
-  /// In uk, this message translates to:
-  /// **'Формула з неправильним форматом номера'**
+  /// In en, this message translates to:
+  /// **'Formula with incorrect numbering format'**
   String get errFormulaFormat;
 
-  /// No description provided for @errFormulaFontSize.
+  /// Error shown when formula font size does not match the requirements
   ///
-  /// In uk, this message translates to:
-  /// **'Неправильний розмір шрифту у формулі'**
+  /// In en, this message translates to:
+  /// **'Incorrect font size in formula'**
   String get errFormulaFontSize;
 
-  /// No description provided for @errFormulaSpacingBefore.
+  /// Error shown when spacing before a formula does not match the requirements
   ///
-  /// In uk, this message translates to:
-  /// **'Неправильний відступ перед формулою'**
+  /// In en, this message translates to:
+  /// **'Incorrect spacing before formula'**
   String get errFormulaSpacingBefore;
 
-  /// No description provided for @errFormulaSpacingAfter.
+  /// Error shown when spacing after a formula does not match the requirements
   ///
-  /// In uk, this message translates to:
-  /// **'Неправильний відступ після формули'**
+  /// In en, this message translates to:
+  /// **'Incorrect spacing after formula'**
   String get errFormulaSpacingAfter;
 
-  /// No description provided for @errFormulaSpacingBeforeNotation.
+  /// Error shown when spacing before formula notation does not match the requirements
   ///
-  /// In uk, this message translates to:
-  /// **'Неправильний відступ перед позначенням формули'**
+  /// In en, this message translates to:
+  /// **'Incorrect spacing before formula notation'**
   String get errFormulaSpacingBeforeNotation;
 
-  /// No description provided for @errFormulaNotationSpacing.
+  /// Error shown when spacing inside formula notation does not match the requirements
   ///
-  /// In uk, this message translates to:
-  /// **'Неправильний відступ у позначенні формули'**
+  /// In en, this message translates to:
+  /// **'Incorrect spacing in formula notation'**
   String get errFormulaNotationSpacing;
 
-  /// No description provided for @errFigureAlignment.
+  /// Error shown when figure alignment does not match the requirements
   ///
-  /// In uk, this message translates to:
-  /// **'Невірне вирівнювання рисунка'**
+  /// In en, this message translates to:
+  /// **'Incorrect figure alignment'**
   String get errFigureAlignment;
 
-  /// No description provided for @errFigureBlankLine.
+  /// Error shown when blank lines before or after a figure are missing
   ///
-  /// In uk, this message translates to:
-  /// **'Відсутній пустий рядок перед/після рисунка'**
+  /// In en, this message translates to:
+  /// **'Missing blank line before/after figure'**
   String get errFigureBlankLine;
 
-  /// No description provided for @errFigureMissingCaption.
+  /// Error shown when a figure caption is missing
   ///
-  /// In uk, this message translates to:
-  /// **'Відсутній підпис рисунка'**
+  /// In en, this message translates to:
+  /// **'Missing figure caption'**
   String get errFigureMissingCaption;
 
-  /// No description provided for @errFigureUnexpectedInCaption.
+  /// Error shown when drawing content appears inside a figure caption
   ///
-  /// In uk, this message translates to:
-  /// **'Креслення у підписі'**
+  /// In en, this message translates to:
+  /// **'Drawing inside caption'**
   String get errFigureUnexpectedInCaption;
 
-  /// No description provided for @errFigureCaptionFormat.
+  /// Error shown when a figure caption does not match the required format
   ///
-  /// In uk, this message translates to:
-  /// **'Неправильний формат підпису рисунка (очікується: «Рисунок <номер> - <назва>»)'**
+  /// In en, this message translates to:
+  /// **'Incorrect figure caption format (expected: «Figure <number> - <title>»)'**
   String get errFigureCaptionFormat;
 
-  /// No description provided for @errStructuralElementMissing.
+  /// Error shown when a required structural element is missing
   ///
-  /// In uk, this message translates to:
-  /// **'Відсутній обов\'язковий структурний елемент'**
+  /// In en, this message translates to:
+  /// **'Required structural element is missing'**
   String get errStructuralElementMissing;
 
-  /// No description provided for @errStructuralElementOrder.
+  /// Error shown when the document structural elements are in the wrong order
   ///
-  /// In uk, this message translates to:
-  /// **'Порушено порядок структурних елементів документа'**
+  /// In en, this message translates to:
+  /// **'Document structural elements order violated'**
   String get errStructuralElementOrder;
 
-  /// No description provided for @warnStructuralElementNewPage.
+  /// Warning shown when a structural element does not start on a new page
   ///
-  /// In uk, this message translates to:
-  /// **'Структурний елемент не починається з нової сторінки'**
+  /// In en, this message translates to:
+  /// **'Structural element does not start on a new page'**
   String get warnStructuralElementNewPage;
 
-  /// No description provided for @err000.
+  /// Error shown when the file cannot be opened
   ///
-  /// In uk, this message translates to:
-  /// **'Помилка відкриття файлу'**
+  /// In en, this message translates to:
+  /// **'File open error'**
   String get err000;
 }
 
@@ -508,7 +512,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['uk'].contains(locale.languageCode);
+      <String>['en', 'uk'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -517,6 +521,8 @@ class _AppLocalizationsDelegate
 AppLocalizations lookupAppLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'en':
+      return AppLocalizationsEn();
     case 'uk':
       return AppLocalizationsUk();
   }

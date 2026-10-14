@@ -1,25 +1,67 @@
 {
   "@@locale": "uk",
   "appTitle": "Thesis checker",
+  "@appTitle": {
+    "description": "Назва застосунку"
+  },
 
   "@@comment_home": "Головна сторінка",
   "navHome": "Головна",
+  "@navHome": {
+    "description": "Мітка навігації для головного екрана"
+  },
   "homeSectionTitle": "Що перевіряємо",
+  "@homeSectionTitle": {
+    "description": "Заголовок секції, що пояснює, що перевіряє застосунок"
+  },
   "uploadTitle": "Завантажте документ",
+  "@uploadTitle": {
+    "description": "Заголовок блоку завантаження документа"
+  },
   "uploadSubtitle": "Перетягніть .docx файл або натисніть щоб обрати",
+  "@uploadSubtitle": {
+    "description": "Пояснювальний текст про те, як надати DOCX-файл"
+  },
   "uploadSelectFile": "+ Обрати файл",
+  "@uploadSelectFile": {
+    "description": "Текст кнопки для відкриття вибору файлу"
+  },
 
   "@@comment_loading": "Екран аналізу",
   "navAnalysis": "Аналіз",
+  "@navAnalysis": {
+    "description": "Мітка навігації для екрана аналізу"
+  },
   "loadingNoFile": "Завантажте, будь ласка, документ для аналізу",
+  "@loadingNoFile": {
+    "description": "Повідомлення, коли ще не завантажено жодного документа"
+  },
   "loadingAnalyzing": "Аналізую документ...",
+  "@loadingAnalyzing": {
+    "description": "Статусний текст під час аналізу документа"
+  },
 
   "@@comment_results": "Екран результату",
   "navResults": "Результати",
+  "@navResults": {
+    "description": "Мітка навігації для екрана результатів"
+  },
   "retryAnalysis": "Заново",
+  "@retryAnalysis": {
+    "description": "Текст кнопки для повторного запуску аналізу"
+  },
   "resultCategories": "Категорії",
+  "@resultCategories": {
+    "description": "Заголовок для списку категорій результатів"
+  },
   "resultDetails": "Деталі помилок",
+  "@resultDetails": {
+    "description": "Заголовок для детального списку помилок"
+  },
   "resultNoSelectedCategories": "Немає обраних категорій для відображення",
+  "@resultNoSelectedCategories": {
+    "description": "Повідомлення, коли не вибрано жодної категорії"
+  },
   "resultNoErrorsForCategory": "Для категорії \"{category}\" помилки відсутні.",
   "@resultNoErrorsForCategory": {
     "description": "Повідомлення, коли для обраної категорії не знайдено помилок",
@@ -33,20 +75,53 @@
 
   "@@comment_error_details": "Фрагменти для вказання відсутності або присутності помилки",
   "errorFragmentMissing": "Фрагмент тексту відсутній.",
+  "@errorFragmentMissing": {
+    "description": "Повідомлення, коли фрагмент тексту відсутній в помилці"
+  },
   "errorArrowShouldBe": "→ має бути",
+  "@errorArrowShouldBe": {
+    "description": "Мітка в деталях помилки для показу очікуваного тексту"
+  },
 
   "@@comment_dialogs": "Модальне вікно для запуску повторної перевірки",
   "dialogSettingsTitle": "Налаштування перевірки",
+  "@dialogSettingsTitle": {
+    "description": "Заголовок діалогу налаштувань аналізу"
+  },
   "dialogChooseChecks": "Оберіть що перевіряти",
+  "@dialogChooseChecks": {
+    "description": "Підказка з проханням обрати перевірки для запуску"
+  },
   "dialogChooseChecksHint": "Можна обрати декілька перевірок одночасно",
+  "@dialogChooseChecksHint": {
+    "description": "Пояснення, що можна вибрати кілька перевірок одночасно"
+  },
   "dialogChooseOneError": "Оберіть хоча б одну перевірку",
+  "@dialogChooseOneError": {
+    "description": "Повідомлення про валідацію, коли не вибрано жодної перевірки"
+  },
   "dialogCancel": "Скасувати",
+  "@dialogCancel": {
+    "description": "Текст кнопки для закриття діалогу без змін"
+  },
   "dialogStartAnalysis": "▶ Почати аналіз",
+  "@dialogStartAnalysis": {
+    "description": "Текст кнопки для запуску аналізу з діалогу"
+  },
 
   "@@comment_theme": "Тема оформлення",
   "themeLight": "Світла",
+  "@themeLight": {
+    "description": "Мітка для опції світлої теми"
+  },
   "themeDark": "Темна",
+  "@themeDark": {
+    "description": "Мітка для опції темної теми"
+  },
   "themeSystem": "Системна",
+  "@themeSystem": {
+    "description": "Мітка для опції системної теми"
+  },
 
   "@@comment_snackbar": "Повідомлення у snackbar",
   "snackbarError": "Виникла помилка: {error}",
@@ -64,63 +139,183 @@
 
   "@@comment_alignment": "ALIGNMENT CHECKER - Вирівнювання",
   "errAlignment": "Невірне вирівнювання тексту",
+  "@errAlignment": {
+    "description": "Помилка, коли вирівнювання тексту не відповідає вимогам"
+  },
 
   "@@comment_font": "FONT CHECKER - Шрифти",
   "errFont": "Невірні шрифти у параграфі",
+  "@errFont": {
+    "description": "Помилка, коли шрифти в параграфі не відповідають вимогам"
+  },
   "errFontHeader": "Неправильні шрифти в верхньому колонтитулі",
+  "@errFontHeader": {
+    "description": "Помилка, коли шрифти у верхньому колонтитулі не відповідають вимогам"
+  },
   "errFontFooter": "Неправильні шрифти в нижньому колонтитулі",
+  "@errFontFooter": {
+    "description": "Помилка, коли шрифти у нижньому колонтитулі не відповідають вимогам"
+  },
   "errFontTable": "Невірні шрифти у таблиці",
+  "@errFontTable": {
+    "description": "Помилка, коли шрифти у таблиці не відповідають вимогам"
+  },
 
   "@@comment_size": "SIZE CHECKER - Розмір шрифту",
   "errFontSize": "Неправильний розмір шрифта у параграфі",
+  "@errFontSize": {
+    "description": "Помилка, коли розмір шрифту в параграфі не відповідає вимогам"
+  },
   "errFontSizeHeader": "Неправильний розмір шрифта в верхньому колонтитулі",
+  "@errFontSizeHeader": {
+    "description": "Помилка, коли розмір шрифту у верхньому колонтитулі не відповідає вимогам"
+  },
   "errFontSizeFooter": "Неправильний розмір шрифта в нижньому колонтитулі",
+  "@errFontSizeFooter": {
+    "description": "Помилка, коли розмір шрифту у нижньому колонтитулі не відповідає вимогам"
+  },
   "errFontSizeTable": "Неправильний розмір шрифта у таблиці",
+  "@errFontSizeTable": {
+    "description": "Помилка, коли розмір шрифту у таблиці не відповідає вимогам"
+  },
 
   "@@comment_linespacing": "LINE SPACING CHECKER - Міжрядковий інтервал",
   "errLinespace": "Неправильні інтервали між рядками у параграфі",
+  "@errLinespace": {
+    "description": "Помилка, коли міжрядковий інтервал у параграфі не відповідає вимогам"
+  },
 
   "@@comment_list": "LIST CHECKER - Списки",
   "errListLevelSkip": "Пропущено рівень вкладеності списку",
+  "@errListLevelSkip": {
+    "description": "Помилка, коли пропущено рівень вкладеності списку"
+  },
   "errListFormat": "Невідповідний формат нумерації на одному рівні списку",
+  "@errListFormat": {
+    "description": "Помилка, коли нумерація на одному рівні списку є непослідовною"
+  },
   "errListMarkerFormat": "Недозволений формат позначення переліку",
+  "@errListMarkerFormat": {
+    "description": "Помилка, коли позначення списку має недозволений формат"
+  },
   "errListMarkerSuffix": "Пункт переліку має закінчуватися дужкою, а не крапкою",
+  "@errListMarkerSuffix": {
+    "description": "Помилка, коли пункт переліку закінчується крапкою замість дужки"
+  },
   "errListBulletChar": "Недозволений символ маркера переліку — має бути тире",
+  "@errListBulletChar": {
+    "description": "Помилка, коли символ маркера списку не є тире"
+  },
   "warnListManual": "Виявлено ручне форматування переліку",
+  "@warnListManual": {
+    "description": "Попередження, коли виявлено ручне форматування списку"
+  },
 
   "@@comment_spacing": "PARAGRAPH SPACING CHECKER - Відступи перед/після абзаців",
   "errSpacingBefore": "Невірний відступ перед абзацом",
+  "@errSpacingBefore": {
+    "description": "Помилка, коли відступ перед абзацом не відповідає вимогам"
+  },
   "errSpacingAfter": "Невірний відступ після абзацу",
+  "@errSpacingAfter": {
+    "description": "Помилка, коли відступ після абзацу не відповідає вимогам"
+  },
 
   "@@comment_indentation": "PARAGRAPH INDENTATION CHECKER - Індентація абзаців",
   "errIndentationLeft": "Невірний відступ зліва",
+  "@errIndentationLeft": {
+    "description": "Помилка, коли лівий відступ не відповідає вимогам"
+  },
   "errIndentationRight": "Невірний відступ справа",
+  "@errIndentationRight": {
+    "description": "Помилка, коли правий відступ не відповідає вимогам"
+  },
 
   "@@comment_formula": "FORMULA CHECKER - Формули",
   "errFormulaAlignment": "Формула вирівняна по лівому краю",
+  "@errFormulaAlignment": {
+    "description": "Помилка, коли формула вирівняна по лівому краю"
+  },
   "errFormulaMultiplePerLine": "Кілька формул в одному рядку",
+  "@errFormulaMultiplePerLine": {
+    "description": "Помилка, коли в одному рядку міститься більше ніж одна формула"
+  },
   "errFormulaNotTool": "Формула набрана вручну, а не через інструмент \"Формула\"",
+  "@errFormulaNotTool": {
+    "description": "Помилка, коли формулу набрано вручну замість інструмента Формула"
+  },
   "errFormulaChapterMismatch": "Формула з неправильним розділом",
+  "@errFormulaChapterMismatch": {
+    "description": "Помилка, коли формула розміщена не в тому розділі"
+  },
   "errFormulaSequence": "Формула з порушеною послідовністю",
+  "@errFormulaSequence": {
+    "description": "Помилка, коли послідовність нумерації формул порушена"
+  },
   "errFormulaFormat": "Формула з неправильним форматом номера",
+  "@errFormulaFormat": {
+    "description": "Помилка, коли формат нумерації формули не відповідає вимогам"
+  },
   "errFormulaFontSize": "Неправильний розмір шрифту у формулі",
+  "@errFormulaFontSize": {
+    "description": "Помилка, коли розмір шрифту у формулі не відповідає вимогам"
+  },
   "errFormulaSpacingBefore": "Неправильний відступ перед формулою",
+  "@errFormulaSpacingBefore": {
+    "description": "Помилка, коли відступ перед формулою не відповідає вимогам"
+  },
   "errFormulaSpacingAfter": "Неправильний відступ після формули",
+  "@errFormulaSpacingAfter": {
+    "description": "Помилка, коли відступ після формули не відповідає вимогам"
+  },
   "errFormulaSpacingBeforeNotation": "Неправильний відступ перед позначенням формули",
+  "@errFormulaSpacingBeforeNotation": {
+    "description": "Помилка, коли відступ перед позначенням формули не відповідає вимогам"
+  },
   "errFormulaNotationSpacing": "Неправильний відступ у позначенні формули",
+  "@errFormulaNotationSpacing": {
+    "description": "Помилка, коли відступ у позначенні формули не відповідає вимогам"
+  },
 
   "@@comment_figure": "FIGURE CHECKER - Рисунки",
   "errFigureAlignment": "Невірне вирівнювання рисунка",
+  "@errFigureAlignment": {
+    "description": "Помилка, коли вирівнювання рисунка не відповідає вимогам"
+  },
   "errFigureBlankLine": "Відсутній пустий рядок перед/після рисунка",
+  "@errFigureBlankLine": {
+    "description": "Помилка, коли відсутні порожні рядки перед або після рисунка"
+  },
   "errFigureMissingCaption": "Відсутній підпис рисунка",
+  "@errFigureMissingCaption": {
+    "description": "Помилка, коли підпис рисунка відсутній"
+  },
   "errFigureUnexpectedInCaption": "Креслення у підписі",
+  "@errFigureUnexpectedInCaption": {
+    "description": "Помилка, коли в підписі рисунка є графічний об'єкт"
+  },
   "errFigureCaptionFormat": "Неправильний формат підпису рисунка (очікується: «Рисунок <номер> - <назва>»)",
+  "@errFigureCaptionFormat": {
+    "description": "Помилка, коли підпис рисунка не відповідає потрібному формату"
+  },
 
   "@@comment_structure": "STRUCTURAL ELEMENT CHECKER - Структура документа",
   "errStructuralElementMissing": "Відсутній обов'язковий структурний елемент",
+  "@errStructuralElementMissing": {
+    "description": "Помилка, коли відсутній обов'язковий структурний елемент"
+  },
   "errStructuralElementOrder": "Порушено порядок структурних елементів документа",
+  "@errStructuralElementOrder": {
+    "description": "Помилка, коли порушено порядок структурних елементів документа"
+  },
   "warnStructuralElementNewPage": "Структурний елемент не починається з нової сторінки",
+  "@warnStructuralElementNewPage": {
+    "description": "Попередження, коли структурний елемент не починається з нової сторінки"
+  },
 
   "@@comment_file_error": "FILE ERROR - Помилка файлу",
-  "err000": "Помилка відкриття файлу"
+  "err000": "Помилка відкриття файлу",
+  "@err000": {
+    "description": "Помилка, коли файл не вдається відкрити"
+  }
 }
