@@ -6,6 +6,12 @@ enum ApplicationLocalization {
     Locale('uk'),
     'assets/images/flag_ua.png',
     'Українська'
+  ),
+
+  english(
+    Locale('en'),
+    'assets/images/flag_en.png',
+    'English'
   );
 
   final Locale locale;
