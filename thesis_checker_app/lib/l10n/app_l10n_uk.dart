@@ -98,6 +98,59 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
+  String get checkTypeFontTitle => 'Шрифт';
+
+  @override
+  String get checkTypeFontDescription => 'Назва і розмір шрифту';
+
+  @override
+  String get checkTypeSpacingTitle => 'Інтервали';
+
+  @override
+  String get checkTypeSpacingDescription =>
+      'Міжрядковий і відступи навколо абзаців';
+
+  @override
+  String get checkTypeAlignmentTitle => 'Вирівнювання';
+
+  @override
+  String get checkTypeAlignmentDescription =>
+      'Вирівнювання абзаців і заголовків';
+
+  @override
+  String get checkTypeFormulaTitle => 'Формули';
+
+  @override
+  String get checkTypeFormulaDescription =>
+      'Опис, нумерація, відступи навколо формул';
+
+  @override
+  String get checkTypeListTitle => 'Списки';
+
+  @override
+  String get checkTypeListDescription =>
+      'Вкладеність, маркери, формат нумарації на відповідному рівні';
+
+  @override
+  String get checkTypeOtherTitle => 'Інші';
+
+  @override
+  String get checkTypeOtherDescription =>
+      'Інші перевірки, які не входять до категорій';
+
+  @override
+  String unsupportedFileExtensionError(String extension) {
+    return 'Файл з розширенням .$extension не підтримується';
+  }
+
+  @override
+  String get analysisFinishedWithError => 'Аналіз завершився з помилкою';
+
+  @override
+  String get analysisCouldNotComplete =>
+      'Не вдалося виконати аналіз. Спробуйте ще раз.';
+
+  @override
   String get errAlignment => 'Невірне вирівнювання тексту';
 
   @override
