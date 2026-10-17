@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:parameterized_test/parameterized_test.dart';
 import 'package:thesis_checker/app_view.dart';
+import 'package:thesis_checker/core/localization/app_localization_bloc.dart';
 import 'package:thesis_checker/core/theme/theme_cubit.dart';
 import 'package:thesis_checker/features/home/bloc/file_bloc.dart';
 import 'package:thesis_checker/features/loading_analysis/bloc/analysis_bloc.dart';
@@ -12,24 +13,30 @@ import 'package:thesis_checker/features/result/cubit/result_state.dart';
 
 class MockThemeCubit extends Mock implements ThemeCubit {}
 class MockFileBloc extends Mock implements FileBloc {}
+class MockAppLocalizationBloc extends Mock implements AppLocalizationBloc {}
 class MockAnalysisBloc extends Mock implements AnalysisBloc {}
 class MockResultCubit extends Mock implements ResultCubit {}
 
 void main() {
   late MockThemeCubit mockThemeCubit;
   late MockFileBloc mockFileBloc;
+  late MockAppLocalizationBloc mockAppLocalizationBloc;
   late MockAnalysisBloc mockAnalysisBloc;
   late MockResultCubit mockResultCubit;
 
   setUp(() {
     mockThemeCubit = MockThemeCubit();
     mockFileBloc = MockFileBloc();
+    mockAppLocalizationBloc = MockAppLocalizationBloc();
     mockAnalysisBloc = MockAnalysisBloc();
     mockResultCubit = MockResultCubit();
 
     // Arrange: Set up default states for the mocks
     when(() => mockFileBloc.state).thenReturn(FileInitial());
     when(() => mockFileBloc.stream).thenAnswer((_) => Stream.value(FileInitial()));
+
+    when(() => mockAppLocalizationBloc.state).thenReturn(AppLocalizationState());
+    when(() => mockAppLocalizationBloc.stream).thenAnswer((_) => Stream.value(AppLocalizationState()));
 
     when(() => mockAnalysisBloc.state).thenReturn(AnalysisInitial());
     when(() => mockAnalysisBloc.stream).thenAnswer((_) => Stream.value(AnalysisInitial()));
@@ -44,6 +51,7 @@ void main() {
         providers: [
           BlocProvider<ThemeCubit>.value(value: mockThemeCubit),
           BlocProvider<FileBloc>.value(value: mockFileBloc),
+          BlocProvider<AppLocalizationBloc>.value(value: mockAppLocalizationBloc),
           BlocProvider<AnalysisBloc>.value(value: mockAnalysisBloc),
           BlocProvider<ResultCubit>.value(value: mockResultCubit),
         ],

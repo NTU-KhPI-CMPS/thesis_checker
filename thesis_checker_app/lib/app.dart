@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:thesis_checker/app_view.dart';
 import 'package:thesis_checker/core/di/injection_container.dart';
+import 'package:thesis_checker/core/localization/app_localization_bloc.dart';
 import 'package:thesis_checker/core/theme/theme_cubit.dart';
 import 'package:thesis_checker/features/home/bloc/file_bloc.dart';
 import 'package:thesis_checker/features/loading_analysis/bloc/analysis_bloc.dart';
@@ -17,6 +18,9 @@ class App extends StatelessWidget {
       providers: [
         BlocProvider(
           create:  (_) => getIt<ThemeCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => getIt<AppLocalizationBloc>(),
         ),
         BlocProvider(
           create: (_) => getIt<FileBloc>(),
