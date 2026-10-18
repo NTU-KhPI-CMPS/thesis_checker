@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:thesis_checker/core/constants/available_check_types.dart';
 import 'package:thesis_checker/core/constants/app_colors.dart';
+import 'package:thesis_checker/core/extensions/error_localization_x.dart';
 import 'package:thesis_checker/core/widgets/checkbox_container.dart';
 import 'package:thesis_checker/core/widgets/hint_text.dart';
 import 'package:thesis_checker/features/home/widgets/custom_animated_button.dart';
@@ -216,10 +217,12 @@ class _ResultViewState extends State<ResultView> {
                 separatorBuilder: (_, __) => const SizedBox(height: 12.0),
                 itemBuilder: (context, index) {
                   final error = filteredErrors[index];
+
+                  final errorTitle = error.getLocalizedMessage(context);
                   final paragraphText = error.paragraphText?.trim();
 
                   return ErrorDetailExpandableCard(
-                    title: error.title,
+                    title: errorTitle!,
                     quote: (paragraphText == null || paragraphText.isEmpty)
                         ? 'Фрагмент тексту відсутній.'
                         : paragraphText,

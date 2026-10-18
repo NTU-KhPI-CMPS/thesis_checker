@@ -10,6 +10,7 @@ import 'package:thesis_checker/features/home/bloc/file_bloc.dart';
 import 'package:thesis_checker/features/loading_analysis/bloc/analysis_bloc.dart';
 import 'package:thesis_checker/features/result/cubit/result_cubit.dart';
 import 'package:thesis_checker/features/result/cubit/result_state.dart';
+import 'package:thesis_checker/models/application_localization.dart';
 
 class MockThemeCubit extends Mock implements ThemeCubit {}
 class MockFileBloc extends Mock implements FileBloc {}
@@ -32,6 +33,9 @@ void main() {
     mockResultCubit = MockResultCubit();
 
     // Arrange: Set up default states for the mocks
+    when(() => mockThemeCubit.state).thenReturn(ThemeMode.system);
+    when(() => mockThemeCubit.stream).thenAnswer((_) => Stream.value(ThemeMode.system));
+
     when(() => mockFileBloc.state).thenReturn(FileInitial());
     when(() => mockFileBloc.stream).thenAnswer((_) => Stream.value(FileInitial()));
 
@@ -80,7 +84,32 @@ void main() {
 
           final materialApp = tester.widget<MaterialApp>(materialAppFinder);
           expect(materialApp.themeMode, theme);
-      });
+        }
+      );
+    }
+  );
+
+  parameterizedGroup(
+    'AppView localization tests',
+    ApplicationLocalization.values,
+    (ApplicationLocalization selectedLocalization) {
+      testWidgets(
+        'AppView builds MaterialApp with correct localization: ${selectedLocalization.name}',
+        (WidgetTester tester) async {
+          // Arrange: Set up the AppLocalizationBloc to emit a chose localization state
+          final state = AppLocalizationState(localization: selectedLocalization);
+          when(() => mockAppLocalizationBloc.state).thenReturn(state);
+          when(() => mockAppLocalizationBloc.stream)
+              .thenAnswer((_) => Stream.value(state));
+
+          // Act: Pump the AppView widget
+          await pumpAppView(tester);
+
+          // Assert: Verify localization is set correctly in MaterialApp
+          final materialApp = tester.widget<MaterialApp>(find.byType(MaterialApp));
+          expect(materialApp.locale, selectedLocalization.locale);
+        }
+      );
     }
   );
 }
