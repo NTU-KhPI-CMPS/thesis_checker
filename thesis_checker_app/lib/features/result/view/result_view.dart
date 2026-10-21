@@ -222,7 +222,7 @@ class _ResultViewState extends State<ResultView> {
                   final paragraphText = error.paragraphText?.trim();
 
                   return ErrorDetailExpandableCard(
-                    title: errorTitle!,
+                    title: errorTitle,
                     quote: (paragraphText == null || paragraphText.isEmpty)
                         ? 'Фрагмент тексту відсутній.'
                         : paragraphText,

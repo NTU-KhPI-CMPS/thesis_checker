@@ -16,7 +16,7 @@ enum ApplicationLocalization {
 
   final Locale locale;
   final String iconPath;
-  final String name;
+  final String label;
 
-  const ApplicationLocalization(this.locale, this.iconPath, this.name);
+  const ApplicationLocalization(this.locale, this.iconPath, this.label);
 }
