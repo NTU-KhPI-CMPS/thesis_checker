@@ -1,3 +1,4 @@
+import 'package:thesis_checker/core/errors/analysis_exception.dart';
 import 'package:thesis_checker/data/repositories/analysis_repository.dart';
 import 'package:thesis_checker/models/analysis_result.dart';
 import 'package:thesis_checker/features/result/cubit/result_cubit.dart';
@@ -29,9 +30,10 @@ class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
 
       resultCubit.setResult(analysisResult);
       emit(AnalysisDoneState());
+    } on AnalysisException catch (e) {
+      emit(AnalysisFailureState(type: e.type));
     } catch (e) {
-      final errorMessage = e.toString().replaceFirst('Exception: ', '').trim();
-      emit(AnalysisFailureState(error: errorMessage));
+      emit(const AnalysisFailureState(type: AnalysisErrorType.couldNotComplete));
     }
   }
 }

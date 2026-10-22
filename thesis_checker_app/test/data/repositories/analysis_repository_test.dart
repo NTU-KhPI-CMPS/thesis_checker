@@ -9,6 +9,7 @@ import 'package:thesis_checker/data/models/format_error_api.dart';
 import 'package:thesis_checker/data/models/report_api.dart';
 import 'package:thesis_checker/data/repositories/analysis_repository.dart';
 import 'package:thesis_checker/data/services/runner_java_service.dart';
+import 'package:thesis_checker/models/check_type_info.dart';
 
 import 'analysis_repository_test.mocks.dart';
 
@@ -31,7 +32,7 @@ void main() {
       final mockRunner = MockRunnerJavaService();
       final repository = AnalysisRepository(runnerJavaService: mockRunner);
       const filePath = 'nested/thesis.docx';
-      final fontType = AvailableCheckTypes.checkTypes.firstWhere((type) => type.title == 'Шрифт');
+      final fontType = AvailableCheckTypes.checkTypes.firstWhere((type) => type.category == CheckCategory.font);
 
       when(mockRunner.checkFile(filePath, selectedChecks: [fontType])).thenAnswer(
         (_) async => ReportApi(
@@ -50,10 +51,10 @@ void main() {
       );
 
       final fontGroup = result.errorsByCategory.firstWhere(
-        (item) => item.category == 'Шрифт',
+        (item) => item.category == CheckCategory.font,
       );
       final otherGroup = result.errorsByCategory.firstWhere(
-        (item) => item.category == 'Інші',
+        (item) => item.category == CheckCategory.other,
       );
 
       expect(result.fileName, 'thesis.docx');

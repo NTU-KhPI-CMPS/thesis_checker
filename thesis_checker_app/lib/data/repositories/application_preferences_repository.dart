@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:thesis_checker/models/application_localization.dart';
 
 /// Manages application settings
 class ApplicationPreferencesRepository {
   final SharedPreferences _prefs;
+
   final String _themeKey = 'theme';
+  final String _localizationKey = 'localization';
 
   const ApplicationPreferencesRepository(this._prefs);
 
@@ -15,6 +18,24 @@ class ApplicationPreferencesRepository {
 
   ThemeMode getApplicationTheme() {
     return _mapStringToThemeMode(_prefs.getString(_themeKey));
+  }
+
+  Future<void> saveApplicationLocalization(
+    ApplicationLocalization localization,
+  ) async {
+    await _prefs.setString(
+      _localizationKey,
+      localization.locale.toLanguageTag(),
+    );
+  }
+
+  ApplicationLocalization getApplicationLocalization() {
+    String? tag = _prefs.getString(_localizationKey);
+
+    return ApplicationLocalization.values.firstWhere(
+      (l) => l.locale.toLanguageTag() == tag,
+      orElse: () => ApplicationLocalization.ukrainian,
+    );
   }
 
   ThemeMode _mapStringToThemeMode(String? theme) {

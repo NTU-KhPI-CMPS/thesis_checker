@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:thesis_checker/features/home/bloc/file_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thesis_checker/features/home/widgets/custom_animated_button.dart';
+import 'package:thesis_checker/l10n/l10n.dart';
 
 /// Interactive drop area for uploading thesis files.
 class UploadZone extends StatefulWidget {
@@ -21,6 +22,8 @@ class _UploadZoneState extends State<UploadZone> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     final borderColor = Theme.of(context).dividerColor;
     final accentColor = Theme.of(context).primaryColor;
     final surfaceColor = Theme.of(context).scaffoldBackgroundColor;
@@ -84,7 +87,7 @@ class _UploadZoneState extends State<UploadZone> {
                 ),
                 SizedBox(height: 16.0),
                 Text(
-                  'Завантажте документ',
+                  l10n.uploadTitle,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: textColor,
@@ -94,7 +97,7 @@ class _UploadZoneState extends State<UploadZone> {
                   ),
                 ),
                 Text(
-                  'Перетягніть .docx файл або натисніть щоб обрати',
+                  l10n.uploadSubtitle,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: textColor2,
@@ -105,7 +108,7 @@ class _UploadZoneState extends State<UploadZone> {
                 ),
                 SizedBox(height: 24.0),
                 CustomAnimatedButton(
-                    text: '+ Обрати файл',
+                    text: l10n.uploadSelectFile,
                     buttonIsHovered: buttonIsHovered,
                     accentColor: accentColor,
                     onTap: () async {

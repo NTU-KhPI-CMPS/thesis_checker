@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:thesis_checker/core/constants/app_colors.dart';
+import 'package:thesis_checker/l10n/l10n.dart';
 
 /// Expandable card that displays a summary row and detailed error information.
 class ErrorDetailExpandableCard extends StatefulWidget {
@@ -35,6 +36,8 @@ class _ErrorDetailExpandableCardState extends State<ErrorDetailExpandableCard> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     final theme = Theme.of(context);
     final isLightTheme = theme.brightness == Brightness.light;
 
@@ -169,7 +172,7 @@ class _ErrorDetailExpandableCardState extends State<ErrorDetailExpandableCard> {
                                     textColor: chipTextColor,
                                   ),
                                   Text(
-                                    '→ має бути',
+                                    l10n.errorArrowShouldBe,
                                     style: TextStyle(
                                       fontFamily: 'FunnelSans',
                                       fontWeight: FontWeight.w600,

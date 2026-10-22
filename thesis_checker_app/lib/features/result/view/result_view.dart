@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:thesis_checker/core/constants/available_check_types.dart';
 import 'package:thesis_checker/core/constants/app_colors.dart';
+import 'package:thesis_checker/core/extensions/check_type_localization_x.dart';
 import 'package:thesis_checker/core/extensions/error_localization_x.dart';
 import 'package:thesis_checker/core/widgets/checkbox_container.dart';
 import 'package:thesis_checker/core/widgets/hint_text.dart';
@@ -13,6 +14,7 @@ import 'package:thesis_checker/features/result/cubit/result_cubit.dart';
 import 'package:thesis_checker/features/result/cubit/result_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thesis_checker/features/analysis_options_dialog/analysis_options_dialog.dart';
+import 'package:thesis_checker/l10n/l10n.dart';
 
 class ResultView extends StatefulWidget {
   const ResultView({super.key});
@@ -27,6 +29,8 @@ class _ResultViewState extends State<ResultView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     final accentColor = Theme.of(context).primaryColor;
     final isLightTheme = Theme.of(context).brightness == Brightness.light;
     final fileNameTextColor = Theme.of(context).textTheme.bodyLarge?.color;
@@ -37,7 +41,7 @@ class _ResultViewState extends State<ResultView> {
     return BlocBuilder<ResultCubit, ResultState>(
       builder: (context, state) {
         if (state is! ResultLoaded) {
-          return const HintText(text: 'Завантажте, будь ласка, документ для аналізу');
+          return HintText(text: l10n.loadingNoFile);
         }
 
         final result = state.result;
@@ -47,7 +51,7 @@ class _ResultViewState extends State<ResultView> {
             ? checkTypes
             : checkTypes.where(selectedChecks.contains).toList();
         if (visibleCheckTypes.isEmpty) {
-          return const HintText(text: 'Немає обраних категорій для відображення');
+          return HintText(text: l10n.resultNoSelectedCategories);
         }
         final categoriesByTitle = {
           for (final item in result.errorsByCategory) item.category: item,
@@ -57,9 +61,9 @@ class _ResultViewState extends State<ResultView> {
             ? activeCategoryIndex
             : 0;
         final selectedType = visibleCheckTypes[safeIndex];
-        final selectedCategory = categoriesByTitle[selectedType.title];
+        final selectedCategory = categoriesByTitle[selectedType.category];
 
-        final selectedCategoryTitle = selectedType.title;
+        final selectedCategoryTitle = selectedType.localizedTitle(context);
         final filteredErrors = selectedCategory?.errors ?? const [];
         final totalWarnings = result.errorsByCategory.fold<int>(0, (sum, item) =>
             sum + item.errors.where((e) => e.severity.toLowerCase() == 'warning').length);
@@ -111,7 +115,7 @@ class _ResultViewState extends State<ResultView> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     CustomAnimatedButton(
-                      text: 'Заново',
+                      text: l10n.retryAnalysis,
                       buttonIsHovered: buttonIsHovered,
                       accentColor: accentColor,
                       onTap: () => showDialog(
@@ -128,7 +132,7 @@ class _ResultViewState extends State<ResultView> {
               ],
             ),
             const SizedBox(height: 24.0),
-            InfoText(text: 'Категорії',),
+            InfoText(text: l10n.resultCategories),
             const SizedBox(height: 12.0),
             LayoutBuilder(
               builder: (context, constraints) {
@@ -146,7 +150,7 @@ class _ResultViewState extends State<ResultView> {
                   ),
                   itemBuilder: (context, index) {
                     final type = visibleCheckTypes[index];
-                    final category = categoriesByTitle[type.title];
+                    final category = categoriesByTitle[type.category];
                     final warnCount = category?.errors.where((e) => e.severity.toLowerCase() == 'warning').length ?? 0;
                     final errorCount = category?.errors.where((e) => e.severity.toLowerCase() != 'warning').length ?? 0;
 
@@ -169,7 +173,7 @@ class _ResultViewState extends State<ResultView> {
                       ),
                       children: [
                         Text(
-                          type.title,
+                          type.localizedTitle(context),
                           style: TextStyle(
                             fontSize: 14.0,
                             fontWeight: FontWeight.w600,
@@ -180,7 +184,7 @@ class _ResultViewState extends State<ResultView> {
                           ),
                         ),
                         Text(
-                          type.description,
+                          type.localizedDescription(context),
                           style: TextStyle(
                             fontSize: 14.0,
                             fontFamily: 'FunnelSans',
@@ -197,11 +201,11 @@ class _ResultViewState extends State<ResultView> {
               },
             ),
             const SizedBox(height: 24.0),
-            InfoText(text: 'Деталі помилок',),
+            InfoText(text: l10n.resultDetails),
             const SizedBox(height: 12.0),
             if (filteredErrors.isEmpty)
               Text(
-                'Для категорії "$selectedCategoryTitle" помилки відсутні.',
+                l10n.resultNoErrorsForCategory(selectedCategoryTitle),
                 style: TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.w600,
@@ -224,7 +228,7 @@ class _ResultViewState extends State<ResultView> {
                   return ErrorDetailExpandableCard(
                     title: errorTitle,
                     quote: (paragraphText == null || paragraphText.isEmpty)
-                        ? 'Фрагмент тексту відсутній.'
+                        ? l10n.errorFragmentMissing
                         : paragraphText,
                     severity: error.severity,
                     foundValue: error.found,

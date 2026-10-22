@@ -73,6 +73,21 @@
     }
   },
 
+  "errorCount": "{count, plural, one{{count} помилка} few{{count} помилки} many{{count} помилок} other{{count} помилки}}",
+  "@errorCount": {
+    "description": "Кількість помилок з правильним закінченням",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "warningCount": "{count, plural, one{{count} попередження} few{{count} попередження} many{{count} попереджень} other{{count} попередження}}",
+  "@warningCount": {
+    "description": "Кількість попереджень з правильним закінченням",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
   "@@comment_error_details": "Фрагменти для вказання відсутності або присутності помилки",
   "errorFragmentMissing": "Фрагмент тексту відсутній.",
   "@errorFragmentMissing": {

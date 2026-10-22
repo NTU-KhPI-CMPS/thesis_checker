@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:thesis_checker/core/constants/available_check_types.dart';
+import 'package:thesis_checker/core/extensions/check_type_localization_x.dart';
 import 'package:thesis_checker/core/widgets/info_card.dart';
 import 'package:thesis_checker/core/widgets/info_text.dart';
 import 'package:thesis_checker/features/home/widgets/upload_zone.dart';
+import 'package:thesis_checker/l10n/l10n.dart';
 
 /// Primary content area of the home screen.
 class HomeContent extends StatelessWidget {
@@ -10,6 +12,8 @@ class HomeContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     final textColor2 = Theme.of(context).textTheme.bodyMedium?.color;
     final textColor = Theme.of(context).textTheme.bodyLarge?.color;
 
@@ -18,7 +22,7 @@ class HomeContent extends StatelessWidget {
       children: [
         const UploadZone(),
         const SizedBox(height: 28.0,),
-        InfoText(text: 'Що перевіряємо'),
+        InfoText(text: l10n.homeSectionTitle),
         const SizedBox(height: 28.0,),
         LayoutBuilder(
           builder: (context, constraints) {
@@ -48,7 +52,7 @@ class HomeContent extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            AvailableCheckTypes.checkTypes[index].title,
+                            AvailableCheckTypes.checkTypes[index].localizedTitle(context),
                             style: TextStyle(
                               fontSize: 14.0,
                               fontFamily: 'FunnelSans',
@@ -59,7 +63,7 @@ class HomeContent extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            AvailableCheckTypes.checkTypes[index].description,
+                            AvailableCheckTypes.checkTypes[index].localizedDescription(context),
                             style: TextStyle(
                               fontSize: 14.0,
                               fontFamily: 'FunnelSans',

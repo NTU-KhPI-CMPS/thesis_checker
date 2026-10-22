@@ -26,16 +26,16 @@ void main() {
         analyzedAt: DateTime.parse('2026-04-16T12:00:00.000Z'),
         errorsByCategory: [
           ErrorsByCategory(
-            category: 'Шрифт',
+            category: CheckCategory.font,
             errors: [
               _makeError('e-1', Check.fontName.name),
               _makeError('e-2', Check.fontSize.name),
             ],
           ),
-          ErrorsByCategory(category: 'Інші', errors: const []),
+          ErrorsByCategory(category: CheckCategory.other, errors: const []),
         ],
         selectedChecks: [
-          AvailableCheckTypes.checkTypes.firstWhere((type) => type.title == 'Шрифт'),
+          AvailableCheckTypes.checkTypes.firstWhere((type) => type.category == CheckCategory.font),
         ],
       );
 

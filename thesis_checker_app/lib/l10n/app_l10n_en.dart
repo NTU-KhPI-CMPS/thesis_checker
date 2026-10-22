@@ -57,6 +57,28 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String errorCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count errors',
+      one: '$count error',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String warningCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count warnings',
+      one: '$count warning',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get errorFragmentMissing => 'Text fragment is missing.';
 
   @override

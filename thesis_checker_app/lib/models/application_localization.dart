@@ -10,7 +10,7 @@ enum ApplicationLocalization {
 
   english(
     Locale('en'),
-    'assets/images/flag_en.png',
+    'assets/images/flag_gb.png',
     'English'
   );
 

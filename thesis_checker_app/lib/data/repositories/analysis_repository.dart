@@ -19,20 +19,20 @@ class AnalysisRepository {
     final report = await _runnerJavaService.checkFile(filePath, selectedChecks: selectedChecks);
     final foundErrors = report.errors;
 
-    final groupedErrorsByType = <String, List<FormatErrorApi>> {
-      for (final type in AvailableCheckTypes.checkTypes) type.title: <FormatErrorApi>[],
+    final groupedErrorsByType = <CheckCategory, List<FormatErrorApi>> {
+      for (final type in AvailableCheckTypes.checkTypes) type.category: <FormatErrorApi>[],
     };
 
     for (final error in foundErrors) {
       final type = _resolveTypeByError(error);
-      groupedErrorsByType[type.title]?.add(error);
+      groupedErrorsByType[type.category]?.add(error);
     }
 
     final errorsByCategory = AvailableCheckTypes.checkTypes
         .map(
           (type) => ErrorsByCategory(
-            category: type.title,
-            errors: groupedErrorsByType[type.title] ?? const <FormatErrorApi>[],
+            category: type.category,
+            errors: groupedErrorsByType[type.category] ?? const <FormatErrorApi>[],
           ),
         ).toList();
 

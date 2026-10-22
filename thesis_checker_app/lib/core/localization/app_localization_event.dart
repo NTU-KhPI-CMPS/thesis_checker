@@ -13,3 +13,8 @@ class ChangeAppLocalizationEvent extends AppLocalizationEvent {
   @override
   List<Object?> get props => [selectedLocalization];
 }
+
+class GetAppLocalizationEvent extends AppLocalizationEvent {
+  @override
+  List<Object?> get props => [];
+}

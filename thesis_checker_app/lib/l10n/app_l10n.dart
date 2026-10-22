@@ -188,6 +188,18 @@ abstract class AppLocalizations {
   /// **'No errors found for category \"{category}\".'**
   String resultNoErrorsForCategory(String category);
 
+  /// Number of errors with correct plural form
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{{count} error} other{{count} errors}}'**
+  String errorCount(int count);
+
+  /// Number of warnings with correct plural form
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{{count} warning} other{{count} warnings}}'**
+  String warningCount(int count);
+
   /// Message shown when a text fragment is missing in error
   ///
   /// In en, this message translates to:

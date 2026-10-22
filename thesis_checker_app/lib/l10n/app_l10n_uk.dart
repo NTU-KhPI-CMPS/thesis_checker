@@ -59,6 +59,32 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
+  String errorCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count помилки',
+      many: '$count помилок',
+      few: '$count помилки',
+      one: '$count помилка',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String warningCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count попередження',
+      many: '$count попереджень',
+      few: '$count попередження',
+      one: '$count попередження',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get errorFragmentMissing => 'Фрагмент тексту відсутній.';
 
   @override

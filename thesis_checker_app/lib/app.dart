@@ -20,7 +20,8 @@ class App extends StatelessWidget {
           create:  (_) => getIt<ThemeCubit>(),
         ),
         BlocProvider(
-          create: (_) => getIt<AppLocalizationBloc>(),
+          create: (_) => getIt<AppLocalizationBloc>()
+            ..add(GetAppLocalizationEvent()),
         ),
         BlocProvider(
           create: (_) => getIt<FileBloc>(),

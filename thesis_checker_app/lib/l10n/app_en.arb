@@ -73,6 +73,21 @@
     }
   },
 
+  "errorCount": "{count, plural, one{{count} error} other{{count} errors}}",
+  "@errorCount": {
+    "description": "Number of errors with correct plural form",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "warningCount": "{count, plural, one{{count} warning} other{{count} warnings}}",
+  "@warningCount": {
+    "description": "Number of warnings with correct plural form",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
   "@@comment_error_details": "Fragments indicating absence or presence of an error",
   "errorFragmentMissing": "Text fragment is missing.",
   "@errorFragmentMissing": {
