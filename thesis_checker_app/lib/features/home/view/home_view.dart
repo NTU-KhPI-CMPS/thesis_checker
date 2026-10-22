@@ -97,7 +97,9 @@ class _HomeViewState extends State<HomeView> {
         }
         if (state is FileUploadErrorState) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.snackbarError(state.extension))),
+            SnackBar(content: Text(
+                l10n.unsupportedFileExtensionError(state.extension)
+            )),
           );
         }
       },

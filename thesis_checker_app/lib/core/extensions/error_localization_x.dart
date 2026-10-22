@@ -5,6 +5,7 @@ import 'package:thesis_checker/l10n/l10n.dart';
 
 /// An extension on [FormatErrorApi] to provide localized error messages.
 extension ErrorLocalizationX on FormatErrorApi {
+  /// Returns a localized error message based on the [FormatErrorApi] id.
   String getLocalizedMessage(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     if (l10n == null) return id;

@@ -4,6 +4,7 @@ import 'package:thesis_checker/models/check_type_info.dart';
 
 /// Provides localized title and description for [CheckTypeInfo].
 extension CheckTypeLocalizationX on CheckTypeInfo {
+  /// Returns the localized title for the check type based on its category.
   String localizedTitle(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
@@ -17,6 +18,7 @@ extension CheckTypeLocalizationX on CheckTypeInfo {
     };
   }
 
+  /// Returns the localized description for the check type based on its category.
   String localizedDescription(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
