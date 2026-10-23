@@ -223,6 +223,8 @@ class _ResultViewState extends State<ResultView> {
                   final error = filteredErrors[index];
 
                   final errorTitle = error.getLocalizedMessage(context);
+                  final errorFoundValue = error.getLocalizedFound(context);
+                  final errorExpectedValue = error.getLocalizedExpected(context);
                   final paragraphText = error.paragraphText?.trim();
 
                   return ErrorDetailExpandableCard(
@@ -231,8 +233,8 @@ class _ResultViewState extends State<ResultView> {
                         ? l10n.errorFragmentMissing
                         : paragraphText,
                     severity: error.severity,
-                    foundValue: error.found,
-                    expectedValue: error.expected,
+                    foundValue: errorFoundValue,
+                    expectedValue: errorExpectedValue,
                   );
                 },
               ),

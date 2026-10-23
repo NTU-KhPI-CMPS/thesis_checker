@@ -307,4 +307,130 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get err000 => 'Помилка відкриття файлу';
+
+  @override
+  String get valueAlignmentLeft => 'По лівому краю';
+
+  @override
+  String get valueAlignmentRight => 'По правому краю';
+
+  @override
+  String get valueAlignmentCenter => 'По центру';
+
+  @override
+  String get valueAlignmentBoth => 'По ширині';
+
+  @override
+  String get valueAlignmentDistribute => 'Розподілено';
+
+  @override
+  String get valueAlignmentBothOrRight => 'По ширині або правому краю';
+
+  @override
+  String get valueListFormatDecimal => 'арабські цифри';
+
+  @override
+  String get valueListFormatLowerLetter => 'літери (нижній регістр)';
+
+  @override
+  String get valueListFormatUpperLetter => 'літери (верхній регістр)';
+
+  @override
+  String get valueListFormatLowerRoman => 'римські числа (нижній регістр)';
+
+  @override
+  String get valueListFormatUpperRoman => 'римські числа (верхній регістр)';
+
+  @override
+  String get valueListFormatBullet => 'позначка (маркер)';
+
+  @override
+  String get valueListFormatOther => 'інший формат';
+
+  @override
+  String get valueListConsistent => 'Однаковий формат';
+
+  @override
+  String get valueFigureNoBlankBefore => 'немає пустого рядка перед';
+
+  @override
+  String get valueFigureNoBlankAfter => 'немає пустого рядка після';
+
+  @override
+  String get valueFigureOneBlankLine => 'один пустий рядок';
+
+  @override
+  String get valueFigureCaptionParagraph => 'Параграф з підписом «Рисунок»';
+
+  @override
+  String get valueFigureCaptionMissing => 'відсутній';
+
+  @override
+  String get valueFigureNoDrawing => 'Відсутність креслення';
+
+  @override
+  String get valueFigureDrawingPresent => 'Креслення присутнє';
+
+  @override
+  String get valueFigureCaptionFormat => '«Рисунок <номер> - <назва>»';
+
+  @override
+  String get valueFormulaInsertViaTool =>
+      'Формула має бути вставлена через Вставлення → Формула';
+
+  @override
+  String get valueFormulaOnePerLine => '1 формула в рядку';
+
+  @override
+  String get valueFormulaBlankLineBefore => 'Порожній рядок перед формулою';
+
+  @override
+  String get valueFormulaBlankLineAfter => 'Порожній рядок після формули';
+
+  @override
+  String get valueFormulaNotationDirectlyBelow =>
+      'Пояснення «де» безпосередньо під формулою (без відступу)';
+
+  @override
+  String get valueFormulaBlankLineAfterNotation =>
+      'Порожній рядок після блоку пояснень';
+
+  @override
+  String get valueDocumentStart => 'Початок документу';
+
+  @override
+  String get valuePlaceholderFormula => '[Формула]';
+
+  @override
+  String get valuePlaceholderBlankLine => '[Порожній рядок]';
+
+  @override
+  String get valueStructuralPageBreakBefore =>
+      'Розрив сторінки перед елементом';
+
+  @override
+  String get valueStructuralAbstract => 'РЕФЕРАТ';
+
+  @override
+  String get valueStructuralContents => 'ЗМІСТ';
+
+  @override
+  String get valueStructuralAbbreviations => 'ПЕРЕЛІК ПОЗНАК ТА СКОРОЧЕНЬ';
+
+  @override
+  String get valueStructuralIntroduction => 'ВСТУП';
+
+  @override
+  String get valueStructuralConclusions => 'ВИСНОВКИ';
+
+  @override
+  String get valueStructuralReferences => 'СПИСОК ДЖЕРЕЛ ІНФОРМАЦІЇ';
+
+  @override
+  String get valueStructuralAppendix => 'ДОДАТОК';
+
+  @override
+  String valueCentimeters(String value) {
+    return '$value см';
+  }
 }
