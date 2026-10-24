@@ -35,7 +35,7 @@ Future<void> setupLocator() async {
 
   getIt.registerSingleton<FileBloc>(FileBloc());
   getIt.registerSingleton<AppLocalizationBloc>(AppLocalizationBloc(
-    getIt<ApplicationPreferencesRepository>()));
+      appPreferences: getIt<ApplicationPreferencesRepository>()));
   getIt.registerSingleton<AnalysisBloc>(AnalysisBloc(
       analysisRepository: getIt<AnalysisRepository>(),
       resultCubit: getIt<ResultCubit>()));

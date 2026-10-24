@@ -26,7 +26,6 @@ class HomeView extends StatefulWidget {
 /// Internal state for [HomeView].
 class _HomeViewState extends State<HomeView> {
   int selectedIndex = 0;
-  bool themeButtonIsHovered = false;
 
   void _onAnalysisComplete() {
     context.read<FileBloc>().add(ResetFileEvent());
@@ -98,7 +97,9 @@ class _HomeViewState extends State<HomeView> {
         if (state is FileUploadErrorState) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(
-                l10n.unsupportedFileExtensionError(state.extension)
+                l10n.snackbarError(
+                  l10n.unsupportedFileExtensionError(state.extension)
+                )
             )),
           );
         }
@@ -151,7 +152,7 @@ class _HomeViewState extends State<HomeView> {
                 ),
                 const SizedBox(width: 12.0),
                 Text(
-                  'Thesis checker',
+                  l10n.appTitle,
                   style: TextStyle(
                     color: textColor,
                     fontFamily: 'FunnelSans',

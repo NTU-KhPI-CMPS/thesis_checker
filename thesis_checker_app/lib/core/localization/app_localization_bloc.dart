@@ -8,12 +8,11 @@ part 'app_localization_event.dart';
 part 'app_localization_state.dart';
 
 /// Bloc that manages the app's localization state.
-class AppLocalizationBloc
-    extends Bloc<AppLocalizationEvent, AppLocalizationState> {
+class AppLocalizationBloc extends Bloc<AppLocalizationEvent, AppLocalizationState> {
   final ApplicationPreferencesRepository _appPreferences;
 
-  AppLocalizationBloc(this._appPreferences)
-    : super(const AppLocalizationState()) {
+  AppLocalizationBloc({required this._appPreferences})
+    : super(AppLocalizationState(localization: _appPreferences.getApplicationLocalization())) {
     on<ChangeAppLocalizationEvent>(_onChangeAppLocalization);
     on<GetAppLocalizationEvent>(_onGetAppLocalization);
   }

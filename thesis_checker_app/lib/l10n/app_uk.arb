@@ -404,6 +404,10 @@
   },
 
   "@@comment_error_values": "ЗНАЧЕННЯ ПОМИЛОК - Локалізовані значення \"found\" / \"expected\"",
+  "valueDefaultFont": "Шрифт за замовчуванням",
+  "@valueDefaultFont": {
+    "description": "Значення шрифту: за замовчуванням"
+  },
 
   "valueAlignmentLeft": "По лівому краю",
   "@valueAlignmentLeft": {

@@ -404,6 +404,10 @@
   },
 
   "@@comment_error_values": "ERROR VALUES - Localized \"found\" / \"expected\" values",
+  "valueDefaultFont": "Default font",
+  "@valueDefaultFont": {
+    "description": "Font value: default"
+  },
 
   "valueAlignmentLeft": "Left",
   "@valueAlignmentLeft": {

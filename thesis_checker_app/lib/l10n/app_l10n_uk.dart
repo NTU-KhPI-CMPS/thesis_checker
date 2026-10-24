@@ -309,6 +309,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get err000 => 'Помилка відкриття файлу';
 
   @override
+  String get valueDefaultFont => 'Шрифт за замовчуванням';
+
+  @override
   String get valueAlignmentLeft => 'По лівому краю';
 
   @override

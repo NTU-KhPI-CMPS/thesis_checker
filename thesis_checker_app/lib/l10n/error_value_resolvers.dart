@@ -3,6 +3,9 @@ import 'package:thesis_checker/l10n/l10n.dart';
 
 /// Maps raw `found` / `expected` values from the Java checker to localized resolvers.
 final Map<String, MessageResolver> errorValueResolvers = {
+  // Font
+  'Шрифт за замовчуванням': (l) => l.valueDefaultFont,
+
   // Alignment
   'LEFT': (l) => l.valueAlignmentLeft,
   'По лівому краю': (l) => l.valueAlignmentLeft,

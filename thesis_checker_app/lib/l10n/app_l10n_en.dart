@@ -298,6 +298,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get err000 => 'File open error';
 
   @override
+  String get valueDefaultFont => 'Default font';
+
+  @override
   String get valueAlignmentLeft => 'Left';
 
   @override

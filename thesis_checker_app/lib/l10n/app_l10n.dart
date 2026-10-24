@@ -602,6 +602,12 @@ abstract class AppLocalizations {
   /// **'File open error'**
   String get err000;
 
+  /// Font value: default
+  ///
+  /// In en, this message translates to:
+  /// **'Default font'**
+  String get valueDefaultFont;
+
   /// Alignment value: left
   ///
   /// In en, this message translates to:
