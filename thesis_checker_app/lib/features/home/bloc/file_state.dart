@@ -30,12 +30,12 @@ final class FileUploadedState extends FileState {
 
 /// State emitted when file validation fails.
 final class FileUploadErrorState extends FileState {
-  final String error;
+  final String extension;
   final DateTime _timestamp;
 
-  FileUploadErrorState({required this.error})
+  FileUploadErrorState({required this.extension})
     : _timestamp = DateTime.now();
 
   @override
-  List<Object> get props => [error, _timestamp];
+  List<Object> get props => [extension, _timestamp];
 }

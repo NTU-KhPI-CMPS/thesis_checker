@@ -22,7 +22,7 @@ class FileBloc extends Bloc<FileEvent, FileState> {
         selectedChecks: e.selectedChecks,
       ));
     } else {
-      emit(FileUploadErrorState(error: 'Файл з розширенням $fileExtension не підтримується'));
+      emit(FileUploadErrorState(extension: fileExtension));
     }
   }
 }

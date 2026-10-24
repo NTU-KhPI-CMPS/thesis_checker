@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:thesis_checker/core/errors/analysis_exception.dart';
 import 'package:thesis_checker/features/home/bloc/file_bloc.dart';
 import 'package:thesis_checker/features/loading_analysis/bloc/analysis_bloc.dart';
 import 'package:thesis_checker/features/loading_analysis/widgets/dual_ring_indicator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:thesis_checker/l10n/l10n.dart';
 
 /// Displays the analysis progress with animated loading indicator and progress bar.
 class LoadingAnalysisView extends StatefulWidget {
@@ -13,7 +15,7 @@ class LoadingAnalysisView extends StatefulWidget {
   });
 
   final VoidCallback? onAnalysisComplete;
-  final ValueChanged<String>? onAnalysisFailed;
+  final ValueChanged<AnalysisErrorType>? onAnalysisFailed;
 
   @override
   State<LoadingAnalysisView> createState() => _LoadingAnalysisViewState();
@@ -61,6 +63,8 @@ class _LoadingAnalysisViewState extends State<LoadingAnalysisView> with SingleTi
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     final textColor = Theme.of(context).textTheme.bodyLarge?.color;
     final progressBarBgColor = Theme.of(context).dividerColor;
     final prograssBarValueColor = Theme.of(context).colorScheme.primary;
@@ -75,7 +79,7 @@ class _LoadingAnalysisViewState extends State<LoadingAnalysisView> with SingleTi
 
         if (state is AnalysisFailureState) {
           await _completeAnimation();
-          widget.onAnalysisFailed?.call(state.error);
+          widget.onAnalysisFailed?.call(state.type);
         }
       },
       child: BlocBuilder<FileBloc, FileState>(
@@ -83,7 +87,7 @@ class _LoadingAnalysisViewState extends State<LoadingAnalysisView> with SingleTi
           if (state is! FileUploadedState) {
             return Center(
               child: Text(
-                'Завантажте, будь ласка, документ для аналізу',
+                l10n.loadingNoFile,
                 style: TextStyle(
                   color: textColor,
                   fontFamily: 'FunnelSans',
@@ -103,7 +107,7 @@ class _LoadingAnalysisViewState extends State<LoadingAnalysisView> with SingleTi
                   DualRingIndicator(),
                   SizedBox(height: 24.0),
                   Text(
-                    'Аналізую документ...',
+                    l10n.loadingAnalyzing,
                     style: TextStyle(
                       color: textColor,
                       fontFamily: 'FunnelSans',

@@ -73,6 +73,21 @@
     }
   },
 
+  "errorCount": "{count, plural, one{{count} помилка} few{{count} помилки} many{{count} помилок} other{{count} помилки}}",
+  "@errorCount": {
+    "description": "Кількість помилок з правильним закінченням",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "warningCount": "{count, plural, one{{count} попередження} few{{count} попередження} many{{count} попереджень} other{{count} попередження}}",
+  "@warningCount": {
+    "description": "Кількість попереджень з правильним закінченням",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
   "@@comment_error_details": "Фрагменти для вказання відсутності або присутності помилки",
   "errorFragmentMissing": "Фрагмент тексту відсутній.",
   "@errorFragmentMissing": {
@@ -386,5 +401,183 @@
   "err000": "Помилка відкриття файлу",
   "@err000": {
     "description": "Помилка, коли файл не вдається відкрити"
+  },
+
+  "@@comment_error_values": "ЗНАЧЕННЯ ПОМИЛОК - Локалізовані значення \"found\" / \"expected\"",
+  "valueDefaultFont": "Шрифт за замовчуванням",
+  "@valueDefaultFont": {
+    "description": "Значення шрифту: за замовчуванням"
+  },
+
+  "valueAlignmentLeft": "По лівому краю",
+  "@valueAlignmentLeft": {
+    "description": "Значення вирівнювання: по лівому краю"
+  },
+  "valueAlignmentRight": "По правому краю",
+  "@valueAlignmentRight": {
+    "description": "Значення вирівнювання: по правому краю"
+  },
+  "valueAlignmentCenter": "По центру",
+  "@valueAlignmentCenter": {
+    "description": "Значення вирівнювання: по центру"
+  },
+  "valueAlignmentBoth": "По ширині",
+  "@valueAlignmentBoth": {
+    "description": "Значення вирівнювання: по ширині"
+  },
+  "valueAlignmentDistribute": "Розподілено",
+  "@valueAlignmentDistribute": {
+    "description": "Значення вирівнювання: розподілено"
+  },
+  "valueAlignmentBothOrRight": "По ширині або правому краю",
+  "@valueAlignmentBothOrRight": {
+    "description": "Допустиме вирівнювання формул: по ширині або правому краю"
+  },
+
+  "valueListFormatDecimal": "арабські цифри",
+  "@valueListFormatDecimal": {
+    "description": "Формат нумерації списку: арабські цифри"
+  },
+  "valueListFormatLowerLetter": "літери (нижній регістр)",
+  "@valueListFormatLowerLetter": {
+    "description": "Формат нумерації списку: літери нижнього регістру"
+  },
+  "valueListFormatUpperLetter": "літери (верхній регістр)",
+  "@valueListFormatUpperLetter": {
+    "description": "Формат нумерації списку: літери верхнього регістру"
+  },
+  "valueListFormatLowerRoman": "римські числа (нижній регістр)",
+  "@valueListFormatLowerRoman": {
+    "description": "Формат нумерації списку: римські числа нижнього регістру"
+  },
+  "valueListFormatUpperRoman": "римські числа (верхній регістр)",
+  "@valueListFormatUpperRoman": {
+    "description": "Формат нумерації списку: римські числа верхнього регістру"
+  },
+  "valueListFormatBullet": "позначка (маркер)",
+  "@valueListFormatBullet": {
+    "description": "Формат нумерації списку: позначка (маркер)"
+  },
+  "valueListFormatOther": "інший формат",
+  "@valueListFormatOther": {
+    "description": "Формат нумерації списку: інший формат"
+  },
+  "valueListConsistent": "Однаковий формат",
+  "@valueListConsistent": {
+    "description": "Очікуване значення: один формат нумерації на рівні списку"
+  },
+
+  "valueFigureNoBlankBefore": "немає пустого рядка перед",
+  "@valueFigureNoBlankBefore": {
+    "description": "Знайдене значення: немає пустого рядка перед рисунком"
+  },
+  "valueFigureNoBlankAfter": "немає пустого рядка після",
+  "@valueFigureNoBlankAfter": {
+    "description": "Знайдене значення: немає пустого рядка після підпису"
+  },
+  "valueFigureOneBlankLine": "один пустий рядок",
+  "@valueFigureOneBlankLine": {
+    "description": "Очікуване значення: один пустий рядок"
+  },
+  "valueFigureCaptionParagraph": "Параграф з підписом «Рисунок»",
+  "@valueFigureCaptionParagraph": {
+    "description": "Очікуване значення: параграф з підписом рисунка"
+  },
+  "valueFigureCaptionMissing": "відсутній",
+  "@valueFigureCaptionMissing": {
+    "description": "Знайдене значення: підпис рисунка відсутній"
+  },
+  "valueFigureNoDrawing": "Відсутність креслення",
+  "@valueFigureNoDrawing": {
+    "description": "Очікуване значення: у підписі немає креслення"
+  },
+  "valueFigureDrawingPresent": "Креслення присутнє",
+  "@valueFigureDrawingPresent": {
+    "description": "Знайдене значення: у підписі присутнє креслення"
+  },
+  "valueFigureCaptionFormat": "«Рисунок <номер> - <назва>»",
+  "@valueFigureCaptionFormat": {
+    "description": "Очікуваний формат підпису рисунка"
+  },
+
+  "valueFormulaInsertViaTool": "Формула має бути вставлена через Вставлення → Формула",
+  "@valueFormulaInsertViaTool": {
+    "description": "Очікуване значення: використати інструмент «Формула» у Word"
+  },
+  "valueFormulaOnePerLine": "1 формула в рядку",
+  "@valueFormulaOnePerLine": {
+    "description": "Очікуване значення: одна формула в рядку"
+  },
+  "valueFormulaBlankLineBefore": "Порожній рядок перед формулою",
+  "@valueFormulaBlankLineBefore": {
+    "description": "Очікуване значення: порожній рядок перед формулою"
+  },
+  "valueFormulaBlankLineAfter": "Порожній рядок після формули",
+  "@valueFormulaBlankLineAfter": {
+    "description": "Очікуване значення: порожній рядок після формули"
+  },
+  "valueFormulaNotationDirectlyBelow": "Пояснення «де» безпосередньо під формулою (без відступу)",
+  "@valueFormulaNotationDirectlyBelow": {
+    "description": "Очікуване значення: пояснення починається безпосередньо під формулою"
+  },
+  "valueFormulaBlankLineAfterNotation": "Порожній рядок після блоку пояснень",
+  "@valueFormulaBlankLineAfterNotation": {
+    "description": "Очікуване значення: порожній рядок після блоку пояснень"
+  },
+  "valueDocumentStart": "Початок документу",
+  "@valueDocumentStart": {
+    "description": "Знайдене значення: формула стоїть на початку документа"
+  },
+  "valuePlaceholderFormula": "[Формула]",
+  "@valuePlaceholderFormula": {
+    "description": "Заповнювач для параграфа з формулою"
+  },
+  "valuePlaceholderBlankLine": "[Порожній рядок]",
+  "@valuePlaceholderBlankLine": {
+    "description": "Заповнювач для порожнього параграфа"
+  },
+
+  "valueStructuralPageBreakBefore": "Розрив сторінки перед елементом",
+  "@valueStructuralPageBreakBefore": {
+    "description": "Очікуване значення: структурний елемент починається з нової сторінки"
+  },
+  "valueStructuralAbstract": "РЕФЕРАТ",
+  "@valueStructuralAbstract": {
+    "description": "Назва структурного елемента: реферат"
+  },
+  "valueStructuralContents": "ЗМІСТ",
+  "@valueStructuralContents": {
+    "description": "Назва структурного елемента: зміст"
+  },
+  "valueStructuralAbbreviations": "ПЕРЕЛІК ПОЗНАК ТА СКОРОЧЕНЬ",
+  "@valueStructuralAbbreviations": {
+    "description": "Назва структурного елемента: перелік познак та скорочень"
+  },
+  "valueStructuralIntroduction": "ВСТУП",
+  "@valueStructuralIntroduction": {
+    "description": "Назва структурного елемента: вступ"
+  },
+  "valueStructuralConclusions": "ВИСНОВКИ",
+  "@valueStructuralConclusions": {
+    "description": "Назва структурного елемента: висновки"
+  },
+  "valueStructuralReferences": "СПИСОК ДЖЕРЕЛ ІНФОРМАЦІЇ",
+  "@valueStructuralReferences": {
+    "description": "Назва структурного елемента: список джерел інформації"
+  },
+  "valueStructuralAppendix": "ДОДАТОК",
+  "@valueStructuralAppendix": {
+    "description": "Назва структурного елемента: додаток"
+  },
+
+  "valueCentimeters": "{value} см",
+  "@valueCentimeters": {
+    "description": "Довжина в сантиметрах",
+    "placeholders": {
+      "value": {
+        "type": "String",
+        "description": "Числове значення довжини"
+      }
+    }
   }
 }

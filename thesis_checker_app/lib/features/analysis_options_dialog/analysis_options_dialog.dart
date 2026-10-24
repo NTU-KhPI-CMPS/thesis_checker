@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thesis_checker/core/constants/app_colors.dart';
 import 'package:thesis_checker/core/constants/available_check_types.dart';
+import 'package:thesis_checker/core/extensions/check_type_localization_x.dart';
+import 'package:thesis_checker/l10n/l10n.dart';
 import 'package:thesis_checker/models/check_type_info.dart';
 import 'package:thesis_checker/features/analysis_options_dialog/widgets/clickable_option_card.dart';
 import 'package:thesis_checker/features/home/widgets/custom_animated_button.dart';
@@ -66,6 +68,8 @@ class _AnalysisOptionsDialogState extends State<AnalysisOptionsDialog> with Sing
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     final accentColor = Theme.of(context).primaryColor;
     final backgroundColor = Theme.of(context).canvasColor;
     final borderColor = Theme.of(context).inputDecorationTheme.border?.borderSide.color;
@@ -145,7 +149,7 @@ class _AnalysisOptionsDialogState extends State<AnalysisOptionsDialog> with Sing
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Налаштування перевірки',
+                            l10n.dialogSettingsTitle,
                             style: TextStyle(
                               fontSize: 18.0,
                               fontWeight: FontWeight.w600,
@@ -201,7 +205,7 @@ class _AnalysisOptionsDialogState extends State<AnalysisOptionsDialog> with Sing
                       ),
                       SizedBox(height: 12.0),
                       Text(
-                        'Оберіть що перевіряти'.toUpperCase(),
+                        l10n.dialogChooseChecks.toUpperCase(),
                         style: TextStyle(
                             fontFamily: 'FunnelSans',
                             fontSize: 13.0,
@@ -235,7 +239,7 @@ class _AnalysisOptionsDialogState extends State<AnalysisOptionsDialog> with Sing
                                     height: 24.0,
                                   ),
                                   Text(
-                                    option.title,
+                                    option.localizedTitle(context),
                                     maxLines: 1,
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,
@@ -248,7 +252,7 @@ class _AnalysisOptionsDialogState extends State<AnalysisOptionsDialog> with Sing
                                   ),
                                   Expanded(
                                     child: Text(
-                                      option.description,
+                                      option.localizedDescription(context),
                                       maxLines: 2,
                                       softWrap: true,
                                       style: TextStyle(
@@ -285,7 +289,7 @@ class _AnalysisOptionsDialogState extends State<AnalysisOptionsDialog> with Sing
                           SizedBox(width: 10.0),
                           Expanded(
                             child: Text(
-                              'Можна обрати декілька перевірок одночасно',
+                              l10n.dialogChooseChecksHint,
                               softWrap: true,
                               style: TextStyle(
                                 fontSize: 12.0,
@@ -303,7 +307,7 @@ class _AnalysisOptionsDialogState extends State<AnalysisOptionsDialog> with Sing
                           borderColor: errorContainerColor!,
                           textColor: errorTextColor!,
                           imageAsset: 'assets/images/warning.png',
-                          infoText: 'Оберіть хоча б одну перевірку'
+                          infoText: l10n.dialogChooseOneError
                         ),
                         SizedBox(height: 15.0),
                       ],
@@ -332,7 +336,7 @@ class _AnalysisOptionsDialogState extends State<AnalysisOptionsDialog> with Sing
                                   ),
                                   child: Center(
                                     child: Text(
-                                      'Скасувати',
+                                      l10n.dialogCancel,
                                       style: TextStyle(
                                         fontSize: 14.0,
                                         fontWeight: FontWeight.w600,
@@ -350,7 +354,7 @@ class _AnalysisOptionsDialogState extends State<AnalysisOptionsDialog> with Sing
                           const SizedBox(width: 12.0),
                           Expanded(
                             child: CustomAnimatedButton(
-                              text: '▶ Почати аналіз',
+                              text: l10n.dialogStartAnalysis,
                               buttonIsHovered: _startButtonIsHovered,
                               accentColor: accentColor,
                               onTap: () {

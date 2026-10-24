@@ -57,6 +57,28 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String errorCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count errors',
+      one: '$count error',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String warningCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count warnings',
+      one: '$count warning',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get errorFragmentMissing => 'Text fragment is missing.';
 
   @override
@@ -274,4 +296,135 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get err000 => 'File open error';
+
+  @override
+  String get valueDefaultFont => 'Default font';
+
+  @override
+  String get valueAlignmentLeft => 'Left';
+
+  @override
+  String get valueAlignmentRight => 'Right';
+
+  @override
+  String get valueAlignmentCenter => 'Centered';
+
+  @override
+  String get valueAlignmentBoth => 'Justified';
+
+  @override
+  String get valueAlignmentDistribute => 'Distributed';
+
+  @override
+  String get valueAlignmentBothOrRight => 'Justified or right';
+
+  @override
+  String get valueListFormatDecimal => 'Arabic numerals';
+
+  @override
+  String get valueListFormatLowerLetter => 'Letters (lowercase)';
+
+  @override
+  String get valueListFormatUpperLetter => 'Letters (uppercase)';
+
+  @override
+  String get valueListFormatLowerRoman => 'Roman numerals (lowercase)';
+
+  @override
+  String get valueListFormatUpperRoman => 'Roman numerals (uppercase)';
+
+  @override
+  String get valueListFormatBullet => 'Marker (bullet)';
+
+  @override
+  String get valueListFormatOther => 'Other format';
+
+  @override
+  String get valueListConsistent => 'Consistent format';
+
+  @override
+  String get valueFigureNoBlankBefore => 'no blank line before';
+
+  @override
+  String get valueFigureNoBlankAfter => 'no blank line after';
+
+  @override
+  String get valueFigureOneBlankLine => 'one blank line';
+
+  @override
+  String get valueFigureCaptionParagraph =>
+      'Paragraph with the «Figure» caption';
+
+  @override
+  String get valueFigureCaptionMissing => 'missing';
+
+  @override
+  String get valueFigureNoDrawing => 'No drawing';
+
+  @override
+  String get valueFigureDrawingPresent => 'Drawing present';
+
+  @override
+  String get valueFigureCaptionFormat => '«Figure <number> - <title>»';
+
+  @override
+  String get valueFormulaInsertViaTool =>
+      'The formula must be inserted via Insert → Formula';
+
+  @override
+  String get valueFormulaOnePerLine => '1 formula per line';
+
+  @override
+  String get valueFormulaBlankLineBefore => 'Blank line before the formula';
+
+  @override
+  String get valueFormulaBlankLineAfter => 'Blank line after the formula';
+
+  @override
+  String get valueFormulaNotationDirectlyBelow =>
+      'The «де» («where») explanation directly below the formula, without a blank line';
+
+  @override
+  String get valueFormulaBlankLineAfterNotation =>
+      'Blank line after the explanation block';
+
+  @override
+  String get valueDocumentStart => 'Start of document';
+
+  @override
+  String get valuePlaceholderFormula => '[Formula]';
+
+  @override
+  String get valuePlaceholderBlankLine => '[Blank line]';
+
+  @override
+  String get valueStructuralPageBreakBefore => 'Page break before the element';
+
+  @override
+  String get valueStructuralAbstract => 'ABSTRACT (РЕФЕРАТ)';
+
+  @override
+  String get valueStructuralContents => 'TABLE OF CONTENTS (ЗМІСТ)';
+
+  @override
+  String get valueStructuralAbbreviations =>
+      'LIST OF SYMBOLS AND ABBREVIATIONS (ПЕРЕЛІК ПОЗНАК ТА СКОРОЧЕНЬ)';
+
+  @override
+  String get valueStructuralIntroduction => 'INTRODUCTION (ВСТУП)';
+
+  @override
+  String get valueStructuralConclusions => 'CONCLUSIONS (ВИСНОВКИ)';
+
+  @override
+  String get valueStructuralReferences =>
+      'REFERENCES (СПИСОК ДЖЕРЕЛ ІНФОРМАЦІЇ)';
+
+  @override
+  String get valueStructuralAppendix => 'APPENDIX (ДОДАТОК)';
+
+  @override
+  String valueCentimeters(String value) {
+    return '$value cm';
+  }
 }

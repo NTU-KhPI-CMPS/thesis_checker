@@ -188,6 +188,18 @@ abstract class AppLocalizations {
   /// **'No errors found for category \"{category}\".'**
   String resultNoErrorsForCategory(String category);
 
+  /// Number of errors with correct plural form
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{{count} error} other{{count} errors}}'**
+  String errorCount(int count);
+
+  /// Number of warnings with correct plural form
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{{count} warning} other{{count} warnings}}'**
+  String warningCount(int count);
+
   /// Message shown when a text fragment is missing in error
   ///
   /// In en, this message translates to:
@@ -589,6 +601,252 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'File open error'**
   String get err000;
+
+  /// Font value: default
+  ///
+  /// In en, this message translates to:
+  /// **'Default font'**
+  String get valueDefaultFont;
+
+  /// Alignment value: left
+  ///
+  /// In en, this message translates to:
+  /// **'Left'**
+  String get valueAlignmentLeft;
+
+  /// Alignment value: right
+  ///
+  /// In en, this message translates to:
+  /// **'Right'**
+  String get valueAlignmentRight;
+
+  /// Alignment value: centered
+  ///
+  /// In en, this message translates to:
+  /// **'Centered'**
+  String get valueAlignmentCenter;
+
+  /// Alignment value: justified
+  ///
+  /// In en, this message translates to:
+  /// **'Justified'**
+  String get valueAlignmentBoth;
+
+  /// Alignment value: distributed
+  ///
+  /// In en, this message translates to:
+  /// **'Distributed'**
+  String get valueAlignmentDistribute;
+
+  /// Allowed alignment for formulas: justified or right
+  ///
+  /// In en, this message translates to:
+  /// **'Justified or right'**
+  String get valueAlignmentBothOrRight;
+
+  /// List numbering format: arabic numerals
+  ///
+  /// In en, this message translates to:
+  /// **'Arabic numerals'**
+  String get valueListFormatDecimal;
+
+  /// List numbering format: lowercase letters
+  ///
+  /// In en, this message translates to:
+  /// **'Letters (lowercase)'**
+  String get valueListFormatLowerLetter;
+
+  /// List numbering format: uppercase letters
+  ///
+  /// In en, this message translates to:
+  /// **'Letters (uppercase)'**
+  String get valueListFormatUpperLetter;
+
+  /// List numbering format: lowercase roman numerals
+  ///
+  /// In en, this message translates to:
+  /// **'Roman numerals (lowercase)'**
+  String get valueListFormatLowerRoman;
+
+  /// List numbering format: uppercase roman numerals
+  ///
+  /// In en, this message translates to:
+  /// **'Roman numerals (uppercase)'**
+  String get valueListFormatUpperRoman;
+
+  /// List numbering format: bullet marker
+  ///
+  /// In en, this message translates to:
+  /// **'Marker (bullet)'**
+  String get valueListFormatBullet;
+
+  /// List numbering format: other
+  ///
+  /// In en, this message translates to:
+  /// **'Other format'**
+  String get valueListFormatOther;
+
+  /// Expected value: one numbering format per list level
+  ///
+  /// In en, this message translates to:
+  /// **'Consistent format'**
+  String get valueListConsistent;
+
+  /// Found value: blank line before a figure is missing
+  ///
+  /// In en, this message translates to:
+  /// **'no blank line before'**
+  String get valueFigureNoBlankBefore;
+
+  /// Found value: blank line after a figure caption is missing
+  ///
+  /// In en, this message translates to:
+  /// **'no blank line after'**
+  String get valueFigureNoBlankAfter;
+
+  /// Expected value: exactly one blank line
+  ///
+  /// In en, this message translates to:
+  /// **'one blank line'**
+  String get valueFigureOneBlankLine;
+
+  /// Expected value: a paragraph with the figure caption
+  ///
+  /// In en, this message translates to:
+  /// **'Paragraph with the «Figure» caption'**
+  String get valueFigureCaptionParagraph;
+
+  /// Found value: figure caption is missing
+  ///
+  /// In en, this message translates to:
+  /// **'missing'**
+  String get valueFigureCaptionMissing;
+
+  /// Expected value: no drawing inside the caption
+  ///
+  /// In en, this message translates to:
+  /// **'No drawing'**
+  String get valueFigureNoDrawing;
+
+  /// Found value: a drawing is present inside the caption
+  ///
+  /// In en, this message translates to:
+  /// **'Drawing present'**
+  String get valueFigureDrawingPresent;
+
+  /// Expected figure caption format
+  ///
+  /// In en, this message translates to:
+  /// **'«Figure <number> - <title>»'**
+  String get valueFigureCaptionFormat;
+
+  /// Expected value: use the Word formula tool
+  ///
+  /// In en, this message translates to:
+  /// **'The formula must be inserted via Insert → Formula'**
+  String get valueFormulaInsertViaTool;
+
+  /// Expected value: one formula per line
+  ///
+  /// In en, this message translates to:
+  /// **'1 formula per line'**
+  String get valueFormulaOnePerLine;
+
+  /// Expected value: blank line before a formula
+  ///
+  /// In en, this message translates to:
+  /// **'Blank line before the formula'**
+  String get valueFormulaBlankLineBefore;
+
+  /// Expected value: blank line after a formula
+  ///
+  /// In en, this message translates to:
+  /// **'Blank line after the formula'**
+  String get valueFormulaBlankLineAfter;
+
+  /// Expected value: explanation starts right below the formula
+  ///
+  /// In en, this message translates to:
+  /// **'The «де» («where») explanation directly below the formula, without a blank line'**
+  String get valueFormulaNotationDirectlyBelow;
+
+  /// Expected value: blank line after the formula explanation block
+  ///
+  /// In en, this message translates to:
+  /// **'Blank line after the explanation block'**
+  String get valueFormulaBlankLineAfterNotation;
+
+  /// Found value: the formula is the first paragraph of the document
+  ///
+  /// In en, this message translates to:
+  /// **'Start of document'**
+  String get valueDocumentStart;
+
+  /// Placeholder for a paragraph that contains a formula
+  ///
+  /// In en, this message translates to:
+  /// **'[Formula]'**
+  String get valuePlaceholderFormula;
+
+  /// Placeholder for an empty paragraph
+  ///
+  /// In en, this message translates to:
+  /// **'[Blank line]'**
+  String get valuePlaceholderBlankLine;
+
+  /// Expected value: structural element starts on a new page
+  ///
+  /// In en, this message translates to:
+  /// **'Page break before the element'**
+  String get valueStructuralPageBreakBefore;
+
+  /// Structural element title: abstract
+  ///
+  /// In en, this message translates to:
+  /// **'ABSTRACT (РЕФЕРАТ)'**
+  String get valueStructuralAbstract;
+
+  /// Structural element title: table of contents
+  ///
+  /// In en, this message translates to:
+  /// **'TABLE OF CONTENTS (ЗМІСТ)'**
+  String get valueStructuralContents;
+
+  /// Structural element title: list of symbols and abbreviations
+  ///
+  /// In en, this message translates to:
+  /// **'LIST OF SYMBOLS AND ABBREVIATIONS (ПЕРЕЛІК ПОЗНАК ТА СКОРОЧЕНЬ)'**
+  String get valueStructuralAbbreviations;
+
+  /// Structural element title: introduction
+  ///
+  /// In en, this message translates to:
+  /// **'INTRODUCTION (ВСТУП)'**
+  String get valueStructuralIntroduction;
+
+  /// Structural element title: conclusions
+  ///
+  /// In en, this message translates to:
+  /// **'CONCLUSIONS (ВИСНОВКИ)'**
+  String get valueStructuralConclusions;
+
+  /// Structural element title: list of references
+  ///
+  /// In en, this message translates to:
+  /// **'REFERENCES (СПИСОК ДЖЕРЕЛ ІНФОРМАЦІЇ)'**
+  String get valueStructuralReferences;
+
+  /// Structural element title: appendix
+  ///
+  /// In en, this message translates to:
+  /// **'APPENDIX (ДОДАТОК)'**
+  String get valueStructuralAppendix;
+
+  /// Length in centimeters
+  ///
+  /// In en, this message translates to:
+  /// **'{value} cm'**
+  String valueCentimeters(String value);
 }
 
 class _AppLocalizationsDelegate

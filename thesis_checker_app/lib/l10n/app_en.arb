@@ -73,6 +73,21 @@
     }
   },
 
+  "errorCount": "{count, plural, one{{count} error} other{{count} errors}}",
+  "@errorCount": {
+    "description": "Number of errors with correct plural form",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "warningCount": "{count, plural, one{{count} warning} other{{count} warnings}}",
+  "@warningCount": {
+    "description": "Number of warnings with correct plural form",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
   "@@comment_error_details": "Fragments indicating absence or presence of an error",
   "errorFragmentMissing": "Text fragment is missing.",
   "@errorFragmentMissing": {
@@ -386,5 +401,183 @@
   "err000": "File open error",
   "@err000": {
     "description": "Error shown when the file cannot be opened"
+  },
+
+  "@@comment_error_values": "ERROR VALUES - Localized \"found\" / \"expected\" values",
+  "valueDefaultFont": "Default font",
+  "@valueDefaultFont": {
+    "description": "Font value: default"
+  },
+
+  "valueAlignmentLeft": "Left",
+  "@valueAlignmentLeft": {
+    "description": "Alignment value: left"
+  },
+  "valueAlignmentRight": "Right",
+  "@valueAlignmentRight": {
+    "description": "Alignment value: right"
+  },
+  "valueAlignmentCenter": "Centered",
+  "@valueAlignmentCenter": {
+    "description": "Alignment value: centered"
+  },
+  "valueAlignmentBoth": "Justified",
+  "@valueAlignmentBoth": {
+    "description": "Alignment value: justified"
+  },
+  "valueAlignmentDistribute": "Distributed",
+  "@valueAlignmentDistribute": {
+    "description": "Alignment value: distributed"
+  },
+  "valueAlignmentBothOrRight": "Justified or right",
+  "@valueAlignmentBothOrRight": {
+    "description": "Allowed alignment for formulas: justified or right"
+  },
+
+  "valueListFormatDecimal": "Arabic numerals",
+  "@valueListFormatDecimal": {
+    "description": "List numbering format: arabic numerals"
+  },
+  "valueListFormatLowerLetter": "Letters (lowercase)",
+  "@valueListFormatLowerLetter": {
+    "description": "List numbering format: lowercase letters"
+  },
+  "valueListFormatUpperLetter": "Letters (uppercase)",
+  "@valueListFormatUpperLetter": {
+    "description": "List numbering format: uppercase letters"
+  },
+  "valueListFormatLowerRoman": "Roman numerals (lowercase)",
+  "@valueListFormatLowerRoman": {
+    "description": "List numbering format: lowercase roman numerals"
+  },
+  "valueListFormatUpperRoman": "Roman numerals (uppercase)",
+  "@valueListFormatUpperRoman": {
+    "description": "List numbering format: uppercase roman numerals"
+  },
+  "valueListFormatBullet": "Marker (bullet)",
+  "@valueListFormatBullet": {
+    "description": "List numbering format: bullet marker"
+  },
+  "valueListFormatOther": "Other format",
+  "@valueListFormatOther": {
+    "description": "List numbering format: other"
+  },
+  "valueListConsistent": "Consistent format",
+  "@valueListConsistent": {
+    "description": "Expected value: one numbering format per list level"
+  },
+
+  "valueFigureNoBlankBefore": "no blank line before",
+  "@valueFigureNoBlankBefore": {
+    "description": "Found value: blank line before a figure is missing"
+  },
+  "valueFigureNoBlankAfter": "no blank line after",
+  "@valueFigureNoBlankAfter": {
+    "description": "Found value: blank line after a figure caption is missing"
+  },
+  "valueFigureOneBlankLine": "one blank line",
+  "@valueFigureOneBlankLine": {
+    "description": "Expected value: exactly one blank line"
+  },
+  "valueFigureCaptionParagraph": "Paragraph with the «Figure» caption",
+  "@valueFigureCaptionParagraph": {
+    "description": "Expected value: a paragraph with the figure caption"
+  },
+  "valueFigureCaptionMissing": "missing",
+  "@valueFigureCaptionMissing": {
+    "description": "Found value: figure caption is missing"
+  },
+  "valueFigureNoDrawing": "No drawing",
+  "@valueFigureNoDrawing": {
+    "description": "Expected value: no drawing inside the caption"
+  },
+  "valueFigureDrawingPresent": "Drawing present",
+  "@valueFigureDrawingPresent": {
+    "description": "Found value: a drawing is present inside the caption"
+  },
+  "valueFigureCaptionFormat": "«Figure <number> - <title>»",
+  "@valueFigureCaptionFormat": {
+    "description": "Expected figure caption format"
+  },
+
+  "valueFormulaInsertViaTool": "The formula must be inserted via Insert → Formula",
+  "@valueFormulaInsertViaTool": {
+    "description": "Expected value: use the Word formula tool"
+  },
+  "valueFormulaOnePerLine": "1 formula per line",
+  "@valueFormulaOnePerLine": {
+    "description": "Expected value: one formula per line"
+  },
+  "valueFormulaBlankLineBefore": "Blank line before the formula",
+  "@valueFormulaBlankLineBefore": {
+    "description": "Expected value: blank line before a formula"
+  },
+  "valueFormulaBlankLineAfter": "Blank line after the formula",
+  "@valueFormulaBlankLineAfter": {
+    "description": "Expected value: blank line after a formula"
+  },
+  "valueFormulaNotationDirectlyBelow": "The «де» («where») explanation directly below the formula, without a blank line",
+  "@valueFormulaNotationDirectlyBelow": {
+    "description": "Expected value: explanation starts right below the formula"
+  },
+  "valueFormulaBlankLineAfterNotation": "Blank line after the explanation block",
+  "@valueFormulaBlankLineAfterNotation": {
+    "description": "Expected value: blank line after the formula explanation block"
+  },
+  "valueDocumentStart": "Start of document",
+  "@valueDocumentStart": {
+    "description": "Found value: the formula is the first paragraph of the document"
+  },
+  "valuePlaceholderFormula": "[Formula]",
+  "@valuePlaceholderFormula": {
+    "description": "Placeholder for a paragraph that contains a formula"
+  },
+  "valuePlaceholderBlankLine": "[Blank line]",
+  "@valuePlaceholderBlankLine": {
+    "description": "Placeholder for an empty paragraph"
+  },
+
+  "valueStructuralPageBreakBefore": "Page break before the element",
+  "@valueStructuralPageBreakBefore": {
+    "description": "Expected value: structural element starts on a new page"
+  },
+  "valueStructuralAbstract": "ABSTRACT (РЕФЕРАТ)",
+  "@valueStructuralAbstract": {
+    "description": "Structural element title: abstract"
+  },
+  "valueStructuralContents": "TABLE OF CONTENTS (ЗМІСТ)",
+  "@valueStructuralContents": {
+    "description": "Structural element title: table of contents"
+  },
+  "valueStructuralAbbreviations": "LIST OF SYMBOLS AND ABBREVIATIONS (ПЕРЕЛІК ПОЗНАК ТА СКОРОЧЕНЬ)",
+  "@valueStructuralAbbreviations": {
+    "description": "Structural element title: list of symbols and abbreviations"
+  },
+  "valueStructuralIntroduction": "INTRODUCTION (ВСТУП)",
+  "@valueStructuralIntroduction": {
+    "description": "Structural element title: introduction"
+  },
+  "valueStructuralConclusions": "CONCLUSIONS (ВИСНОВКИ)",
+  "@valueStructuralConclusions": {
+    "description": "Structural element title: conclusions"
+  },
+  "valueStructuralReferences": "REFERENCES (СПИСОК ДЖЕРЕЛ ІНФОРМАЦІЇ)",
+  "@valueStructuralReferences": {
+    "description": "Structural element title: list of references"
+  },
+  "valueStructuralAppendix": "APPENDIX (ДОДАТОК)",
+  "@valueStructuralAppendix": {
+    "description": "Structural element title: appendix"
+  },
+
+  "valueCentimeters": "{value} cm",
+  "@valueCentimeters": {
+    "description": "Length in centimeters",
+    "placeholders": {
+      "value": {
+        "type": "String",
+        "description": "Length value"
+      }
+    }
   }
 }

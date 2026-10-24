@@ -1,6 +1,13 @@
 # Thesis Checker
 A project to automatically verify thesis formatting.
 
+## Project structure
+- [java-thesis-checker](java-thesis-checker/README.md) - Java module that checks `.docx` formatting
+- [thesis_checker_app](thesis_checker_app/README.md) - Flutter desktop app
+
+## Guides
+- [How to add a new check](docs/HOW_TO_ADD_CHECK.md)
+
 ## Development environment requirements
 - Flutter SDK 3.9.2
 - Java 25 ([GraalVM](https://www.graalvm.org/downloads/))

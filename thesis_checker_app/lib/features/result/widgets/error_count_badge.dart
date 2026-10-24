@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:thesis_checker/core/constants/app_colors.dart';
-import 'package:thesis_checker/core/utils/ukrainian_plural.dart';
+import 'package:thesis_checker/l10n/l10n.dart';
 
 /// Badge that displays error and warning counts with appropriate colors.
 class ErrorCountBadge extends StatelessWidget {
@@ -15,6 +15,8 @@ class ErrorCountBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     final isLightTheme = Theme.of(context).brightness == Brightness.light;
 
     // Error visuals
@@ -39,7 +41,7 @@ class ErrorCountBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Text(
-        UkrainePlural.formatErrorCount(errorCount),
+        l10n.errorCount(errorCount),
         style: TextStyle(
           fontSize: 11.0,
           fontWeight: FontWeight.w700,
@@ -49,7 +51,7 @@ class ErrorCountBadge extends StatelessWidget {
       ),
     );
 
-    final warnText = UkrainePlural.formatWarningCount(warnCount);
+    final warnText = l10n.warningCount(warnCount);
     final warnBadge = AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       curve: Curves.easeInOut,

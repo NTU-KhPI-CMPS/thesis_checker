@@ -19,10 +19,10 @@ final class AnalysisDoneState extends AnalysisState {}
 
 /// State emitted when analysis fails with an error message.
 final class AnalysisFailureState extends AnalysisState {
-  final String error;
+  final AnalysisErrorType type;
   
-  const AnalysisFailureState({required this.error});
+  const AnalysisFailureState({required this.type});
   
   @override
-  List<Object> get props => [error];
+  List<Object> get props => [type];
 }
