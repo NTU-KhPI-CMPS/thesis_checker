@@ -2,6 +2,8 @@ package com.cmps.thesischecker.utils;
 
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class ParagraphUtils {
@@ -47,5 +49,47 @@ public class ParagraphUtils {
 
         String trimmedText = ParagraphUtils.getTrimmedText(paragraph);
         return pattern.matcher(trimmedText).find();
+    }
+
+    /**
+     * Returns the text of the given paragraph if it is not blank.
+     * Otherwise, searches for the nearest non-blank paragraph in the provided
+     * list (looking at previous and next paragraphs) and returns its text.
+     * If no non-blank paragraph is found, returns an empty string.
+     *
+     * @param paragraph  the paragraph to get text from
+     * @param paragraphs the list of all paragraphs in document order
+     * @return the paragraph text, or nearest non-blank paragraph text, or empty string
+     */
+    public static String getNearestParagraphText(XWPFParagraph paragraph, List<XWPFParagraph> paragraphs) {
+        String text = getTrimmedText(paragraph);
+        if (!text.isEmpty()) {
+            return text;
+        }
+
+        int index = paragraphs.indexOf(paragraph);
+        if (index < 0) {
+            return "";
+        }
+
+        for (int offset = 1; offset < paragraphs.size(); offset++) {
+            int prevIdx = index - offset;
+            if (prevIdx >= 0) {
+                String prevText = getTrimmedText(paragraphs.get(prevIdx));
+                if (!prevText.isEmpty()) {
+                    return prevText;
+                }
+            }
+
+            int nextIdx = index + offset;
+            if (nextIdx < paragraphs.size()) {
+                String nextText = getTrimmedText(paragraphs.get(nextIdx));
+                if (!nextText.isEmpty()) {
+                    return nextText;
+                }
+            }
+        }
+
+        return "";
     }
 }
