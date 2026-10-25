@@ -4,6 +4,7 @@ import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.utils.AlignmentUtils;
 import com.cmps.thesischecker.utils.MainContentUtils;
+import com.cmps.thesischecker.utils.ParagraphUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
@@ -30,51 +31,53 @@ public class FigureChecker implements Checker {
             for (int i = 0; i < paragraphs.size(); i++) {
                 XWPFParagraph figureParagraph = paragraphs.get(i);
                 if (AlignmentUtils.hasDrawing(figureParagraph)) {
-                    String figureText = figureParagraph.getText().trim();
+                    String figureTextActual = ParagraphUtils.getTrimmedText(figureParagraph);
+                    String figureTextForError = ParagraphUtils.getNearestParagraphText(figureParagraph, paragraphs);
 
                     String alignment = AlignmentUtils.getAlignment(figureParagraph);
                     if (!alignment.equalsIgnoreCase("CENTER")) {
-                        errors.add(buildAlignmentError(figureText, alignment, "CENTER",
+                        errors.add(buildAlignmentError(figureTextForError, alignment, "CENTER",
                                 ErrorCategory.FIGURE,
                                 "Рисунок повинен бути вирівняним по центру"));
                     }
 
                     if (i == 0 || !isBlankParagraph(paragraphs.get(i - 1))) {
-                        errors.add(buildBlankLineError(figureText, true,
+                        errors.add(buildBlankLineError(figureTextForError, true,
                                 "Перед рисунком має бути один пустий рядок"));
                     }
 
-                    if (isValidCaption(figureText)) {
+                    if (isValidCaption(figureTextActual)) {
                         if (i + 1 >= paragraphs.size() || !isBlankParagraph(paragraphs.get(i + 1))) {
-                            errors.add(buildBlankLineError(figureText, false,
+                            errors.add(buildBlankLineError(figureTextForError, false,
                                     "Після підпису рисунка має бути один пустий рядок"));
                         }
                     } else {
                         if (i + 1 >= paragraphs.size()) {
-                            errors.add(buildMissingCaptionError(figureText,
+                            errors.add(buildMissingCaptionError(figureTextForError,
                                     "Після рисунку очікується підпис «Рисунок»"));
                         } else {
                             XWPFParagraph captionPara = paragraphs.get(i + 1);
-                            String captionText = captionPara.getText().trim();
+                            String captionTextActual = ParagraphUtils.getTrimmedText(captionPara);
+                            String captionTextForError = ParagraphUtils.getNearestParagraphText(captionPara, paragraphs);
 
                             if (AlignmentUtils.hasDrawing(captionPara)) {
-                                errors.add(buildUnexpectedFigureError(figureText,
+                                errors.add(buildUnexpectedFigureError(figureTextForError,
                                         "Параграф підпису не повинен містити креслення"));
                             } else {
                                 String captionAlignment = AlignmentUtils.getAlignment(captionPara);
                                 if (!captionAlignment.equalsIgnoreCase("CENTER")) {
-                                    errors.add(buildAlignmentError(captionText, captionAlignment, "CENTER",
+                                    errors.add(buildAlignmentError(captionTextForError, captionAlignment, "CENTER",
                                             ErrorCategory.FIGURE,
                                             "Підпис рисунка повинен бути вирівняним по центру"));
                                 }
 
-                                if (!isValidCaption(captionText)) {
-                                    errors.add(buildCaptionFormatError(captionText,
+                                if (!isValidCaption(captionTextActual)) {
+                                    errors.add(buildCaptionFormatError(captionTextForError,
                                             "Неправильний формат підпису рисунка. Очікується: «Рисунок <номер> - <назва>»"));
                                 }
 
                                 if (i + 2 >= paragraphs.size() || !isBlankParagraph(paragraphs.get(i + 2))) {
-                                    errors.add(buildBlankLineError(captionText, false,
+                                    errors.add(buildBlankLineError(captionTextForError, false,
                                             "Після підпису рисунка має бути один пустий рядок"));
                                 }
                             }
