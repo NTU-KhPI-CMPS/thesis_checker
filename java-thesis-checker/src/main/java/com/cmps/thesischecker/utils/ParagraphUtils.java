@@ -3,7 +3,6 @@ package com.cmps.thesischecker.utils;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class ParagraphUtils {
@@ -69,7 +68,7 @@ public class ParagraphUtils {
 
         int index = paragraphs.indexOf(paragraph);
         if (index < 0) {
-            return "";
+            return "ERROR: Cannot find nearest to image text. Index is < 0";
         }
 
         for (int offset = 1; offset < paragraphs.size(); offset++) {
@@ -90,6 +89,6 @@ public class ParagraphUtils {
             }
         }
 
-        return "";
+        return "There is no text in the document with the incorrectly formatted image.";
     }
 }

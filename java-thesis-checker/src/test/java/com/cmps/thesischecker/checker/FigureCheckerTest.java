@@ -103,4 +103,19 @@ public class FigureCheckerTest extends BaseTest {
         // THEN
         assertTrue(errors.isEmpty(), "Expected no errors in correct_figures.docx, but found: " + errors);
     }
+
+    @Test
+    void check_figureWithNoNearestText_returnsErrorMessageInParagraphText() {
+        // GIVEN
+        String testFile = "src/test/resources/figure_without_text.docx";
+
+        // WHEN
+        List<FormatError> errors = checker.check(testFile);
+
+        // THEN
+        boolean hasErrorMessage = errors.stream()
+                .anyMatch(e -> e.getParagraphText().contains("ERROR: Cannot find nearest to image text")
+                        || e.getParagraphText().contains("There is no text in the document with the incorrectly formatted image"));
+        assertTrue(hasErrorMessage, "Expected error message from ParagraphUtils in paragraph text, but got: " + errors);
+    }
 }

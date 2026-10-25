@@ -4,7 +4,6 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileInputStream;
@@ -35,7 +34,7 @@ class ParagraphUtilsTest {
     }
 
     @Test
-    void getNearestParagraphText_returnsOwnText_whenParagraphHasText() {
+    void getNearestParagraphText_paragraphHasText_returnsOwnText() {
         // GIVEN
         XWPFParagraph p1 = correctParagraphs.get(0);
 
@@ -47,7 +46,7 @@ class ParagraphUtilsTest {
     }
 
     @Test
-    void getNearestParagraphText_returnsPreviousText_whenCurrentIsEmpty() {
+    void getNearestParagraphText_currentIsEmpty_returnsPreviousText() {
         // GIVEN
         XWPFParagraph p3 = correctParagraphs.get(2);
 
@@ -59,7 +58,7 @@ class ParagraphUtilsTest {
     }
 
     @Test
-    void getNearestParagraphText_returnsNextText_whenPreviousIsAlsoEmpty() {
+    void getNearestParagraphText_previousIsAlsoEmpty_returnsNextText() {
         // GIVEN
         XWPFParagraph p4 = correctParagraphs.get(3);
 
@@ -71,34 +70,22 @@ class ParagraphUtilsTest {
     }
 
     @Test
-    void getNearestParagraphText_returnsEmpty_whenAllParagraphsAreEmpty() throws IOException {
+    void getNearestParagraphText_allParagraphsAreEmpty_returnsEmpty() throws IOException {
         // GIVEN
         try (XWPFDocument emptyDoc = new XWPFDocument(new FileInputStream(INCORRECT_FILE))) {
             List<XWPFParagraph> emptyParagraphs = emptyDoc.getParagraphs();
-            XWPFParagraph emptyPara = emptyParagraphs.get(1);
+            XWPFParagraph emptyParagraph = emptyParagraphs.get(1);
 
             // WHEN
-            String result = ParagraphUtils.getNearestParagraphText(emptyPara, List.of(emptyPara));
+            String result = ParagraphUtils.getNearestParagraphText(emptyParagraph, List.of(emptyParagraph));
 
             // THEN
-            assertEquals("", result);
+            assertEquals("There is no text in the document with the incorrectly formatted image.", result);
         }
     }
 
     @Test
-    void getNearestParagraphText_prefersCloserParagraph() {
-        // GIVEN
-        XWPFParagraph p3 = correctParagraphs.get(2);
-
-        // WHEN
-        String result = ParagraphUtils.getNearestParagraphText(p3, correctParagraphs);
-
-        // THEN
-        assertEquals("Second paragraph", result);
-    }
-
-    @Test
-    void getNearestParagraphText_handlesNullParagraphGracefully() {
+    void getNearestParagraphText_nullParagraph_returnsEmpty() {
         // GIVEN
         XWPFParagraph nullParagraph = null;
 
@@ -106,11 +93,11 @@ class ParagraphUtilsTest {
         String result = ParagraphUtils.getNearestParagraphText(nullParagraph, correctParagraphs);
 
         // THEN
-        assertEquals("", result);
+        assertEquals("ERROR: Cannot find nearest to image text. Index is < 0", result);
     }
 
     @Test
-    void getNearestParagraphText_returnsOwnTextEvenIfNotInList() throws IOException {
+    void getNearestParagraphText_paragraphWithTextNotInList_returnsOwnText() throws IOException {
         // GIVEN
         XWPFParagraph outsideParagraph;
         try (XWPFDocument otherDoc = new XWPFDocument()) {
