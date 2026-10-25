@@ -113,9 +113,16 @@ public class FigureCheckerTest extends BaseTest {
         List<FormatError> errors = checker.check(testFile);
 
         // THEN
-        boolean hasErrorMessage = errors.stream()
-                .anyMatch(e -> e.getParagraphText().contains("ERROR: Cannot find nearest to image text")
-                        || e.getParagraphText().contains("There is no text in the document with the incorrectly formatted image"));
-        assertTrue(hasErrorMessage, "Expected error message from ParagraphUtils in paragraph text, but got: " + errors);
+        List<FormatError> captionFormatErrors = errors.stream()
+                .filter(e -> Objects.equals(e.getId(), "err_figure_caption_format"))
+                .toList();
+        assertEquals(1, captionFormatErrors.size(), "Expected exactly one caption format error");
+        FormatError error = captionFormatErrors.getFirst();
+        assertEquals(ErrorCategory.FIGURE, error.getCategory());
+        assertEquals("«Рисунок <номер> - <назва>»", error.getExpected());
+        assertTrue(error.getParagraphText().contains("There is no text in the document with the incorrectly formatted image")
+                || error.getParagraphText().contains("ERROR: Cannot find nearest to image text"),
+                "Expected error message in paragraph text, but got: " + error.getParagraphText());
+        assertEquals(1, error.getFound().size());
     }
 }
