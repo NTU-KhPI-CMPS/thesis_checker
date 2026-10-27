@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:thesis_checker/core/constants/available_check_types.dart';
 import 'package:thesis_checker/core/extensions/check_type_localization_x.dart';
@@ -34,7 +35,7 @@ class HomeContent extends StatelessWidget {
                 crossAxisCount: crossAxisCount,
                 crossAxisSpacing: 16.0,
                 mainAxisSpacing: 16.0,
-                mainAxisExtent: 76.0,
+                mainAxisExtent: 100.0,
               ),
               children: List.generate(
                 AvailableCheckTypes.checkTypes.length,
@@ -51,7 +52,7 @@ class HomeContent extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          AutoSizeText(
                             AvailableCheckTypes.checkTypes[index].localizedTitle(context),
                             style: TextStyle(
                               fontSize: 14.0,
@@ -59,10 +60,10 @@ class HomeContent extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                               color: textColor,
                             ),
-                            maxLines: 1,
+                            maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          Text(
+                          AutoSizeText(
                             AvailableCheckTypes.checkTypes[index].localizedDescription(context),
                             style: TextStyle(
                               fontSize: 14.0,
@@ -70,7 +71,7 @@ class HomeContent extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                               color: textColor2,
                             ),
-                            maxLines: 1,
+                            maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ],
