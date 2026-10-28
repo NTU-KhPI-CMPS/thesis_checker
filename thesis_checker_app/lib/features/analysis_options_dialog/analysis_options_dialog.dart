@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thesis_checker/core/constants/app_colors.dart';
@@ -148,13 +149,15 @@ class _AnalysisOptionsDialogState extends State<AnalysisOptionsDialog> with Sing
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            l10n.dialogSettingsTitle,
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: 'FunnelSans',
-                              color: textColor,
+                          Expanded(
+                            child: Text(
+                              l10n.dialogSettingsTitle,
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'FunnelSans',
+                                color: textColor,
+                              ),
                             ),
                           ),
                           MouseRegion(
@@ -226,7 +229,7 @@ class _AnalysisOptionsDialogState extends State<AnalysisOptionsDialog> with Sing
                               crossAxisCount: isNarrow ? 1 : 2,
                               mainAxisSpacing: 14.0,
                               crossAxisSpacing: 14.0,
-                              childAspectRatio: 2,
+                              childAspectRatio: !isNarrow? 1 : 2,
                             ),
                             itemBuilder: (context, index) {
                               final option = AvailableCheckTypes.checkTypes[index];
@@ -238,9 +241,9 @@ class _AnalysisOptionsDialogState extends State<AnalysisOptionsDialog> with Sing
                                     width: 24.0,
                                     height: 24.0,
                                   ),
-                                  Text(
+                                  AutoSizeText(
                                     option.localizedTitle(context),
-                                    maxLines: 1,
+                                    maxLines: 3,
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
@@ -251,9 +254,9 @@ class _AnalysisOptionsDialogState extends State<AnalysisOptionsDialog> with Sing
                                     ),
                                   ),
                                   Expanded(
-                                    child: Text(
+                                    child: AutoSizeText(
                                       option.localizedDescription(context),
-                                      maxLines: 2,
+                                      maxLines: 3,
                                       softWrap: true,
                                       style: TextStyle(
                                         fontSize: 11.0,
