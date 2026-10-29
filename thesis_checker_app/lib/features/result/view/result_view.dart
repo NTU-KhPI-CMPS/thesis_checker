@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:thesis_checker/core/constants/available_check_types.dart';
@@ -8,7 +10,7 @@ import 'package:thesis_checker/core/widgets/checkbox_container.dart';
 import 'package:thesis_checker/core/widgets/hint_text.dart';
 import 'package:thesis_checker/features/home/widgets/custom_animated_button.dart';
 import 'package:thesis_checker/features/result/widgets/error_count_badge.dart';
-import 'package:thesis_checker/features/result/widgets/error_detail_expandable_card.dart';
+import 'package:thesis_checker/features/result/widgets/error_detail_card.dart';
 import 'package:thesis_checker/core/widgets/info_card.dart';
 import 'package:thesis_checker/core/widgets/info_text.dart';
 import 'package:thesis_checker/features/result/cubit/result_cubit.dart';
@@ -17,6 +19,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thesis_checker/features/analysis_options_dialog/analysis_options_dialog.dart';
 import 'package:thesis_checker/l10n/l10n.dart';
 import 'package:thesis_checker/models/analysis_result.dart';
+
+const double _pagePadding = 36.0;
+const double _maxContentWidth = 820.0;
 
 class ResultView extends StatefulWidget {
   const ResultView({super.key});
@@ -43,7 +48,7 @@ class _ResultViewState extends State<ResultView> {
     return BlocBuilder<ResultCubit, ResultState>(
       builder: (context, state) {
         if (state is! ResultLoaded) {
-          return HintText(text: l10n.loadingNoFile);
+          return _CenteredHint(text: l10n.loadingNoFile);
         }
 
         final result = state.result;
@@ -53,7 +58,7 @@ class _ResultViewState extends State<ResultView> {
             ? checkTypes
             : checkTypes.where(selectedChecks.contains).toList();
         if (visibleCheckTypes.isEmpty) {
-          return HintText(text: l10n.resultNoSelectedCategories);
+          return _CenteredHint(text: l10n.resultNoSelectedCategories);
         }
         final categoriesByTitle = {
           for (final item in result.errorsByCategory) item.category: item,
@@ -68,144 +73,164 @@ class _ResultViewState extends State<ResultView> {
         final selectedCategoryTitle = selectedType.localizedTitle(context);
         final filteredErrors = selectedCategory?.errors ?? const [];
         final totalWarnings = result.errorsByCategory.fold<int>(0, (sum, item) =>
-            sum + item.errors.where((e) => e.severity.toLowerCase() == 'warning').length);
+        sum + item.errors.where((e) => e.severity.toLowerCase() == 'warning').length);
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                if (constraints.maxWidth > 400) {
-                  return _buildFullSizeInfoCard(
-                    result,
-                    fileNameTextColor,
-                    totalWarnings,
-                    l10n,
-                    accentColor,
-                    context
-                  );
-                } else {
-                  return _buildSmallSizeInfoCard(
-                    result,
-                    fileNameTextColor,
-                    totalWarnings,
-                    l10n,
-                    accentColor,
-                    context
-                  );
-                }
-              },
-            ),
-            const SizedBox(height: 24.0),
-            InfoText(text: l10n.resultCategories),
-            const SizedBox(height: 12.0),
-            LayoutBuilder(
-              builder: (context, constraints) {
-                final crossAxisCount = constraints.maxWidth < 700 ? 1 : 2;
-                final mainAxisExtent = crossAxisCount == 2 ? 135.0 : 175.0;
-                final textMaxLines = mainAxisExtent == 135.0 ? 4 : 6;
+        return LayoutBuilder(
+          builder: (context, pageConstraints) {
+            final side = math.max(
+              _pagePadding,
+              (pageConstraints.maxWidth - _maxContentWidth) / 2,
+            );
 
-                return GridView.builder(
-                  itemCount: visibleCheckTypes.length,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: crossAxisCount,
-                    crossAxisSpacing: 16.0,
-                    mainAxisSpacing: 16.0,
-                    mainAxisExtent: mainAxisExtent
-                  ),
-                  itemBuilder: (context, index) {
-                    final type = visibleCheckTypes[index];
-                    final category = categoriesByTitle[type.category];
-                    final warnCount = category?.errors.where((e) => e.severity.toLowerCase() == 'warning').length ?? 0;
-                    final errorCount = category?.errors.where((e) => e.severity.toLowerCase() != 'warning').length ?? 0;
-
-                    return CheckboxContainer(
-                      isSelected: (activeCategoryIndex < visibleCheckTypes.length
-                              ? activeCategoryIndex
-                              : 0) == index,
-                      onTap: () => setState(() => activeCategoryIndex = index),
-                      bottomStripeColor: (errorCount > 0 && warnCount == 0)
-                          ? AppColors.error
-                          : (errorCount == 0 && warnCount > 0)
-                              ? warnColor
-                              : (errorCount == 0 && warnCount == 0 ? AppColors.ok : null),
-                      bottomStripeGradient: (errorCount > 0 && warnCount > 0)
-                          ? LinearGradient(colors: [AppColors.error, warnColor])
-                          : null,
-                      rightWidget: ErrorCountBadge(
-                        errorCount: errorCount,
-                        warnCount: warnCount,
-                      ),
+            return CustomScrollView(
+              slivers: [
+                SliverPadding(
+                  padding: EdgeInsets.fromLTRB(side, _pagePadding, side, 0),
+                  sliver: SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        AutoSizeText(
-                          type.localizedTitle(context),
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'FunnelSans',
-                            color: safeIndex == index
-                                ? activeTextColor
-                                : fileNameTextColor,
-                          ),
+                        LayoutBuilder(
+                          builder: (BuildContext context, BoxConstraints constraints) {
+                            if (constraints.maxWidth > 400) {
+                              return _buildFullSizeInfoCard(
+                                result,
+                                fileNameTextColor,
+                                totalWarnings,
+                                l10n,
+                                accentColor,
+                                context
+                              );
+                            } else {
+                              return _buildSmallSizeInfoCard(
+                                result,
+                                fileNameTextColor,
+                                totalWarnings,
+                                l10n,
+                                accentColor,
+                                context
+                              );
+                            }
+                          },
                         ),
-                        AutoSizeText(
-                          type.localizedDescription(context),
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            fontFamily: 'FunnelSans',
-                            fontWeight: FontWeight.w600,
-                            color: subTextColor,
-                          ),
-                          maxLines: textMaxLines,
-                          overflow: TextOverflow.ellipsis,
-                        )
+                        const SizedBox(height: 24.0),
+                        InfoText(text: l10n.resultCategories),
+                        const SizedBox(height: 12.0),
+                        LayoutBuilder(
+                          builder: (context, constraints) {
+                            final crossAxisCount = constraints.maxWidth < 700 ? 1 : 2;
+                            final mainAxisExtent = crossAxisCount == 2 ? 135.0 : 175.0;
+                            final textMaxLines = mainAxisExtent == 135.0 ? 4 : 6;
+
+                            return GridView.builder(
+                              itemCount: visibleCheckTypes.length,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: crossAxisCount,
+                                crossAxisSpacing: 16.0,
+                                mainAxisSpacing: 16.0,
+                                mainAxisExtent: mainAxisExtent
+                              ),
+                              itemBuilder: (context, index) {
+                                final type = visibleCheckTypes[index];
+                                final category = categoriesByTitle[type.category];
+                                final warnCount = category?.errors.where((e) => e.severity.toLowerCase() == 'warning').length ?? 0;
+                                final errorCount = category?.errors.where((e) => e.severity.toLowerCase() != 'warning').length ?? 0;
+
+                                return CheckboxContainer(
+                                  isSelected: (activeCategoryIndex < visibleCheckTypes.length
+                                      ? activeCategoryIndex
+                                      : 0) == index,
+                                  onTap: () => setState(() => activeCategoryIndex = index),
+                                  bottomStripeColor: (errorCount > 0 && warnCount == 0)
+                                      ? AppColors.error
+                                      : (errorCount == 0 && warnCount > 0)
+                                      ? warnColor
+                                      : (errorCount == 0 && warnCount == 0 ? AppColors.ok : null),
+                                  bottomStripeGradient: (errorCount > 0 && warnCount > 0)
+                                      ? LinearGradient(colors: [AppColors.error, warnColor])
+                                      : null,
+                                  rightWidget: ErrorCountBadge(
+                                    errorCount: errorCount,
+                                    warnCount: warnCount,
+                                  ),
+                                  children: [
+                                    AutoSizeText(
+                                      type.localizedTitle(context),
+                                      style: TextStyle(
+                                        fontSize: 14.0,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: 'FunnelSans',
+                                        color: safeIndex == index
+                                            ? activeTextColor
+                                            : fileNameTextColor,
+                                      ),
+                                    ),
+                                    AutoSizeText(
+                                      type.localizedDescription(context),
+                                      style: TextStyle(
+                                        fontSize: 14.0,
+                                        fontFamily: 'FunnelSans',
+                                        fontWeight: FontWeight.w600,
+                                        color: subTextColor,
+                                      ),
+                                      maxLines: textMaxLines,
+                                      overflow: TextOverflow.ellipsis,
+                                    )
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 24.0),
+                        InfoText(text: l10n.resultDetails),
+                        const SizedBox(height: 12.0),
                       ],
-                    );
-                  },
-                );
-              },
-            ),
-            const SizedBox(height: 24.0),
-            InfoText(text: l10n.resultDetails),
-            const SizedBox(height: 12.0),
-            if (filteredErrors.isEmpty)
-              Text(
-                l10n.resultNoErrorsForCategory(selectedCategoryTitle),
-                style: TextStyle(
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'FunnelSans',
-                  color: subTextColor,
+                    ),
+                  ),
                 ),
-              )
-            else
-              ListView.separated(
-                itemCount: filteredErrors.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                separatorBuilder: (_, __) => const SizedBox(height: 12.0),
-                itemBuilder: (context, index) {
-                  final error = filteredErrors[index];
+                SliverPadding(
+                  padding: EdgeInsets.fromLTRB(side, 0, side, _pagePadding),
+                  sliver: filteredErrors.isEmpty
+                      ? SliverToBoxAdapter(
+                    child: Text(
+                      l10n.resultNoErrorsForCategory(selectedCategoryTitle),
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'FunnelSans',
+                        color: subTextColor,
+                      ),
+                    ),
+                  )
+                      : SliverList.separated(
+                    itemCount: filteredErrors.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 12.0),
+                    itemBuilder: (context, index) {
+                      final error = filteredErrors[index];
 
-                  final errorTitle = error.getLocalizedMessage(context);
-                  final errorFoundValue = error.getLocalizedFound(context);
-                  final errorExpectedValue = error.getLocalizedExpected(context);
-                  final paragraphText = error.paragraphText?.trim();
+                      final errorTitle = error.getLocalizedMessage(context);
+                      final errorFoundValue = error.getLocalizedFound(context);
+                      final errorExpectedValue = error.getLocalizedExpected(context);
+                      final paragraphText = error.paragraphText?.trim();
 
-                  return ErrorDetailExpandableCard(
-                    title: errorTitle,
-                    quote: (paragraphText == null || paragraphText.isEmpty)
-                        ? l10n.errorFragmentMissing
-                        : paragraphText,
-                    severity: error.severity,
-                    foundValue: errorFoundValue,
-                    expectedValue: errorExpectedValue,
-                  );
-                },
-              ),
-          ]
+                      return ErrorDetailCard(
+                        title: errorTitle,
+                        quote: (paragraphText == null || paragraphText.isEmpty)
+                            ? l10n.errorFragmentMissing
+                            : paragraphText,
+                        severity: error.severity,
+                        foundValue: errorFoundValue,
+                        expectedValue: errorExpectedValue,
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
+          },
         );
       },
     );
@@ -347,6 +372,22 @@ class _ResultViewState extends State<ResultView> {
         const SizedBox(width: 12.0),
         _buildRetryButton(result, l10n, accentColor, context),
       ],
+    );
+  }
+}
+
+class _CenteredHint extends StatelessWidget {
+  const _CenteredHint({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(_pagePadding),
+        child: HintText(text: text),
+      ),
     );
   }
 }

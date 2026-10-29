@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:thesis_checker/core/constants/app_colors.dart';
 import 'package:thesis_checker/l10n/l10n.dart';
 
-/// Expandable card that displays a summary row and detailed error information.
-class ErrorDetailExpandableCard extends StatefulWidget {
+/// Card that displays a summary row and detailed error information.
+class ErrorDetailCard extends StatefulWidget {
   final String title;
   final String quote;
   final String severity;
@@ -11,7 +11,7 @@ class ErrorDetailExpandableCard extends StatefulWidget {
   final String expectedValue;
   final String iconAsset;
 
-  const ErrorDetailExpandableCard({
+  const ErrorDetailCard({
     super.key,
     required this.title,
     required this.quote,
@@ -22,10 +22,10 @@ class ErrorDetailExpandableCard extends StatefulWidget {
   });
 
   @override
-  State<ErrorDetailExpandableCard> createState() => _ErrorDetailExpandableCardState();
+  State<ErrorDetailCard> createState() => _ErrorDetailCardState();
 }
 
-class _ErrorDetailExpandableCardState extends State<ErrorDetailExpandableCard> {
+class _ErrorDetailCardState extends State<ErrorDetailCard> {
 
   @override
   void initState() {
