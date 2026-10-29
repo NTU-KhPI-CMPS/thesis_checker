@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:thesis_checker/core/constants/available_check_types.dart';
 import 'package:thesis_checker/core/constants/app_colors.dart';
@@ -15,6 +16,7 @@ import 'package:thesis_checker/features/result/cubit/result_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thesis_checker/features/analysis_options_dialog/analysis_options_dialog.dart';
 import 'package:thesis_checker/l10n/l10n.dart';
+import 'package:thesis_checker/models/analysis_result.dart';
 
 class ResultView extends StatefulWidget {
   const ResultView({super.key});
@@ -71,72 +73,37 @@ class _ResultViewState extends State<ResultView> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            InfoCard(
-              padding: EdgeInsets.all(24.0),
-              borderRadius: BorderRadius.circular(16.0),
-              children: [
-                Image.asset(
-                  result.totalErrors > 0
-                      ? 'assets/images/found_errors.png'
-                      : 'assets/images/no_errors.png',
-                  width: 24.0,
-                  height: 24.0,
-                ),
-                const SizedBox(width: 12.0),
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        result.fileName,
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'FunnelSans',
-                          color: fileNameTextColor,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 3,
-                      ),
-                      const SizedBox(height: 6.0),
-                      Row(
-                        children: [
-                          ErrorCountBadge(
-                            errorCount: result.totalErrors,
-                            warnCount: totalWarnings,
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    CustomAnimatedButton(
-                      text: l10n.retryAnalysis,
-                      buttonIsHovered: buttonIsHovered,
-                      accentColor: accentColor,
-                      onTap: () => showDialog(
-                          context: context,
-                          builder: (context) => AnalysisOptionsDialog(
-                               filePath: result.filePath,
-                               fileName: result.fileName
-                           )
-                       ),
-                      onHover: (isHovered) => setState(() => buttonIsHovered = isHovered),
-                    ),
-                  ],
-                )
-              ],
+            LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                if (constraints.maxWidth > 400) {
+                  return _buildFullSizeInfoCard(
+                    result,
+                    fileNameTextColor,
+                    totalWarnings,
+                    l10n,
+                    accentColor,
+                    context
+                  );
+                } else {
+                  return _buildSmallSizeInfoCard(
+                    result,
+                    fileNameTextColor,
+                    totalWarnings,
+                    l10n,
+                    accentColor,
+                    context
+                  );
+                }
+              },
             ),
             const SizedBox(height: 24.0),
             InfoText(text: l10n.resultCategories),
             const SizedBox(height: 12.0),
             LayoutBuilder(
               builder: (context, constraints) {
-                final crossAxisCount = constraints.maxWidth < 500 ? 1 : 2;
+                final crossAxisCount = constraints.maxWidth < 700 ? 1 : 2;
+                final mainAxisExtent = crossAxisCount == 2 ? 135.0 : 175.0;
+                final textMaxLines = mainAxisExtent == 135.0 ? 4 : 6;
 
                 return GridView.builder(
                   itemCount: visibleCheckTypes.length,
@@ -146,7 +113,7 @@ class _ResultViewState extends State<ResultView> {
                     crossAxisCount: crossAxisCount,
                     crossAxisSpacing: 16.0,
                     mainAxisSpacing: 16.0,
-                    mainAxisExtent: 76.0,
+                    mainAxisExtent: mainAxisExtent
                   ),
                   itemBuilder: (context, index) {
                     final type = visibleCheckTypes[index];
@@ -172,7 +139,7 @@ class _ResultViewState extends State<ResultView> {
                         warnCount: warnCount,
                       ),
                       children: [
-                        Text(
+                        AutoSizeText(
                           type.localizedTitle(context),
                           style: TextStyle(
                             fontSize: 14.0,
@@ -183,7 +150,7 @@ class _ResultViewState extends State<ResultView> {
                                 : fileNameTextColor,
                           ),
                         ),
-                        Text(
+                        AutoSizeText(
                           type.localizedDescription(context),
                           style: TextStyle(
                             fontSize: 14.0,
@@ -191,7 +158,7 @@ class _ResultViewState extends State<ResultView> {
                             fontWeight: FontWeight.w600,
                             color: subTextColor,
                           ),
-                          maxLines: 1,
+                          maxLines: textMaxLines,
                           overflow: TextOverflow.ellipsis,
                         )
                       ],
@@ -241,6 +208,145 @@ class _ResultViewState extends State<ResultView> {
           ]
         );
       },
+    );
+  }
+
+  Widget _buildStatusIcon(AnalysisResult result) {
+    return Image.asset(
+      result.totalErrors > 0
+          ? 'assets/images/found_errors.png'
+          : 'assets/images/no_errors.png',
+      width: 24.0,
+      height: 24.0,
+    );
+  }
+
+  Widget _buildFileInfo(
+      AnalysisResult result,
+      Color? fileNameTextColor,
+      int totalWarnings, {
+        bool centered = false,
+    }) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment:
+      centered ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+      children: [
+        Text(
+          result.fileName,
+          textAlign: centered ? TextAlign.center : TextAlign.start,
+          style: TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'FunnelSans',
+            color: fileNameTextColor,
+          ),
+          overflow: TextOverflow.ellipsis,
+          maxLines: 3,
+        ),
+        const SizedBox(height: 6.0),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: centered ? Alignment.center : Alignment.centerLeft,
+          child: ErrorCountBadge(
+            errorCount: result.totalErrors,
+            warnCount: totalWarnings,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRetryButton(
+      AnalysisResult result,
+      AppLocalizations l10n,
+      Color accentColor,
+      BuildContext context,
+    ) {
+    return CustomAnimatedButton(
+      text: l10n.retryAnalysis,
+      buttonIsHovered: buttonIsHovered,
+      accentColor: accentColor,
+      onTap: () => _showAnalysisOptions(context, result),
+      onHover: (isHovered) => setState(() => buttonIsHovered = isHovered),
+    );
+  }
+
+  void _showAnalysisOptions(BuildContext context, AnalysisResult result) {
+    showDialog(
+      context: context,
+      builder: (context) => AnalysisOptionsDialog(
+        filePath: result.filePath,
+        fileName: result.fileName,
+      ),
+    );
+  }
+
+  InfoCard _buildSmallSizeInfoCard(
+      AnalysisResult result,
+      Color? fileNameTextColor,
+      int totalWarnings,
+      AppLocalizations l10n,
+      Color accentColor,
+      BuildContext context,
+    ) {
+    return InfoCard(
+      children: [
+        Expanded(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _buildStatusIcon(result),
+                  const SizedBox(width: 12.0),
+                  Flexible(
+                    child: _buildFileInfo(
+                      result,
+                      fileNameTextColor,
+                      totalWarnings,
+                      centered: true,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10.0),
+              SizedBox(
+                width: double.infinity,
+                child: _buildRetryButton(result, l10n, accentColor, context),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  InfoCard _buildFullSizeInfoCard(
+      AnalysisResult result,
+      Color? fileNameTextColor,
+      int totalWarnings,
+      AppLocalizations l10n,
+      Color accentColor,
+      BuildContext context,
+    ) {
+    return InfoCard(
+      padding: const EdgeInsets.all(24.0),
+      borderRadius: BorderRadius.circular(16.0),
+      children: [
+        _buildStatusIcon(result),
+        const SizedBox(width: 12.0),
+        Expanded(
+          child: _buildFileInfo(result, fileNameTextColor, totalWarnings),
+        ),
+        const SizedBox(width: 12.0),
+        _buildRetryButton(result, l10n, accentColor, context),
+      ],
     );
   }
 }
