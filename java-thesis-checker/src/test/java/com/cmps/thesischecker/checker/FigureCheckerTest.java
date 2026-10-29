@@ -3,9 +3,13 @@ package com.cmps.thesischecker.checker;
 import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -125,4 +129,31 @@ public class FigureCheckerTest extends BaseTest {
                 "Expected error message in paragraph text, but got: " + error.getParagraphText());
         assertEquals(1, error.getFound().size());
     }
+
+    @ParameterizedTest(name = "Caption: [{0}] -> should match: {1}")
+    @MethodSource("captionTestCases")
+    void check_captionPattern_validatesCorrectly(String caption, boolean expectedResult) {
+
+        // WHEN
+        boolean actualResult = FigureChecker.isValidCaption(caption);
+
+        // THEN
+        assertEquals(expectedResult, actualResult, "Regex validation failed for caption: [" + caption + "]");
+    }
+
+    private static Stream<Arguments> captionTestCases() {
+        return Stream.of(
+                Arguments.of("Рисунок 1 - Назва", true),
+                Arguments.of("Рисунок 1.10.3 - Три рівні", true),
+                Arguments.of("Рисунок 5.1 (А) - Назва з дужками", true),
+                Arguments.of("Рисунок 5.2 (Б) – Інтерфейс програми: вибір файлу у форматі .docx.\n(у темній темі)", true), // ТЕСТ НА БАГАТОРЯДКОВІСТЬ
+
+                Arguments.of("Рисунок 1", false),
+                Arguments.of("Рисунок 1 - ", false),
+                Arguments.of("Рис. 1 - Помилка", false),
+                Arguments.of("Рисунок 1-Пропущений пробіл", false),
+                Arguments.of("Рисунок1 - Без пробілу після слова", false)
+        );
+    }
+
 }

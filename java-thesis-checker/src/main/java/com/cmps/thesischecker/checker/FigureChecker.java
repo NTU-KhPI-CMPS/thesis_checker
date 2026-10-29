@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 public class FigureChecker implements Checker {
 
-    private static final Pattern CAPTION_PATTERN = Pattern.compile("^Рисунок\\s+\\d+(?:\\.\\d+)?\\s*[–-]\\s+.+");
+    private static final Pattern CAPTION_PATTERN = Pattern.compile("^Рисунок\\s+\\d+(?:\\.\\d+)*(?:\\s*\\([А-Я]\\))?\\s+[-–—]\\s+\\S[\\s\\S]*$");
 
     @Override
     public ErrorCategory getErrorCategory() {
@@ -97,7 +97,7 @@ public class FigureChecker implements Checker {
         return (text == null || text.trim().isEmpty()) && !AlignmentUtils.hasDrawing(paragraph);
     }
 
-    private static boolean isValidCaption(String caption) {
+    static boolean isValidCaption(String caption) {
         return CAPTION_PATTERN.matcher(caption).matches();
     }
 
