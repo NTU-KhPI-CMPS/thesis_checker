@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 class PageContainer extends StatelessWidget {
   final Widget child;
   final AlignmentGeometry contentAlignment;
+  final bool scrollable;
 
   const PageContainer({
     super.key,
     required this.child,
     this.contentAlignment = Alignment.topCenter,
+    this.scrollable = true,
   });
 
   @override
@@ -30,30 +32,34 @@ class PageContainer extends StatelessWidget {
           ),
         ),
       ),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final minHeight = constraints.maxHeight;
-          return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: minHeight,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(36.0),
-                child: Align(
-                  alignment: contentAlignment,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: 820.0,
-                    ),
-                    child: child,
+      child: scrollable ? _buildScrollable() : child,
+    );
+  }
+
+  Widget _buildScrollable() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final minHeight = constraints.maxHeight;
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: minHeight,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(36.0),
+              child: Align(
+                alignment: contentAlignment,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: 820.0,
                   ),
+                  child: child,
                 ),
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

@@ -63,6 +63,7 @@ class _HomeViewState extends State<HomeView> {
         ),
         PageContainer(
           contentAlignment: Alignment.topCenter,
+          scrollable: false,
           child: ResultView(),
         ),
       ],
