@@ -36,7 +36,8 @@ public class Main {
             new StructuralElementChecker(),
             new SizeChecker(),
             new ParagraphIndentationChecker(),
-            new FigureChecker()
+            new FigureChecker(),
+            new TableChecker()
     );
 
     static void main(String[] args) {

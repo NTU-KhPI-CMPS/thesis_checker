@@ -15,7 +15,7 @@ public class SizeCheckerTest extends BaseTest {
         List<FormatError> result = checker.check("src/test/resources/incorrect_font_size.docx");
         assertFalse(result.isEmpty(), "Expected errors in document with incorrect font sizes");
 
-        assertEquals(12.0, result.size(), "Should find 12.0 size errors in test document");
+        assertEquals(8, result.size(), "Should find 8 size errors in test document (table cells are checked by TableChecker)");
     }
 
     @Test
