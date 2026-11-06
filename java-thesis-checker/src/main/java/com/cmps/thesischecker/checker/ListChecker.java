@@ -6,6 +6,7 @@ import com.cmps.thesischecker.model.ListLevelState;
 import com.cmps.thesischecker.model.MarkerDefinition;
 import com.cmps.thesischecker.model.NumberingFormat;
 import com.cmps.thesischecker.requirements.RequirementsHolder;
+import com.cmps.thesischecker.utils.BibliographyUtils;
 import com.cmps.thesischecker.utils.MainContentUtils;
 import com.cmps.thesischecker.utils.StyleUtils;
 import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
@@ -24,17 +25,23 @@ import java.io.FileInputStream;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ListChecker implements Checker {
 
     private static final Pattern MANUAL_LIST_PATTERN = Pattern.compile(
             "^\\s*(?:\\d+[.)]|[а-яА-ЯіїєґІЇЄҐa-zA-Z][.)]|[-–—•*])\\s+"
+    );
+
+    private static final Pattern BIBLIOGRAPHY_MANUAL_MARKER_PATTERN = Pattern.compile(
+            "^\\s*(\\d{1,3}[.)]|[-–—•*])(?!\\d)\\s*"
     );
 
     private static final Pattern PLACEHOLDER_DOT_PATTERN = Pattern.compile(".*%\\d+\\.$");
@@ -66,10 +73,27 @@ public class ListChecker implements Checker {
              XWPFDocument doc = new XWPFDocument(fis)) {
 
             Map<BigInteger, ListLevelState> stateByNumId = new HashMap<>();
+            Set<String> reportedBibliographyMarkers = new HashSet<>();
+            boolean inBibliography = false;
 
             for (XWPFParagraph paragraph : MainContentUtils.getMainContentParagraphs(doc)) {
                 String paragraphText = paragraph.getText().trim();
                 if (paragraphText.isEmpty()) {
+                    continue;
+                }
+
+                if (BibliographyUtils.isBibliographyHeading(paragraphText)) {
+                    inBibliography = true;
+                    continue;
+                }
+                if (inBibliography && BibliographyUtils.isOtherStructuralHeading(paragraphText)) {
+                    inBibliography = false;
+                }
+
+                // The bibliography has its own marker rule: a plain number without brackets or periods.
+                if (inBibliography) {
+                    checkBibliographyParagraph(doc, paragraph, paragraphText,
+                            reportedBibliographyMarkers, allErrors);
                     continue;
                 }
 
@@ -101,6 +125,15 @@ public class ListChecker implements Checker {
                 String resolvedFormat = resolvedFormats.iterator().next();
                 checkFormatConsistency(paragraphText, listInfo.ilvl(), resolvedFormat, state, allErrors);
 
+                // A number without a bracket ("1") is allowed only for lists of complete sentences
+                // (п. 6.2.9), which start with a capital letter; otherwise "1)" is required (п. 6.2.6).
+                MarkerDefinition firstMarker = markers.getFirst();
+                if (firstMarker.hasNoClosingSymbol()
+                        && !startsWithUpperCase(paragraphText)
+                        && state.markNoBracketReported(listInfo.ilvl())) {
+                    allErrors.add(buildMissingBracketError(paragraphText, buildDisplayedMarker(firstMarker)));
+                }
+
                 if (state.markMarkerValidated(listInfo.ilvl())) {
                     MarkerDefinition representativeMarker = markers.getFirst();
                     FormatError markerError = validateMarker(paragraphText, representativeMarker);
@@ -115,6 +148,95 @@ public class ListChecker implements Checker {
         }
 
         return allErrors;
+    }
+
+    /**
+     * Checks the numbering marker of a paragraph located in the bibliography section
+     * ("СПИСОК ДЖЕРЕЛ ІНФОРМАЦІЇ"). The only allowed marker is a plain number without
+     * brackets or periods ("1", "2", ...). Both Word auto-numbering and numbers typed by hand are checked.
+     * <p>
+     * The same violation is reported once (per numbering level for auto-numbering,
+     * per distinct typed marker for manual numbering), so one systematic mistake
+     * does not flood the report with an error per bibliography entry.
+     *
+     * @param doc             the document, used to resolve numbering definitions
+     * @param paragraph       the bibliography paragraph to check
+     * @param paragraphText   trimmed text of the paragraph, used for error reporting
+     * @param reportedMarkers keys of violations that were already reported
+     * @param allErrors       list of errors to append to
+     */
+    private void checkBibliographyParagraph(XWPFDocument doc, XWPFParagraph paragraph, String paragraphText,
+                                            Set<String> reportedMarkers, List<FormatError> allErrors) {
+        ListInfo listInfo = resolveListInfo(paragraph);
+
+        if (listInfo == null) {
+            Matcher matcher = BIBLIOGRAPHY_MANUAL_MARKER_PATTERN.matcher(paragraphText);
+            if (matcher.find()) {
+                String foundMarker = matcher.group(1).replaceFirst("^\\d+", "1");
+                if (reportedMarkers.add("manual:" + foundMarker)) {
+                    allErrors.add(buildBibliographyMarkerError(paragraphText, foundMarker));
+                }
+            }
+            return;
+        }
+
+        List<MarkerDefinition> markers = resolveMarkerDefinitions(doc, listInfo.numId(), listInfo.ilvl());
+        if (markers.isEmpty() || !reportedMarkers.add(listInfo.numId() + ":" + listInfo.ilvl())) {
+            return;
+        }
+
+        for (MarkerDefinition marker : markers) {
+            if (!marker.isPlainNumber()) {
+                allErrors.add(buildBibliographyMarkerError(paragraphText, buildDisplayedMarker(marker)));
+                return;
+            }
+        }
+    }
+
+    /**
+     * Checks whether the text starts with a capital letter, ignoring leading quotes and
+     * other punctuation. A text that starts with a digit does not count as capitalised.
+     *
+     * @param text paragraph text
+     * @return true if the first letter or digit of the text is an upper-case letter
+     */
+    private static boolean startsWithUpperCase(String text) {
+        for (int i = 0; i < text.length(); ) {
+            int codePoint = text.codePointAt(i);
+            if (Character.isLetterOrDigit(codePoint)) {
+                return Character.isUpperCase(codePoint);
+            }
+            i += Character.charCount(codePoint);
+        }
+        return false;
+    }
+
+    /**
+     * Renders a numbering level the way the author sees it in Word, e.g. "%1." -> "1.",
+     * "%1)" -> "1)", a bullet -> the bullet character.
+     *
+     * @param marker marker definition resolved for the paragraph's level
+     * @return human-readable marker for the 'found' field
+     */
+    private static String buildDisplayedMarker(MarkerDefinition marker) {
+        String lvlText = marker.getLvlText();
+        if (lvlText == null || lvlText.isBlank()) {
+            return marker.getFriendlyFormat();
+        }
+
+        String trimmed = lvlText.trim();
+        if (marker.isBullet()) {
+            return trimmed;
+        }
+
+        String sample = switch (marker.getFormat()) {
+            case "lowerletter", "ukrainianlower", "russianlower" -> "а";
+            case "upperletter" -> "А";
+            case "lowerroman" -> "i";
+            case "upperroman" -> "I";
+            default -> "1";
+        };
+        return trimmed.replaceAll("%\\d+", sample);
     }
 
     /**
@@ -354,6 +476,46 @@ public class ListChecker implements Checker {
         error.setParagraphText(paragraphText);
         error.setFound(Set.of(foundChar));
         error.setExpected(RequirementsHolder.getListBulletChar());
+        return error;
+    }
+
+    /**
+     * Builds the error reported when a list is numbered without a bracket ("1") although its items
+     * are not complete sentences starting with a capital letter.
+     *
+     * @param paragraphText text of the first list item that does not start with a capital letter
+     * @param foundMarker   the marker as the author sees it (e.g. "1")
+     * @return a format error describing the missing-bracket violation
+     */
+    private static FormatError buildMissingBracketError(String paragraphText, String foundMarker) {
+        FormatError error = new FormatError();
+        error.setId("err_list_marker_no_bracket");
+        error.setCategory(ErrorCategory.LIST_FORMATTING);
+        error.setSeverity("error");
+        error.setTitle("Номер пункту переліку без дужки допускається лише для речень з великої літери");
+        error.setParagraphText(paragraphText);
+        error.setFound(Set.of(foundMarker));
+        error.setExpected(RequirementsHolder.getListMarkerClosingSymbol());
+        return error;
+    }
+
+    /**
+     * Builds the error reported when a bibliography entry is numbered with anything
+     * other than a plain number (for example "1." or "1)").
+     *
+     * @param paragraphText text of the bibliography paragraph where the marker was found
+     * @param foundMarker   the marker as the author sees it (e.g. "1.", "1)", "–")
+     * @return a format error describing the bibliography-marker violation
+     */
+    private static FormatError buildBibliographyMarkerError(String paragraphText, String foundMarker) {
+        FormatError error = new FormatError();
+        error.setId("err_bibliography_marker");
+        error.setCategory(ErrorCategory.LIST_FORMATTING);
+        error.setSeverity("error");
+        error.setTitle("Нумерація у списку джерел інформації має бути без дужок і крапок (лише номер)");
+        error.setParagraphText(paragraphText);
+        error.setFound(Set.of(foundMarker));
+        error.setExpected(RequirementsHolder.getBibliographyMarkerFormat());
         return error;
     }
 

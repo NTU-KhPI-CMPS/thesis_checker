@@ -290,6 +290,14 @@
   "@errListBulletChar": {
     "description": "Error shown when a list bullet character is not a dash"
   },
+  "errListMarkerNoBracket": "A list number without a bracket is only allowed for items that are sentences starting with a capital letter",
+  "@errListMarkerNoBracket": {
+    "description": "Error shown when a list is numbered without a bracket but its items are not capitalised sentences"
+  },
+  "errBibliographyMarker": "Bibliography entries must be numbered with a plain number, without brackets or periods",
+  "@errBibliographyMarker": {
+    "description": "Error shown when bibliography entries are numbered with a bracket, a period or another symbol"
+  },
   "warnListManual": "Manual list formatting detected",
   "@warnListManual": {
     "description": "Warning shown when manual list formatting is detected"
@@ -461,6 +469,10 @@
   "valueListFormatOther": "Other format",
   "@valueListFormatOther": {
     "description": "List numbering format: other"
+  },
+  "valueBibliographyPlainNumber": "Number only, without brackets or periods",
+  "@valueBibliographyPlainNumber": {
+    "description": "Expected bibliography numbering format: just a number"
   },
   "valueListConsistent": "Consistent format",
   "@valueListConsistent": {

@@ -216,6 +216,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'Disallowed list bullet character — should be a dash';
 
   @override
+  String get errListMarkerNoBracket =>
+      'A list number without a bracket is only allowed for items that are sentences starting with a capital letter';
+
+  @override
+  String get errBibliographyMarker =>
+      'Bibliography entries must be numbered with a plain number, without brackets or periods';
+
+  @override
   String get warnListManual => 'Manual list formatting detected';
 
   @override
@@ -338,6 +346,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get valueListFormatOther => 'Other format';
+
+  @override
+  String get valueBibliographyPlainNumber =>
+      'Number only, without brackets or periods';
 
   @override
   String get valueListConsistent => 'Consistent format';

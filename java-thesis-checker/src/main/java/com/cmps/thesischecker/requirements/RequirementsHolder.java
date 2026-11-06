@@ -54,6 +54,9 @@ public class RequirementsHolder {
     private static String listBulletChar = "–";
 
     @Getter
+    private static String bibliographyMarkerFormat = "Лише номер без дужок і крапок";
+
+    @Getter
     private static String formulaAlignment = "BOTH, RIGHT";
 
     @Getter
