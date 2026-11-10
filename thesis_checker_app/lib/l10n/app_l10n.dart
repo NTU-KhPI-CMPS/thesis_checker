@@ -452,6 +452,18 @@ abstract class AppLocalizations {
   /// **'Disallowed list bullet character — should be a dash'**
   String get errListBulletChar;
 
+  /// Error shown when a list is numbered without a bracket but its items are not capitalised sentences
+  ///
+  /// In en, this message translates to:
+  /// **'A list number without a bracket is only allowed for items that are sentences starting with a capital letter'**
+  String get errListMarkerNoBracket;
+
+  /// Error shown when bibliography entries are numbered with a bracket, a period or another symbol
+  ///
+  /// In en, this message translates to:
+  /// **'Bibliography entries must be numbered with a plain number, without brackets or periods'**
+  String get errBibliographyMarker;
+
   /// Warning shown when manual list formatting is detected
   ///
   /// In en, this message translates to:
@@ -685,6 +697,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Other format'**
   String get valueListFormatOther;
+
+  /// Expected bibliography numbering format: just a number
+  ///
+  /// In en, this message translates to:
+  /// **'Number only, without brackets or periods'**
+  String get valueBibliographyPlainNumber;
 
   /// Expected value: one numbering format per list level
   ///

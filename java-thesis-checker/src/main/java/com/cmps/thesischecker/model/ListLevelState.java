@@ -21,6 +21,7 @@ public class ListLevelState {
     private Integer lastLevel;
     private final Map<BigInteger, String> expectedFormatByLevel = new HashMap<>();
     private final Set<BigInteger> validatedMarkerLevels = new HashSet<>();
+    private final Set<BigInteger> noBracketReportedLevels = new HashSet<>();
 
     /**
      * Looks up the numbering format previously recorded for a given indentation level.
@@ -55,5 +56,16 @@ public class ListLevelState {
      */
     public boolean markMarkerValidated(BigInteger ilvl) {
         return validatedMarkerLevels.add(ilvl);
+    }
+
+    /**
+     * Marks the given level as already reported for a missing bracket after the number,
+     * so the same list level is reported only once.
+     *
+     * @param ilvl the indentation level
+     * @return true if this level had not been reported before this call
+     */
+    public boolean markNoBracketReported(BigInteger ilvl) {
+        return noBracketReportedLevels.add(ilvl);
     }
 }
