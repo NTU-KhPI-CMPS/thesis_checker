@@ -32,7 +32,7 @@ class AvailableCheckTypes {
     ),
     CheckTypeInfo(
       category: CheckCategory.other,
-      checks: [Check.structuralElement, Check.other],
+      checks: [Check.structuralElement, Check.figure],
       iconPath: 'assets/images/other_checks.png',
     ),
   ];
