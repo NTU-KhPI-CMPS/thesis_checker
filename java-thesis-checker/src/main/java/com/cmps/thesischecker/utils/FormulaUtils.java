@@ -34,7 +34,7 @@ public class FormulaUtils {
      * @param paragraph the paragraph to inspect
      * @return true if the paragraph contains a formula
      */
-    public static boolean isFormulaOnlyParagraph(XWPFParagraph paragraph) {
+    public static boolean paragraphContainsFormula(XWPFParagraph paragraph) {
         return !getFormulaXmls(paragraph).isEmpty();
     }
 
@@ -64,7 +64,7 @@ public class FormulaUtils {
 
         String trimmed = ParagraphUtils.getTrimmedText(paragraph);
 
-        if (isFormulaOnlyParagraph(paragraph) && DASH_FIRST_SYMBOL.matcher(trimmed).find()) {
+        if (paragraphContainsFormula(paragraph) && DASH_FIRST_SYMBOL.matcher(trimmed).find()) {
             return true;
         } if (trimmed.length() < 2 || !trimmed.regionMatches(true, 0, "де", 0, 2)) {
             return false;

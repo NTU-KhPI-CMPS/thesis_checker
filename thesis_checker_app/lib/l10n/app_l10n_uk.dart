@@ -278,6 +278,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get errFormulaSpacingAfter => 'Неправильний відступ після формули';
 
   @override
+  String get errFormulaNotationMissing => 'Формула не має пояснення позначень';
+
+  @override
   String get errFormulaSpacingBeforeNotation =>
       'Неправильний відступ перед позначенням формули';
 
@@ -400,6 +403,13 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get valueFormulaBlankLineAfter => 'Порожній рядок після формули';
+
+  @override
+  String get valueFormulaNotationBlockAfter =>
+      'Блок пояснень «де» після формули';
+
+  @override
+  String get valueFormulaNotationBlockMissing => 'Блок пояснень «де» відсутній';
 
   @override
   String get valueFormulaNotationDirectlyBelow =>

@@ -133,7 +133,7 @@ public class AlignmentUtils {
         if (!xml.contains("<w:drawing")) {
             return false;
         }
-        if (FormulaUtils.isFormulaOnlyParagraph(paragraph)
+        if (FormulaUtils.paragraphContainsFormula(paragraph)
                 || FormulaUtils.paragraphHasTrailingFormulaNumber(paragraph)) {
             return false;
         }

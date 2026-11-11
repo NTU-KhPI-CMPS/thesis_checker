@@ -360,6 +360,10 @@
   "@errFormulaSpacingAfter": {
     "description": "Помилка, коли відступ після формули не відповідає вимогам"
   },
+  "errFormulaNotationMissing": "Формула не має пояснення позначень",
+  "@errFormulaNotationMissing": {
+    "description": "Помилка, коли після формули відсутній обов'язковий блок пояснень «де»"
+  },
   "errFormulaSpacingBeforeNotation": "Неправильний відступ перед позначенням формули",
   "@errFormulaSpacingBeforeNotation": {
     "description": "Помилка, коли відступ перед позначенням формули не відповідає вимогам"
@@ -527,6 +531,14 @@
   "valueFormulaBlankLineAfter": "Порожній рядок після формули",
   "@valueFormulaBlankLineAfter": {
     "description": "Очікуване значення: порожній рядок після формули"
+  },
+  "valueFormulaNotationBlockAfter": "Блок пояснень «де» після формули",
+  "@valueFormulaNotationBlockAfter": {
+    "description": "Очікуване значення: після формули має бути блок пояснень позначень"
+  },
+  "valueFormulaNotationBlockMissing": "Блок пояснень «де» відсутній",
+  "@valueFormulaNotationBlockMissing": {
+    "description": "Знайдене значення: блок пояснень позначень відсутній"
   },
   "valueFormulaNotationDirectlyBelow": "Пояснення «де» безпосередньо під формулою (без відступу)",
   "@valueFormulaNotationDirectlyBelow": {

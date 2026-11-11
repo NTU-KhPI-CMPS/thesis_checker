@@ -548,6 +548,12 @@ abstract class AppLocalizations {
   /// **'Incorrect spacing after formula'**
   String get errFormulaSpacingAfter;
 
+  /// Error shown when a formula has no mandatory "where" ("де") notation explanation block
+  ///
+  /// In en, this message translates to:
+  /// **'Formula has no explanation block for notation'**
+  String get errFormulaNotationMissing;
+
   /// Error shown when spacing before formula notation does not match the requirements
   ///
   /// In en, this message translates to:
@@ -782,10 +788,22 @@ abstract class AppLocalizations {
   /// **'Blank line after the formula'**
   String get valueFormulaBlankLineAfter;
 
+  /// Expected value: formula must have a notation explanation block after it
+  ///
+  /// In en, this message translates to:
+  /// **'The «where» («де») explanation block after the formula'**
+  String get valueFormulaNotationBlockAfter;
+
+  /// Found value: formula notation explanation block is missing
+  ///
+  /// In en, this message translates to:
+  /// **'The «where» («де») explanation block is missing'**
+  String get valueFormulaNotationBlockMissing;
+
   /// Expected value: explanation starts right below the formula
   ///
   /// In en, this message translates to:
-  /// **'The «де» («where») explanation directly below the formula, without a blank line'**
+  /// **'The «where» («де») explanation directly below the formula, without a blank line'**
   String get valueFormulaNotationDirectlyBelow;
 
   /// Expected value: blank line after the formula explanation block
