@@ -392,6 +392,12 @@ abstract class AppLocalizations {
   /// **'Incorrect fonts in table'**
   String get errFontTable;
 
+  /// Error shown when table font name does not match the requirements
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect font name in table'**
+  String get errTableFontName;
+
   /// Error shown when paragraph font size does not match the requirements
   ///
   /// In en, this message translates to:
@@ -415,6 +421,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Incorrect font size in table'**
   String get errFontSizeTable;
+
+  /// Error shown when table font size does not match the requirements
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect font size in table'**
+  String get errTableFontSize;
 
   /// Error shown when paragraph line spacing does not match the requirements
   ///
@@ -469,6 +481,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Incorrect spacing after paragraph'**
   String get errSpacingAfter;
+
+  /// Error shown when spacing before a paragraph in a table does not match the requirements
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect spacing before paragraph in table'**
+  String get errTableSpacingBefore;
+
+  /// Error shown when spacing after a paragraph in a table does not match the requirements
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect spacing after paragraph in table'**
+  String get errTableSpacingAfter;
 
   /// Error shown when left indentation does not match the requirements
   ///

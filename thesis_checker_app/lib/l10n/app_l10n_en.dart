@@ -184,6 +184,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errFontTable => 'Incorrect fonts in table';
 
   @override
+  String get errTableFontName => 'Incorrect font name in table';
+
+  @override
   String get errFontSize => 'Incorrect font size in paragraph';
 
   @override
@@ -194,6 +197,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errFontSizeTable => 'Incorrect font size in table';
+
+  @override
+  String get errTableFontSize => 'Incorrect font size in table';
 
   @override
   String get errLinespace => 'Incorrect line spacing in paragraph';
@@ -223,6 +229,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errSpacingAfter => 'Incorrect spacing after paragraph';
+
+  @override
+  String get errTableSpacingBefore =>
+      'Incorrect spacing before paragraph in table';
+
+  @override
+  String get errTableSpacingAfter =>
+      'Incorrect spacing after paragraph in table';
 
   @override
   String get errIndentationLeft => 'Incorrect left indentation';

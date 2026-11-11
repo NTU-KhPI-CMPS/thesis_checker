@@ -30,6 +30,22 @@ void main() {
             'err_formula_sequence',
             (AppLocalizations l) => l.errFormulaSequence,
           ],
+          [
+            'err_table_font_name',
+            (AppLocalizations l) => l.errTableFontName,
+          ],
+          [
+            'err_table_font_size',
+            (AppLocalizations l) => l.errTableFontSize,
+          ],
+          [
+            'err_table_spacing_before',
+            (AppLocalizations l) => l.errTableSpacingBefore,
+          ],
+          [
+            'err_table_spacing_after',
+            (AppLocalizations l) => l.errTableSpacingAfter,
+          ],
         ],
         (String id, String Function(AppLocalizations) expected) {
           // Given

@@ -30,11 +30,15 @@ final Map<String, MessageResolver> errorMessageResolvers = {
 
   'err_spacing_before': (l) => l.errSpacingBefore,
   'err_spacing_after': (l) => l.errSpacingAfter,
+  'err_table_spacing_before': (l) => l.errTableSpacingBefore,
+  'err_table_spacing_after': (l) => l.errTableSpacingAfter,
 
   'err_font': (l) => l.errFont,
   'err_font_header': (l) => l.errFontHeader,
   'err_font_footer': (l) => l.errFontFooter,
   'err_font_table': (l) => l.errFontTable,
+  'err_table_font_name': (l) => l.errTableFontName,
+  'err_table_font_size': (l) => l.errTableFontSize,
 
   'err_font_size': (l) => l.errFontSize,
   'err_font_size_header': (l) => l.errFontSizeHeader,

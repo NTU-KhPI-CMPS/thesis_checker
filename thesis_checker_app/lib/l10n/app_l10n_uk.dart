@@ -192,6 +192,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get errFontTable => 'Невірні шрифти у таблиці';
 
   @override
+  String get errTableFontName => 'Невірна назва шрифта у таблиці';
+
+  @override
   String get errFontSize => 'Неправильний розмір шрифта у параграфі';
 
   @override
@@ -204,6 +207,9 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get errFontSizeTable => 'Неправильний розмір шрифта у таблиці';
+
+  @override
+  String get errTableFontSize => 'Неправильний розмір шрифта у таблиці';
 
   @override
   String get errLinespace => 'Неправильні інтервали між рядками у параграфі';
@@ -234,6 +240,13 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get errSpacingAfter => 'Невірний відступ після абзацу';
+
+  @override
+  String get errTableSpacingBefore =>
+      'Невірний відступ перед абзацем у таблиці';
+
+  @override
+  String get errTableSpacingAfter => 'Невірний відступ після абзацу у таблиці';
 
   @override
   String get errIndentationLeft => 'Невірний відступ зліва';
