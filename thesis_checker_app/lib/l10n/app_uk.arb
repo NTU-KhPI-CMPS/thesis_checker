@@ -324,7 +324,7 @@
   },
 
   "@@comment_formula": "FORMULA CHECKER - Формули",
-  "errFormulaAlignment": "Формула вирівняна по лівому краю",
+  "errFormulaAlignment": "Не правильно вирівняна формула",
   "@errFormulaAlignment": {
     "description": "Помилка, коли формула вирівняна по лівому краю"
   },

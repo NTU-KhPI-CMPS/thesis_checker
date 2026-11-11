@@ -102,7 +102,7 @@ public class FormulaCheckerTest extends BaseTest {
     void check_incorrectFormatting_alignment() {
         // GIVEN
         String testFilePath = "src/test/resources/incorrect_formula.docx";
-        String expectedTitle = "Формула вирівняна по лівому краю";
+        String expectedTitle = "Не правильно вирівняна формула";
 
         // WHEN
         List<FormatError> result = checker.check(testFilePath);

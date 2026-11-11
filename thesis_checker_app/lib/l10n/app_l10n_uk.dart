@@ -250,7 +250,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get errIndentationRight => 'Невірний відступ справа';
 
   @override
-  String get errFormulaAlignment => 'Формула вирівняна по лівому краю';
+  String get errFormulaAlignment => 'Не правильно вирівняна формула';
 
   @override
   String get errFormulaMultiplePerLine => 'Кілька формул в одному рядку';

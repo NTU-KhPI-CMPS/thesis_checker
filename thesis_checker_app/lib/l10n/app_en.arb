@@ -324,7 +324,7 @@
   },
 
   "@@comment_formula": "FORMULA CHECKER - Formulas",
-  "errFormulaAlignment": "Formula aligned to the left",
+  "errFormulaAlignment": "Incorrectly aligned formula",
   "@errFormulaAlignment": {
     "description": "Error shown when a formula is aligned to the left"
   },

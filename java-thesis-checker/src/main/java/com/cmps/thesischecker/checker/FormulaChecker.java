@@ -106,6 +106,21 @@ public class FormulaChecker implements Checker {
     }
 
     /**
+     * Checks the alignment of a paragraph and returns an error if it is not BOTH or RIGHT.
+     *
+     * @param paragraph    the paragraph to check
+     * @param displayedText the text content of the paragraph for error reporting
+     * @return a list containing an alignment error if misaligned, or an empty list if aligned correctly
+     */
+    private List<FormatError> checkTextAlignment(XWPFParagraph paragraph, String displayedText) {
+        String alignment = AlignmentUtils.getAlignment(paragraph);
+        if ("BOTH".equalsIgnoreCase(alignment) || "RIGHT".equalsIgnoreCase(alignment)) {
+            return List.of();
+        }
+        return List.of(buildAlignmentError(displayedText, alignment));
+    }
+
+    /**
      * Detects paragraphs that end with formula-style numbering and have no OMath object.
      *
      * @param paragraph the non-OMath paragraph to inspect
@@ -120,6 +135,7 @@ public class FormulaChecker implements Checker {
 
         String trimmed = ParagraphUtils.getTrimmedText(paragraph);
         errorList.add(buildFormulaToolWarning(trimmed));
+        errorList.addAll(checkTextAlignment(paragraph, trimmed));
 
         Matcher literalParen = TRAILING_LITERAL_PAREN_PATTERN.matcher(trimmed);
         if (literalParen.find()) {
@@ -155,7 +171,8 @@ public class FormulaChecker implements Checker {
         XWPFParagraph formulaParagraph = paragraphs.get(formulaIndex);
         String formulaText = displayText(formulaParagraph);
 
-        if (formulaIndex == 0 || !FormulaUtils.isBlankParagraph(paragraphs.get(formulaIndex - 1))) {
+        if (formulaIndex == 0 || (!FormulaUtils.isBlankParagraph(paragraphs.get(formulaIndex - 1))
+                && !FormulaUtils.isNotationParagraph(formulaParagraph))) {
             errorList.add(buildSpacingError("err_formula_spacing_before",
                     "Формула без порожнього рядка перед неї",
                     formulaText,
@@ -163,9 +180,12 @@ public class FormulaChecker implements Checker {
                     "Порожній рядок перед формулою"));
         }
 
-        String alignment = AlignmentUtils.getAlignment(formulaParagraph);
-        if (!"CENTER".equalsIgnoreCase(alignment) && !"RIGHT".equalsIgnoreCase(alignment)) {
-            errorList.add(buildAlignmentError(formulaText, alignment));
+        String text = ParagraphUtils.getTrimmedText(formulaParagraph);
+        boolean formulaAlone = text.isEmpty()
+                || FormulaUtils.PLAIN_FORMULA_NUMBER_PATTERN.matcher(text).matches();
+
+        if (!formulaAlone) {
+            errorList.addAll(checkTextAlignment(formulaParagraph, formulaText));
         }
 
         List<String> formulaXmls = FormulaUtils.getFormulaXmls(formulaParagraph);
@@ -500,7 +520,7 @@ public class FormulaChecker implements Checker {
         error.setId("err_formula_alignment");
         error.setCategory(ErrorCategory.FORMULA);
         error.setSeverity("error");
-        error.setTitle("Формула вирівняна по лівому краю");
+        error.setTitle("Не правильно вирівняна формула");
         error.setParagraphText(paragraphText);
         error.setFound(Set.of(found));
         error.setExpected(RequirementsHolder.getFormulaAlignment());

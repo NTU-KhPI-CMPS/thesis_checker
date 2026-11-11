@@ -497,7 +497,7 @@ abstract class AppLocalizations {
   /// Error shown when a formula is aligned to the left
   ///
   /// In en, this message translates to:
-  /// **'Formula aligned to the left'**
+  /// **'Incorrectly aligned formula'**
   String get errFormulaAlignment;
 
   /// Error shown when more than one formula appears on a line

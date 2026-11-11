@@ -239,7 +239,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errIndentationRight => 'Incorrect right indentation';
 
   @override
-  String get errFormulaAlignment => 'Formula aligned to the left';
+  String get errFormulaAlignment => 'Incorrectly aligned formula';
 
   @override
   String get errFormulaMultiplePerLine => 'Multiple formulas in one line';
