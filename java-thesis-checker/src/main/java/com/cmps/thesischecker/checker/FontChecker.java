@@ -66,23 +66,7 @@ public class FontChecker implements Checker {
                     if (!incorrectFonts.isEmpty()) {
                         allErrors.add(
                                 buildFontNameFormatError("err_font_footer", "Неправильні шрифти в нижньому колонтитулі",
-                                                         paragraphText, incorrectFonts));
-                    }
-                }
-            }
-
-            for (XWPFTable table : MainContentUtils.getMainContentTables(doc)) {
-                for (XWPFTableRow row : table.getRows()) {
-                    for (XWPFTableCell cell : row.getTableCells()) {
-                        for (XWPFParagraph paragraph : cell.getParagraphs()) {
-                            String paragraphText = paragraph.getText().trim();
-                            if (paragraphText.isEmpty()) continue;
-                            Set<String> incorrectFonts = validate(paragraph);
-                            if (!incorrectFonts.isEmpty()) {
-                                allErrors.add(buildFontNameFormatError("err_font_table", "Невірні шрифти у таблиці",
-                                                                       paragraphText, incorrectFonts));
-                            }
-                        }
+                                                          paragraphText, incorrectFonts));
                     }
                 }
             }

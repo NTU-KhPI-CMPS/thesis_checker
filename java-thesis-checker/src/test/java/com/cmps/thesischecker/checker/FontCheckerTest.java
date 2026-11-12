@@ -24,7 +24,7 @@ class FontCheckerTest extends BaseTest {
         FontChecker checker = new FontChecker();
         List<FormatError> result = checker.check("src/test/resources/incorrect_fonts.docx");
         assertFalse(result.isEmpty(), "Expected errors in test document");
-        assertEquals(7, result.size(), "Should find exactly 7 font errors in test document");
+        assertEquals(3, result.size(), "Should find exactly 3 font errors in test document");
     }
 
     @Test

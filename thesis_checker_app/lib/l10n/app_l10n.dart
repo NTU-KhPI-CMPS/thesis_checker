@@ -386,12 +386,6 @@ abstract class AppLocalizations {
   /// **'Incorrect fonts in footer'**
   String get errFontFooter;
 
-  /// Error shown when table fonts do not match the requirements
-  ///
-  /// In en, this message translates to:
-  /// **'Incorrect fonts in table'**
-  String get errFontTable;
-
   /// Error shown when table font name does not match the requirements
   ///
   /// In en, this message translates to:

@@ -189,9 +189,6 @@ class AppLocalizationsUk extends AppLocalizations {
   String get errFontFooter => 'Неправильні шрифти в нижньому колонтитулі';
 
   @override
-  String get errFontTable => 'Невірні шрифти у таблиці';
-
-  @override
   String get errTableFontName => 'Невірна назва шрифта у таблиці';
 
   @override

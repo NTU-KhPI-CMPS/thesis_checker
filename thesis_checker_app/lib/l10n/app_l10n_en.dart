@@ -181,9 +181,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errFontFooter => 'Incorrect fonts in footer';
 
   @override
-  String get errFontTable => 'Incorrect fonts in table';
-
-  @override
   String get errTableFontName => 'Incorrect font name in table';
 
   @override

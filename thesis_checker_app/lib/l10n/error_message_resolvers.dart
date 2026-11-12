@@ -36,7 +36,6 @@ final Map<String, MessageResolver> errorMessageResolvers = {
   'err_font': (l) => l.errFont,
   'err_font_header': (l) => l.errFontHeader,
   'err_font_footer': (l) => l.errFontFooter,
-  'err_font_table': (l) => l.errFontTable,
   'err_table_font_name': (l) => l.errTableFontName,
   'err_table_font_size': (l) => l.errTableFontSize,
 

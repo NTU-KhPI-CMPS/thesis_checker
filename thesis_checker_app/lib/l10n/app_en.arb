@@ -240,10 +240,6 @@
   "@errFontFooter": {
     "description": "Error shown when footer fonts do not match the requirements"
   },
-  "errFontTable": "Incorrect fonts in table",
-  "@errFontTable": {
-    "description": "Error shown when table fonts do not match the requirements"
-  },
   "errTableFontName": "Incorrect font name in table",
   "@errTableFontName": {
     "description": "Error shown when table font name does not match the requirements"
