@@ -294,6 +294,14 @@
   "@errListBulletChar": {
     "description": "Помилка, коли символ маркера списку не є тире"
   },
+  "errListMarkerNoBracket": "Номер пункту переліку без дужки допускається лише для речень з великої літери",
+  "@errListMarkerNoBracket": {
+    "description": "Помилка, коли перелік пронумеровано без дужки, але пункти не є реченнями з великої літери"
+  },
+  "errBibliographyMarker": "Нумерація у списку джерел інформації має бути без дужок і крапок (лише номер)",
+  "@errBibliographyMarker": {
+    "description": "Помилка, коли джерела у списку літератури пронумеровано з дужкою, крапкою або іншим знаком"
+  },
   "warnListManual": "Виявлено ручне форматування переліку",
   "@warnListManual": {
     "description": "Попередження, коли виявлено ручне форматування списку"
@@ -473,6 +481,10 @@
   "valueListFormatOther": "інший формат",
   "@valueListFormatOther": {
     "description": "Формат нумерації списку: інший формат"
+  },
+  "valueBibliographyPlainNumber": "Лише номер без дужок і крапок",
+  "@valueBibliographyPlainNumber": {
+    "description": "Очікуваний формат нумерації у списку джерел: просто номер"
   },
   "valueListConsistent": "Однаковий формат",
   "@valueListConsistent": {

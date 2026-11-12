@@ -27,6 +27,7 @@ final Map<String, MessageResolver> errorValueResolvers = {
   'позначка (маркер)': (l) => l.valueListFormatBullet,
   'інший формат': (l) => l.valueListFormatOther,
   'consistent': (l) => l.valueListConsistent,
+  'Лише номер без дужок і крапок': (l) => l.valueBibliographyPlainNumber,
 
   // Figures
   'немає пустого рядка перед': (l) => l.valueFigureNoBlankBefore,

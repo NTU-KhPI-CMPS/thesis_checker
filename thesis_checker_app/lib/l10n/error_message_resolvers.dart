@@ -26,6 +26,8 @@ final Map<String, MessageResolver> errorMessageResolvers = {
   'err_list_marker_format': (l) => l.errListMarkerFormat,
   'err_list_marker_suffix': (l) => l.errListMarkerSuffix,
   'err_list_bullet_char': (l) => l.errListBulletChar,
+  'err_list_marker_no_bracket': (l) => l.errListMarkerNoBracket,
+  'err_bibliography_marker': (l) => l.errBibliographyMarker,
   'warn_list_manual': (l) => l.warnListManual,
 
   'err_spacing_before': (l) => l.errSpacingBefore,

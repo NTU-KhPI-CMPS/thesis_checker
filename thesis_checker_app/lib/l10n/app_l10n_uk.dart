@@ -230,6 +230,14 @@ class AppLocalizationsUk extends AppLocalizations {
       'Недозволений символ маркера переліку — має бути тире';
 
   @override
+  String get errListMarkerNoBracket =>
+      'Номер пункту переліку без дужки допускається лише для речень з великої літери';
+
+  @override
+  String get errBibliographyMarker =>
+      'Нумерація у списку джерел інформації має бути без дужок і крапок (лише номер)';
+
+  @override
   String get warnListManual => 'Виявлено ручне форматування переліку';
 
   @override
@@ -359,6 +367,9 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get valueListFormatOther => 'інший формат';
+
+  @override
+  String get valueBibliographyPlainNumber => 'Лише номер без дужок і крапок';
 
   @override
   String get valueListConsistent => 'Однаковий формат';

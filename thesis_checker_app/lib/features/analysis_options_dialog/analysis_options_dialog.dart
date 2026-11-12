@@ -366,7 +366,9 @@ class _AnalysisOptionsDialogState extends State<AnalysisOptionsDialog> with Sing
                                     FileDroppedEvent(
                                       filePath: widget.filePath,
                                       fileName: widget.fileName,
-                                      selectedChecks: selectedChecks.toList(growable: false),
+                                      selectedChecks: selectedChecks.containsAll(
+                                        AvailableCheckTypes.checkTypes.toSet())
+                                        ? [] : selectedChecks.toList(growable: false)
                                     ),
                                   );
                                   Navigator.of(context).pop();

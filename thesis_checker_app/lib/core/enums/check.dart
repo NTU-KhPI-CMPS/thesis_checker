@@ -10,6 +10,7 @@ enum Check {
   // firstLineIndentation('FIRST_LINE_INDENTATION'), need to add this code when the checker will be implemented
   structuralElement('STRUCTURAL_ELEMENT'),
   formula('FORMULA'),
+  figure('FIGURE'),
   other('OTHER');
 
   final String name;

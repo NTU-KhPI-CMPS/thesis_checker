@@ -42,7 +42,7 @@ public abstract class BaseTest {
 
     @ParameterizedTest
     @DisplayName("Verify that files don't have any errors, warnings are allowed")
-    @ValueSource(strings = {"src/test/resources/correct_formulas.docx"})
+    @ValueSource(strings = {"src/test/resources/correct_formulas.docx", "src/test/resources/correct_lists.docx"})
     void check_noErrors(String fileName) {
         if (getChecker() == null) {
             return;

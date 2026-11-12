@@ -119,6 +119,37 @@ public class MarkerDefinition {
     }
 
     /**
+     * Checks whether a numbered (non-bullet) marker has no closing symbol at all, i.e. its level text
+     * is only a number/letter placeholder such as "%1". The standard allows this style only for
+     * lists made of complete sentences (п. 6.2.9); otherwise a bracket is required (п. 6.2.6).
+     *
+     * @return true if the format is decimal or a letter format and the level text is only a placeholder
+     */
+    public boolean hasNoClosingSymbol() {
+        if (lvlText == null || isBullet()) {
+            return false;
+        }
+        boolean numbered = "decimal".equals(format) || "lowerletter".equals(format)
+                || "russianlower".equals(format) || "ukrainianlower".equals(format);
+        return numbered && lvlText.trim().matches("%\\d+");
+    }
+
+    /**
+     * Checks whether this marker is a plain arabic number without any brackets, periods
+     * or other decorations (level text such as "%1"). This is the only marker allowed
+     * in the bibliography ("СПИСОК ДЖЕРЕЛ ІНФОРМАЦІЇ").
+     *
+     * @return true if the format is decimal and the level text is only a number placeholder
+     *         (or is not defined); false otherwise
+     */
+    public boolean isPlainNumber() {
+        if (!"decimal".equals(format)) {
+            return false;
+        }
+        return lvlText == null || lvlText.trim().matches("%\\d+");
+    }
+
+    /**
      * Returns a human-friendly description of the numbering format (for reporting).
      * Example: "римські числа (верхній регістр)" for upperRoman.
      *

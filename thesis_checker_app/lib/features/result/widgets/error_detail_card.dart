@@ -83,8 +83,6 @@ class _ErrorDetailCardState extends State<ErrorDetailCard> {
                   Expanded(
                     child: Text(
                       widget.title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontFamily: 'FunnelSans',
                         fontWeight: FontWeight.w700,
