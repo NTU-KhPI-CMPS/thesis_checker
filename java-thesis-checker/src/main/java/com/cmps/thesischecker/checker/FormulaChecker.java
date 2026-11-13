@@ -78,7 +78,7 @@ public class FormulaChecker implements Checker {
                     continue;
                 }
 
-                if (!FormulaUtils.isFormulaOnlyParagraph(paragraph)) {
+                if (!FormulaUtils.paragraphContainsFormula(paragraph)) {
                     allErrors.addAll(
                             checkPlainTextFormulaCandidate(
                                     paragraph,
@@ -106,6 +106,21 @@ public class FormulaChecker implements Checker {
     }
 
     /**
+     * Checks the alignment of a paragraph and returns an error if it is not BOTH or RIGHT.
+     *
+     * @param paragraph    the paragraph to check
+     * @param displayedText the text content of the paragraph for error reporting
+     * @return a list containing an alignment error if misaligned, or an empty list if aligned correctly
+     */
+    private List<FormatError> checkTextAlignment(XWPFParagraph paragraph, String displayedText) {
+        String alignment = AlignmentUtils.getAlignment(paragraph);
+        if ("BOTH".equalsIgnoreCase(alignment) || "RIGHT".equalsIgnoreCase(alignment)) {
+            return List.of();
+        }
+        return List.of(buildAlignmentError(displayedText, alignment));
+    }
+
+    /**
      * Detects paragraphs that end with formula-style numbering and have no OMath object.
      *
      * @param paragraph the non-OMath paragraph to inspect
@@ -120,6 +135,7 @@ public class FormulaChecker implements Checker {
 
         String trimmed = ParagraphUtils.getTrimmedText(paragraph);
         errorList.add(buildFormulaToolWarning(trimmed));
+        errorList.addAll(checkTextAlignment(paragraph, trimmed));
 
         Matcher literalParen = TRAILING_LITERAL_PAREN_PATTERN.matcher(trimmed);
         if (literalParen.find()) {
@@ -149,27 +165,38 @@ public class FormulaChecker implements Checker {
      * @param expectedNumberInChapter  mutable holder for the expected next formula number
      * @return the detected formula-related errors for the block, or an empty list if none are found
      */
-    private List<FormatError> checkFormulaBlock(List<XWPFParagraph> paragraphs, int formulaIndex, int currentChapter,
-                                      int[] expectedNumberInChapter) {
+
+    private List<FormatError> checkFormulaBlock(
+            List<XWPFParagraph> paragraphs,
+            int formulaIndex,
+            int currentChapter,
+            int[] expectedNumberInChapter) {
+
         List<FormatError> errorList = new ArrayList<>();
         XWPFParagraph formulaParagraph = paragraphs.get(formulaIndex);
         String formulaText = displayText(formulaParagraph);
 
-        if (formulaIndex == 0 || !FormulaUtils.isBlankParagraph(paragraphs.get(formulaIndex - 1))) {
-            errorList.add(buildSpacingError("err_formula_spacing_before",
-                    "Формула без порожнього рядка перед неї",
+        String text = ParagraphUtils.getTrimmedText(formulaParagraph);
+        boolean formulaAlone = text.isEmpty()
+                || FormulaUtils.PLAIN_FORMULA_NUMBER_PATTERN.matcher(text).matches();
+
+        if (formulaAlone && (formulaIndex == 0
+                || !FormulaUtils.isBlankParagraph(paragraphs.get(formulaIndex - 1)))) {
+
+            errorList.add(buildSpacingError(
+                    "err_formula_spacing_before",
+                    "Формула без порожнього рядка перед нею",
                     formulaText,
-                    formulaIndex > 0 ? displayText(paragraphs.get(formulaIndex - 1)) : "Початок документу",
                     "Порожній рядок перед формулою"));
         }
 
-        String alignment = AlignmentUtils.getAlignment(formulaParagraph);
-        if (!"CENTER".equalsIgnoreCase(alignment) && !"RIGHT".equalsIgnoreCase(alignment)) {
-            errorList.add(buildAlignmentError(formulaText, alignment));
+        if (!formulaAlone) {
+            errorList.addAll(checkTextAlignment(formulaParagraph, formulaText));
         }
 
         List<String> formulaXmls = FormulaUtils.getFormulaXmls(formulaParagraph);
         int[] numberCount = {0};
+
         for (String formulaXml : formulaXmls) {
             errorList.addAll(checkFormulaXml(
                     formulaXml,
@@ -181,66 +208,80 @@ public class FormulaChecker implements Checker {
             ));
         }
 
-        if (formulaXmls.size() > 1 || numberCount[0] > 1) {
+        if (formulaAlone && (formulaXmls.size() > 1 || numberCount[0] > 1)) {
             errorList.add(buildOneFormulaPerLineError(formulaText));
         }
 
+        if (!formulaAlone) {
+            return errorList;
+        }
+
         int nextIndex = formulaIndex + 1;
+
         if (nextIndex >= paragraphs.size()) {
-            errorList.add(buildSpacingError("err_formula_spacing_after",
+            errorList.add(buildSpacingError(
+                    "err_formula_spacing_after",
                     "Формула без порожнього рядка після неї",
                     formulaText,
-                    formulaText,
                     "Порожній рядок після формули"));
+
+            errorList.add(buildNotationMissingError(formulaText));
+
             return errorList;
         }
 
         int afterFormulaIndex = nextIndex;
 
-        if (FormulaUtils.isBlankParagraph(paragraphs.get(nextIndex))) {
-            int cursor = nextIndex;
-            while (cursor < paragraphs.size() && FormulaUtils.isBlankParagraph(paragraphs.get(cursor))) {
-                cursor++;
-            }
-
-            if (cursor >= paragraphs.size() || !FormulaUtils.isNotationParagraph(paragraphs.get(cursor))) {
-                return errorList;
-            }
-
-            errorList.add(buildSpacingError("err_formula_spacing_before_notation",
-                    "Помилковий порожній рядок перед поясненням «де»",
-                    formulaText,
-                    formulaText,
-                    "Пояснення «де» безпосередньо під формулою (без відступу)"));
-            afterFormulaIndex = cursor;
+        while (afterFormulaIndex < paragraphs.size()
+                && FormulaUtils.isBlankParagraph(paragraphs.get(afterFormulaIndex))) {
+            afterFormulaIndex++;
         }
 
-        if (FormulaUtils.isNotationParagraph(paragraphs.get(afterFormulaIndex))) {
-            int blockEnd = afterFormulaIndex + 1;
-            while (blockEnd < paragraphs.size() && FormulaUtils.isNotationContinuationLine(paragraphs.get(blockEnd))) {
-                blockEnd++;
+        boolean hasNotationBlock = afterFormulaIndex < paragraphs.size()
+                && FormulaUtils.isNotationParagraph(paragraphs.get(afterFormulaIndex));
+
+        if (!hasNotationBlock) {
+            errorList.add(buildNotationMissingError(formulaText));
+
+            if (afterFormulaIndex == nextIndex) {
+                errorList.add(buildSpacingError(
+                        "err_formula_spacing_after",
+                        "Формула без порожнього рядка після неї",
+                        formulaText,
+                        "Порожній рядок після формули"));
             }
 
-            if (blockEnd >= paragraphs.size() || !FormulaUtils.isBlankParagraph(paragraphs.get(blockEnd))) {
-                errorList.add(buildSpacingError("err_formula_notation_spacing",
-                        "Відсутній порожній рядок після пояснення «де»",
-                        formulaText,
-                        formulaText,
-                        "Порожній рядок після блоку пояснень"));
-            }
             return errorList;
         }
 
-        if (afterFormulaIndex == nextIndex) {
-            errorList.add(buildSpacingError("err_formula_spacing_after",
-                    "Формула без порожнього рядка після неї",
+        if (afterFormulaIndex > nextIndex) {
+            errorList.add(buildSpacingError(
+                    "err_formula_spacing_before_notation",
+                    "Помилковий порожній рядок перед поясненням «де»",
                     formulaText,
+                    "Пояснення «де» безпосередньо під формулою"));
+        }
+
+        int blockEnd = afterFormulaIndex + 1;
+
+        while (blockEnd < paragraphs.size()
+                && FormulaUtils.isNotationContinuationLine(paragraphs.get(blockEnd))) {
+            blockEnd++;
+        }
+
+        if (blockEnd >= paragraphs.size()
+                || !FormulaUtils.isBlankParagraph(paragraphs.get(blockEnd))) {
+
+            errorList.add(buildSpacingError(
+                    "err_formula_notation_spacing",
+                    "Відсутній порожній рядок після пояснення «де»",
                     formulaText,
-                    "Порожній рядок після формули"));
+                    "Порожній рядок після блоку пояснень"));
         }
 
         return errorList;
     }
+
 
     /**
      * Extracts the chapter number from the heading paragraph and resets the formula counter.
@@ -472,19 +513,48 @@ public class FormulaChecker implements Checker {
      * @param id            the unique error identifier
      * @param title         the detailed error title
      * @param paragraphText the text content of the paragraph
-     * @param found         the incorrect format found in the document
      * @param expected      the expected spacing requirements description
      * @return a FormatError describing a spacing problem
      */
-    private static FormatError buildSpacingError(String id, String title, String paragraphText, String found, String expected) {
+
+    private static FormatError buildSpacingError(
+            String id,
+            String title,
+            String paragraphText,
+            String expected) {
+
         FormatError error = new FormatError();
         error.setId(id);
         error.setCategory(ErrorCategory.FORMULA);
         error.setSeverity("error");
         error.setTitle(title);
         error.setParagraphText(paragraphText);
-        error.setFound(Set.of(found));
+
+        if ("err_formula_spacing_before_notation".equals(id)) {
+            error.setFound(Set.of("Порожній рядок присутній"));
+        } else {
+            error.setFound(Set.of("Порожній рядок відсутній"));
+        }
+
         error.setExpected(expected);
+        return error;
+    }
+
+    /**
+     * Creates a FormatError for a formula without the mandatory notation ("де ...") block.
+     *
+     * @param paragraphText the text content of the formula paragraph
+     * @return a FormatError describing a missing notation block
+     */
+    private static FormatError buildNotationMissingError(String paragraphText) {
+        FormatError error = new FormatError();
+        error.setId("err_formula_notation_missing");
+        error.setCategory(ErrorCategory.FORMULA);
+        error.setSeverity("error");
+        error.setTitle("Формула не має пояснення позначень");
+        error.setParagraphText(paragraphText);
+        error.setFound(Set.of("Блок пояснень «де» відсутній"));
+        error.setExpected("Блок пояснень «де» після формули");
         return error;
     }
 
@@ -500,7 +570,7 @@ public class FormulaChecker implements Checker {
         error.setId("err_formula_alignment");
         error.setCategory(ErrorCategory.FORMULA);
         error.setSeverity("error");
-        error.setTitle("Формула вирівняна по лівому краю");
+        error.setTitle("Не правильно вирівняна формула");
         error.setParagraphText(paragraphText);
         error.setFound(Set.of(found));
         error.setExpected(RequirementsHolder.getFormulaAlignment());

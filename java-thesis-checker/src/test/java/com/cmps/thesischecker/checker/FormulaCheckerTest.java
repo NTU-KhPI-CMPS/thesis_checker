@@ -98,11 +98,33 @@ public class FormulaCheckerTest extends BaseTest {
     }
 
     @Test
+    @DisplayName("Detect missing notation block after formula")
+    void check_incorrectFormatting_missingNotationBlock() {
+        // GIVEN
+        String testFilePath = "src/test/resources/incorrect_formula.docx";
+        String expectedErrorId = "err_formula_notation_missing";
+
+        // WHEN
+        List<FormatError> result = checker.check(testFilePath);
+
+        // THEN
+        List<FormatError> errorsWithExpectedId = result.stream()
+                .filter(fe -> expectedErrorId.equals(fe.getId()))
+                .toList();
+
+        assertFalse(errorsWithExpectedId.isEmpty(), "Failed to detect missing formula notation block.");
+        FormatError formatError = errorsWithExpectedId.getFirst();
+        assertEquals(FORMULA, formatError.getCategory());
+        assertEquals(Set.of("Блок пояснень «де» відсутній"), formatError.getFound());
+        assertEquals("Блок пояснень «де» після формули", formatError.getExpected());
+    }
+
+    @Test
     @DisplayName("Detect incorrect formula alignment")
     void check_incorrectFormatting_alignment() {
         // GIVEN
         String testFilePath = "src/test/resources/incorrect_formula.docx";
-        String expectedTitle = "Формула вирівняна по лівому краю";
+        String expectedTitle = "Не правильно вирівняна формула";
 
         // WHEN
         List<FormatError> result = checker.check(testFilePath);

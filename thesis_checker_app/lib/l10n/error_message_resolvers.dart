@@ -55,6 +55,7 @@ final Map<String, MessageResolver> errorMessageResolvers = {
   'err_formula_font_size': (l) => l.errFormulaFontSize,
   'err_formula_spacing_before': (l) => l.errFormulaSpacingBefore,
   'err_formula_spacing_after': (l) => l.errFormulaSpacingAfter,
+  'err_formula_notation_missing': (l) => l.errFormulaNotationMissing,
   'err_formula_spacing_before_notation': (l) => l.errFormulaSpacingBeforeNotation,
   'err_formula_notation_spacing': (l) => l.errFormulaNotationSpacing,
 

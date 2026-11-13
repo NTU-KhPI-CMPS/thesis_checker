@@ -31,6 +31,10 @@ void main() {
             (AppLocalizations l) => l.errFormulaSequence,
           ],
           [
+            'err_formula_notation_missing',
+            (AppLocalizations l) => l.errFormulaNotationMissing,
+          ],
+          [
             'err_table_font_name',
             (AppLocalizations l) => l.errTableFontName,
           ],

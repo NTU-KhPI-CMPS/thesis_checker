@@ -336,7 +336,7 @@
   },
 
   "@@comment_formula": "FORMULA CHECKER - Formulas",
-  "errFormulaAlignment": "Formula aligned to the left",
+  "errFormulaAlignment": "Incorrectly aligned formula",
   "@errFormulaAlignment": {
     "description": "Error shown when a formula is aligned to the left"
   },
@@ -371,6 +371,10 @@
   "errFormulaSpacingAfter": "Incorrect spacing after formula",
   "@errFormulaSpacingAfter": {
     "description": "Error shown when spacing after a formula does not match the requirements"
+  },
+  "errFormulaNotationMissing": "Formula has no explanation block for notation",
+  "@errFormulaNotationMissing": {
+    "description": "Error shown when a formula has no mandatory \"where\" (\"де\") notation explanation block"
   },
   "errFormulaSpacingBeforeNotation": "Incorrect spacing before formula notation",
   "@errFormulaSpacingBeforeNotation": {
@@ -540,7 +544,15 @@
   "@valueFormulaBlankLineAfter": {
     "description": "Expected value: blank line after a formula"
   },
-  "valueFormulaNotationDirectlyBelow": "The «де» («where») explanation directly below the formula, without a blank line",
+  "valueFormulaNotationBlockAfter": "The «where» («де») explanation block after the formula",
+  "@valueFormulaNotationBlockAfter": {
+    "description": "Expected value: formula must have a notation explanation block after it"
+  },
+  "valueFormulaNotationBlockMissing": "The «where» («де») explanation block is missing",
+  "@valueFormulaNotationBlockMissing": {
+    "description": "Found value: formula notation explanation block is missing"
+  },
+  "valueFormulaNotationDirectlyBelow": "The «where» («де») explanation directly below the formula, without a blank line",
   "@valueFormulaNotationDirectlyBelow": {
     "description": "Expected value: explanation starts right below the formula"
   },

@@ -1,6 +1,8 @@
 package com.cmps.thesischecker.utils;
 
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.openxmlformats.schemas.officeDocument.x2006.math.CTOMath;
+import org.openxmlformats.schemas.officeDocument.x2006.math.CTOMathPara;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 
 import java.util.ArrayList;
@@ -20,6 +22,8 @@ public class FormulaUtils {
             Pattern.compile("\\(\\s*\\d+\\.\\d+\\s*\\)[.,;]?\\s*$");
     public static final Pattern TRAILING_FORMULA_NUMBER_PATTERN =
             Pattern.compile(".*\\(\\s*\\d+\\.\\d+\\s*\\)[.,;]?\\s*$");
+    public static final Pattern DASH_FIRST_SYMBOL =
+            Pattern.compile("^\\p{Pd}");
 
     private FormulaUtils() {
     }
@@ -30,7 +34,7 @@ public class FormulaUtils {
      * @param paragraph the paragraph to inspect
      * @return true if the paragraph contains a formula
      */
-    public static boolean isFormulaOnlyParagraph(XWPFParagraph paragraph) {
+    public static boolean paragraphContainsFormula(XWPFParagraph paragraph) {
         return !getFormulaXmls(paragraph).isEmpty();
     }
 
@@ -60,10 +64,11 @@ public class FormulaUtils {
 
         String trimmed = ParagraphUtils.getTrimmedText(paragraph);
 
-        if (trimmed.length() < 2 || !trimmed.regionMatches(true, 0, "де", 0, 2)) {
+        if (paragraphContainsFormula(paragraph) && DASH_FIRST_SYMBOL.matcher(trimmed).find()) {
+            return true;
+        } if (trimmed.length() < 2 || !trimmed.regionMatches(true, 0, "де", 0, 2)) {
             return false;
-        }
-        if (trimmed.length() == 2) {
+        } if (trimmed.length() == 2) {
             return true;
         }
 
@@ -103,8 +108,15 @@ public class FormulaUtils {
             return formulaXmls;
         }
 
-        ctp.getOMathParaList().forEach(oMathPara ->
-                oMathPara.getOMathList().forEach(oMath -> formulaXmls.add(oMath.xmlText())));
+        for (CTOMath oMath : ctp.getOMathList()) {
+            formulaXmls.add(oMath.xmlText());
+        }
+
+        for (CTOMathPara oMathPara : ctp.getOMathParaList()) {
+            for (CTOMath oMath : oMathPara.getOMathList()) {
+                formulaXmls.add(oMath.xmlText());
+            }
+        }
 
         return formulaXmls;
     }
