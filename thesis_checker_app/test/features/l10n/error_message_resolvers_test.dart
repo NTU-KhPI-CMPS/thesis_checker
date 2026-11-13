@@ -30,6 +30,10 @@ void main() {
             'err_formula_sequence',
             (AppLocalizations l) => l.errFormulaSequence,
           ],
+          [
+            'err_formula_notation_missing',
+            (AppLocalizations l) => l.errFormulaNotationMissing,
+          ],
         ],
         (String id, String Function(AppLocalizations) expected) {
           // Given

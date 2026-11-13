@@ -122,6 +122,21 @@ void main() {
             'LEFT, Custom',
             'Left, Custom',
           ],
+          [
+            const Locale('en'),
+            'Блок пояснень «де» відсутній',
+            'The «where» («де») explanation block is missing',
+          ],
+          [
+            const Locale('en'),
+            'Блок пояснень «де» після формули',
+            'The «where» («де») explanation block after the formula',
+          ],
+          [
+            const Locale('en'),
+            'Пояснення «де» безпосередньо перед формулою',
+            'The «where» («де») explanation directly below the formula, without a blank line',
+          ],
         ],
         (Locale locale, String value, String expected) {
           // Given

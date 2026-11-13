@@ -239,7 +239,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errIndentationRight => 'Incorrect right indentation';
 
   @override
-  String get errFormulaAlignment => 'Formula aligned to the left';
+  String get errFormulaAlignment => 'Incorrectly aligned formula';
 
   @override
   String get errFormulaMultiplePerLine => 'Multiple formulas in one line';
@@ -265,6 +265,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errFormulaSpacingAfter => 'Incorrect spacing after formula';
+
+  @override
+  String get errFormulaNotationMissing =>
+      'Formula has no explanation block for notation';
 
   @override
   String get errFormulaSpacingBeforeNotation =>
@@ -393,8 +397,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get valueFormulaBlankLineAfter => 'Blank line after the formula';
 
   @override
+  String get valueFormulaNotationBlockAfter =>
+      'The «where» («де») explanation block after the formula';
+
+  @override
+  String get valueFormulaNotationBlockMissing =>
+      'The «where» («де») explanation block is missing';
+
+  @override
   String get valueFormulaNotationDirectlyBelow =>
-      'The «де» («where») explanation directly below the formula, without a blank line';
+      'The «where» («де») explanation directly below the formula, without a blank line';
 
   @override
   String get valueFormulaBlankLineAfterNotation =>

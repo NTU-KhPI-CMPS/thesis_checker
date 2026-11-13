@@ -72,8 +72,20 @@ class _ResultViewState extends State<ResultView> {
 
         final selectedCategoryTitle = selectedType.localizedTitle(context);
         final filteredErrors = selectedCategory?.errors ?? const [];
-        final totalWarnings = result.errorsByCategory.fold<int>(0, (sum, item) =>
-        sum + item.errors.where((e) => e.severity.toLowerCase() == 'warning').length);
+        final totalWarnings = result.errorsByCategory.fold<int>(
+          0,
+          (sum, item) =>
+            sum +
+            item.errors
+              .where((e) => e.severity.toLowerCase() == 'warning')
+              .length,
+        );
+        final totalErrors = result.errorsByCategory.fold<int>(
+          0,
+          (sum, item) =>
+              sum +
+              item.errors.where((e) => e.severity.toLowerCase() == 'error').length,
+        );
 
         return LayoutBuilder(
           builder: (context, pageConstraints) {
@@ -96,6 +108,7 @@ class _ResultViewState extends State<ResultView> {
                               return _buildFullSizeInfoCard(
                                 result,
                                 fileNameTextColor,
+                                totalErrors,
                                 totalWarnings,
                                 l10n,
                                 accentColor,
@@ -105,6 +118,7 @@ class _ResultViewState extends State<ResultView> {
                               return _buildSmallSizeInfoCard(
                                 result,
                                 fileNameTextColor,
+                                totalErrors,
                                 totalWarnings,
                                 l10n,
                                 accentColor,
@@ -135,8 +149,21 @@ class _ResultViewState extends State<ResultView> {
                               itemBuilder: (context, index) {
                                 final type = visibleCheckTypes[index];
                                 final category = categoriesByTitle[type.category];
-                                final warnCount = category?.errors.where((e) => e.severity.toLowerCase() == 'warning').length ?? 0;
-                                final errorCount = category?.errors.where((e) => e.severity.toLowerCase() != 'warning').length ?? 0;
+                                final warnCount =
+                                    category?.errors
+                                        .where(
+                                          (e) =>
+                                            e.severity.toLowerCase() ==
+                                            'warning',
+                                        ).length ?? 0;
+                                final errorCount =
+                                    category?.errors
+                                        .where(
+                                          (e) =>
+                                            e.severity.toLowerCase() ==
+                                            'error',
+                                        ).length ??
+                                    0;
 
                                 return CheckboxContainer(
                                   isSelected: (activeCategoryIndex < visibleCheckTypes.length
@@ -236,9 +263,9 @@ class _ResultViewState extends State<ResultView> {
     );
   }
 
-  Widget _buildStatusIcon(AnalysisResult result) {
+  Widget _buildStatusIcon(int totalErrors) {
     return Image.asset(
-      result.totalErrors > 0
+      totalErrors > 0
           ? 'assets/images/found_errors.png'
           : 'assets/images/no_errors.png',
       width: 24.0,
@@ -249,6 +276,7 @@ class _ResultViewState extends State<ResultView> {
   Widget _buildFileInfo(
       AnalysisResult result,
       Color? fileNameTextColor,
+      int totalErrors,
       int totalWarnings, {
         bool centered = false,
     }) {
@@ -274,7 +302,7 @@ class _ResultViewState extends State<ResultView> {
           fit: BoxFit.scaleDown,
           alignment: centered ? Alignment.center : Alignment.centerLeft,
           child: ErrorCountBadge(
-            errorCount: result.totalErrors,
+            errorCount: totalErrors,
             warnCount: totalWarnings,
           ),
         ),
@@ -310,6 +338,7 @@ class _ResultViewState extends State<ResultView> {
   InfoCard _buildSmallSizeInfoCard(
       AnalysisResult result,
       Color? fileNameTextColor,
+      int totalErrors,
       int totalWarnings,
       AppLocalizations l10n,
       Color accentColor,
@@ -328,12 +357,13 @@ class _ResultViewState extends State<ResultView> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  _buildStatusIcon(result),
+                  _buildStatusIcon(totalErrors),
                   const SizedBox(width: 12.0),
                   Flexible(
                     child: _buildFileInfo(
                       result,
                       fileNameTextColor,
+                      totalErrors,
                       totalWarnings,
                       centered: true,
                     ),
@@ -355,6 +385,7 @@ class _ResultViewState extends State<ResultView> {
   InfoCard _buildFullSizeInfoCard(
       AnalysisResult result,
       Color? fileNameTextColor,
+      int totalErrors,
       int totalWarnings,
       AppLocalizations l10n,
       Color accentColor,
@@ -364,10 +395,15 @@ class _ResultViewState extends State<ResultView> {
       padding: const EdgeInsets.all(24.0),
       borderRadius: BorderRadius.circular(16.0),
       children: [
-        _buildStatusIcon(result),
+        _buildStatusIcon(totalErrors),
         const SizedBox(width: 12.0),
         Expanded(
-          child: _buildFileInfo(result, fileNameTextColor, totalWarnings),
+          child: _buildFileInfo(
+            result,
+            fileNameTextColor,
+            totalErrors,
+            totalWarnings,
+          ),
         ),
         const SizedBox(width: 12.0),
         _buildRetryButton(result, l10n, accentColor, context),
