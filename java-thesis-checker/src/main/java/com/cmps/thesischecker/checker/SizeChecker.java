@@ -73,22 +73,6 @@ public class SizeChecker implements Checker {
                 }
             }
 
-            for (XWPFTable table : MainContentUtils.getMainContentTables(doc)) {
-                for (XWPFTableRow row : table.getRows()) {
-                    for (XWPFTableCell cell : row.getTableCells()) {
-                        for (XWPFParagraph paragraph : cell.getParagraphs()) {
-                            String paragraphText = paragraph.getText().trim();
-                            if (paragraphText.isEmpty()) continue;
-                            Set<String> incorrectSizes = validate(paragraph);
-                            if (!incorrectSizes.isEmpty()) {
-                                allErrors.add(buildFontSizeError("err_font_size_table", 
-                                                                  "Неправильний розмір шрифта у таблиці",
-                                                                  paragraphText, incorrectSizes, expectedSize));
-                            }
-                        }
-                    }
-                }
-            }
         } catch (Exception e) {
             FormatError err = new FormatError();
             err.setId("err_000");

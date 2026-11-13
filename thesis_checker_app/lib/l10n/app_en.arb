@@ -240,9 +240,9 @@
   "@errFontFooter": {
     "description": "Error shown when footer fonts do not match the requirements"
   },
-  "errFontTable": "Incorrect fonts in table",
-  "@errFontTable": {
-    "description": "Error shown when table fonts do not match the requirements"
+  "errTableFontName": "Incorrect font name in table",
+  "@errTableFontName": {
+    "description": "Error shown when table font name does not match the requirements"
   },
 
   "@@comment_size": "SIZE CHECKER - Font size",
@@ -260,6 +260,10 @@
   },
   "errFontSizeTable": "Incorrect font size in table",
   "@errFontSizeTable": {
+    "description": "Error shown when table font size does not match the requirements"
+  },
+  "errTableFontSize": "Incorrect font size in table",
+  "@errTableFontSize": {
     "description": "Error shown when table font size does not match the requirements"
   },
 
@@ -311,6 +315,14 @@
   "errSpacingAfter": "Incorrect spacing after paragraph",
   "@errSpacingAfter": {
     "description": "Error shown when spacing after a paragraph does not match the requirements"
+  },
+  "errTableSpacingBefore": "Incorrect spacing before paragraph in table",
+  "@errTableSpacingBefore": {
+    "description": "Error shown when spacing before a paragraph in a table does not match the requirements"
+  },
+  "errTableSpacingAfter": "Incorrect spacing after paragraph in table",
+  "@errTableSpacingAfter": {
+    "description": "Error shown when spacing after a paragraph in a table does not match the requirements"
   },
 
   "@@comment_indentation": "PARAGRAPH INDENTATION CHECKER - Paragraph indentation",

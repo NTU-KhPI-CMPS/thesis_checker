@@ -240,9 +240,9 @@
   "@errFontFooter": {
     "description": "Помилка, коли шрифти у нижньому колонтитулі не відповідають вимогам"
   },
-  "errFontTable": "Невірні шрифти у таблиці",
-  "@errFontTable": {
-    "description": "Помилка, коли шрифти у таблиці не відповідають вимогам"
+  "errTableFontName": "Невірна назва шрифта у таблиці",
+  "@errTableFontName": {
+    "description": "Помилка, коли назва шрифта у таблиці не відповідає вимогам"
   },
 
   "@@comment_size": "SIZE CHECKER - Розмір шрифту",
@@ -261,6 +261,10 @@
   "errFontSizeTable": "Неправильний розмір шрифта у таблиці",
   "@errFontSizeTable": {
     "description": "Помилка, коли розмір шрифту у таблиці не відповідає вимогам"
+  },
+  "errTableFontSize": "Неправильний розмір шрифта у таблиці",
+  "@errTableFontSize": {
+    "description": "Помилка, коли розмір шрифта у таблиці не відповідає вимогам"
   },
 
   "@@comment_linespacing": "LINE SPACING CHECKER - Міжрядковий інтервал",
@@ -311,6 +315,14 @@
   "errSpacingAfter": "Невірний відступ після абзацу",
   "@errSpacingAfter": {
     "description": "Помилка, коли відступ після абзацу не відповідає вимогам"
+  },
+  "errTableSpacingBefore": "Невірний відступ перед абзацем у таблиці",
+  "@errTableSpacingBefore": {
+    "description": "Помилка, коли відступ перед абзацем у таблиці не відповідає вимогам"
+  },
+  "errTableSpacingAfter": "Невірний відступ після абзацу у таблиці",
+  "@errTableSpacingAfter": {
+    "description": "Помилка, коли відступ після абзацу у таблиці не відповідає вимогам"
   },
 
   "@@comment_indentation": "PARAGRAPH INDENTATION CHECKER - Індентація абзаців",
