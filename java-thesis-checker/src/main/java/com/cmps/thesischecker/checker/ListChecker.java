@@ -7,6 +7,7 @@ import com.cmps.thesischecker.model.MarkerDefinition;
 import com.cmps.thesischecker.model.NumberingFormat;
 import com.cmps.thesischecker.requirements.RequirementsHolder;
 import com.cmps.thesischecker.utils.BibliographyUtils;
+import com.cmps.thesischecker.utils.FormulaUtils;
 import com.cmps.thesischecker.utils.MainContentUtils;
 import com.cmps.thesischecker.utils.StyleUtils;
 import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
@@ -97,7 +98,7 @@ public class ListChecker implements Checker {
                     continue;
                 }
 
-                if (isManualList(paragraphText)) {
+                if (isManualList(paragraphText) && !FormulaUtils.isNotationParagraph(paragraph)) {
                     allErrors.add(buildManualListWarning(paragraphText));
                     continue;
                 }
