@@ -2,7 +2,6 @@ package com.cmps.thesischecker.checker;
 
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.requirements.RequirementsHolder;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -15,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FirstLineIndentationTest extends BaseTest {
 
-    private Checker checker; // = new FirstLineIdentationChecker();
+    private Checker checker = new FirstLineIndentationChecker();
 
     @Override
     protected Checker getChecker() {
@@ -23,7 +22,6 @@ public class FirstLineIndentationTest extends BaseTest {
     }
 
     @Test
-    @Disabled
     void check_correctFormatting() {
         //WHEN
         List<FormatError> result = checker.check("src/test/resources/correct_first_line_indentation.docx");
@@ -33,7 +31,6 @@ public class FirstLineIndentationTest extends BaseTest {
     }
 
     @Test
-    @Disabled
     void check_incorrectFormatting_defaultFormatting() {
         // GIVEN
         String expectedParagraphText
@@ -57,53 +54,6 @@ public class FirstLineIndentationTest extends BaseTest {
     }
 
     @Test
-    @Disabled
-    void check_incorrectFormatting_formattingFromStyle() {
-        // GIVEN
-        String expectedParagraphText = "НЕПРАВИЛЬНО ВІДФОРМАТОВАНИЙ ВІДСТУП ЗАГОЛОВКУ";
-
-        //WHEN
-        List<FormatError> result = checker.check("src/test/resources/incorrect_first_line_indentation.docx");
-
-        // THEN
-        List<FormatError> errorsWithExpectedText
-                = result.stream()
-                        .filter(fe -> Objects.equals(fe.getParagraphText(), expectedParagraphText))
-                        .toList();
-        assertEquals(1, errorsWithExpectedText.size(), "Only one error with expected text should be found.");
-
-        FormatError formatError = errorsWithExpectedText.getFirst();
-        assertEquals(expectedParagraphText, formatError.getParagraphText());
-        assertEquals(FIRST_LINE_INDENTATION, formatError.getCategory());
-        assertEquals(Set.of("2"), formatError.getFound());
-        assertEquals(RequirementsHolder.getFirstLineIndentation(), formatError.getExpected());
-    }
-
-    @Test
-    @Disabled
-    void check_incorrectFormatting_defaultListFormatting() {
-        // GIVEN
-        String expectedParagraphText = "Не правильно відформатований список";
-
-        //WHEN
-        List<FormatError> result = checker.check("src/test/resources/incorrect_first_line_indentation.docx");
-
-        // THEN
-        List<FormatError> errorsWithExpectedText
-                = result.stream()
-                        .filter(fe -> Objects.equals(fe.getParagraphText(), expectedParagraphText))
-                        .toList();
-        assertEquals(1, errorsWithExpectedText.size(), "Only one error with expected text should be found.");
-
-        FormatError formatError = errorsWithExpectedText.getFirst();
-        assertEquals(expectedParagraphText, formatError.getParagraphText());
-        assertEquals(FIRST_LINE_INDENTATION, formatError.getCategory());
-        assertEquals(Set.of("0.63"), formatError.getFound());
-        assertEquals(RequirementsHolder.getFirstLineIndentation(), formatError.getExpected());
-    }
-
-    @Test
-    @Disabled
     void check_incorrectFormatting_formatIsSpecifiedOnText() {
         // GIVEN
         String expectedParagraphText = "Не правильно відформатований відступ першого рядка абзацу (відступ вказаний на тексті).";
