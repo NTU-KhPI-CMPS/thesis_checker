@@ -299,6 +299,9 @@ class AppLocalizationsUk extends AppLocalizations {
       'Неправильний відступ у позначенні формули';
 
   @override
+  String get errFormulaNumberOutside => 'Номер формули набраний поза формулою';
+
+  @override
   String get errFigureAlignment => 'Невірне вирівнювання рисунка';
 
   @override
@@ -404,6 +407,10 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get valueFormulaInsertViaTool =>
       'Формула має бути вставлена через Вставлення → Формула';
+
+  @override
+  String get valueFormulaNumberInsideFormula =>
+      'Номер має бути частиною формули: після виразу введіть #(N) і натисніть Enter';
 
   @override
   String get valueFormulaOnePerLine => '1 формула в рядку';
