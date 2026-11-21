@@ -41,6 +41,7 @@ final Map<String, MessageResolver> errorValueResolvers = {
 
   // Formulas
   'Формула має бути вставлена через Вставлення → Формула': (l) => l.valueFormulaInsertViaTool,
+  'Номер має бути частиною формули: після виразу введіть #(N) і натисніть Enter': (l) => l.valueFormulaNumberInsideFormula,
   '1 формула в рядку': (l) => l.valueFormulaOnePerLine,
   'Порожній рядок перед формулою': (l) => l.valueFormulaBlankLineBefore,
   'Порожній рядок після формули': (l) => l.valueFormulaBlankLineAfter,
