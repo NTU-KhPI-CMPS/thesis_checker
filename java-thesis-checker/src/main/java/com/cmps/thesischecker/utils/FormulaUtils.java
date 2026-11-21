@@ -4,7 +4,6 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.openxmlformats.schemas.officeDocument.x2006.math.CTOMath;
 import org.openxmlformats.schemas.officeDocument.x2006.math.CTOMathPara;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,11 +43,9 @@ public class FormulaUtils {
     public static final Pattern DASH_FIRST_SYMBOL =
             Pattern.compile("^\\p{Pd}");
     private static final Pattern TRAILING_NUMBER_AT_END =
-            Pattern.compile("\\(\\s*\\d+\\.\\d+\\s*\\)[.,;]?\\s*$");
+            Pattern.compile("\\(\\s*" + FORMULA_NUMBER + "\\s*\\)[.,;]?\\s*$");
     private static final Pattern TYPED_NUMBER_AT_END =
-            Pattern.compile("\\(\\s*(\\d+\\.\\d+)\\s*\\)[.,;]?\\s*$");
-    private static final Pattern NUMBER_ONLY_TEXT =
-            Pattern.compile("^\\(\\d+\\.\\d+\\)[.,;]?$");
+            Pattern.compile("\\(\\s*(" + FORMULA_NUMBER + ")\\s*\\)[.,;]?\\s*$");
 
     private static final Pattern WORD_3_PLUS = Pattern.compile("\\p{L}{3,}");
 
@@ -112,25 +109,6 @@ public class FormulaUtils {
     }
 
     /**
-     * Checks whether the paragraph contains a picture (inline or floating DrawingML, or legacy VML).
-     *
-     * @param paragraph the paragraph to inspect
-     * @return true if at least one run holds a picture
-     */
-    public static boolean paragraphHasPicture(XWPFParagraph paragraph) {
-        CTP ctp = paragraph.getCTP();
-        if (ctp == null) {
-            return false;
-        }
-        for (CTR run : ctp.getRList()) {
-            if (!run.getDrawingList().isEmpty() || !run.getPictList().isEmpty()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * Detects a formula inserted as a picture: the paragraph has a picture, no OMath object,
      * and its whole text is a formula number such as "(2.6)". A figure with a caption never
      * matches, because captions contain words.
@@ -139,11 +117,11 @@ public class FormulaUtils {
      * @return true if the paragraph looks like "picture of a formula + its number"
      */
     public static boolean isImageFormulaParagraph(XWPFParagraph paragraph) {
-        if (paragraphContainsFormula(paragraph) || !paragraphHasPicture(paragraph)) {
+        if (paragraphContainsFormula(paragraph) || !ParagraphUtils.paragraphHasPicture(paragraph)) {
             return false;
         }
-        String compact = ParagraphUtils.getTrimmedText(paragraph).replaceAll("\\s+", "");
-        return NUMBER_ONLY_TEXT.matcher(compact).matches();
+
+        return paragraphHasTrailingFormulaNumber(paragraph);
     }
 
     /**

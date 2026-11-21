@@ -101,7 +101,6 @@ public class FormulaUtilsTest {
             addPicture(paragraph);
             paragraph.createRun().setText("  (2.6)");
 
-            assertTrue(FormulaUtils.paragraphHasPicture(paragraph));
             assertTrue(FormulaUtils.isImageFormulaParagraph(paragraph));
         }
     }
@@ -114,7 +113,6 @@ public class FormulaUtilsTest {
             addPicture(paragraph);
             paragraph.createRun().setText("Рисунок 2.1 – Назва рисунка");
 
-            assertTrue(FormulaUtils.paragraphHasPicture(paragraph));
             assertFalse(FormulaUtils.isImageFormulaParagraph(paragraph));
         }
     }
@@ -137,7 +135,6 @@ public class FormulaUtilsTest {
             XWPFParagraph paragraph = document.createParagraph();
             paragraph.createRun().setText("(2.6)");
 
-            assertFalse(FormulaUtils.paragraphHasPicture(paragraph));
             assertFalse(FormulaUtils.isImageFormulaParagraph(paragraph));
         }
     }
