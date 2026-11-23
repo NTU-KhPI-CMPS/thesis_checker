@@ -4,7 +4,6 @@
   "@appTitle": {
     "description": "Application title"
   },
-
   "@@comment_home": "Home page",
   "navHome": "Home",
   "@navHome": {
@@ -26,7 +25,6 @@
   "@uploadSelectFile": {
     "description": "Button text for opening the file picker"
   },
-
   "@@comment_loading": "Analysis screen",
   "navAnalysis": "Analysis",
   "@navAnalysis": {
@@ -40,7 +38,6 @@
   "@loadingAnalyzing": {
     "description": "Status text shown while the document is being analyzed"
   },
-
   "@@comment_results": "Results screen",
   "navResults": "Results",
   "@navResults": {
@@ -72,22 +69,24 @@
       }
     }
   },
-
   "errorCount": "{count, plural, one{{count} error} other{{count} errors}}",
   "@errorCount": {
     "description": "Number of errors with correct plural form",
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "warningCount": "{count, plural, one{{count} warning} other{{count} warnings}}",
   "@warningCount": {
     "description": "Number of warnings with correct plural form",
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
-
   "@@comment_error_details": "Fragments indicating absence or presence of an error",
   "errorFragmentMissing": "Text fragment is missing.",
   "@errorFragmentMissing": {
@@ -97,7 +96,6 @@
   "@errorArrowShouldBe": {
     "description": "Label used in error fragments to show the expected text"
   },
-
   "@@comment_dialogs": "Modal for starting re-analysis",
   "dialogSettingsTitle": "Analysis settings",
   "@dialogSettingsTitle": {
@@ -123,7 +121,6 @@
   "@dialogStartAnalysis": {
     "description": "Button text for starting analysis from the dialog"
   },
-
   "@@comment_theme": "Theme",
   "themeLight": "Light",
   "@themeLight": {
@@ -137,7 +134,6 @@
   "@themeSystem": {
     "description": "Label for the system theme option"
   },
-
   "@@comment_snackbar": "Snackbar messages",
   "snackbarError": "An error occurred: {error}",
   "@snackbarError": {
@@ -149,7 +145,6 @@
       }
     }
   },
-
   "@@comment_check_types": "Available check categories",
   "checkTypeFontTitle": "Font",
   "@checkTypeFontTitle": {
@@ -199,7 +194,6 @@
   "@checkTypeOtherDescription": {
     "description": "Description for the other checks category"
   },
-
   "@@comment_flutter_errors": "Errors occurring in bloc's, repositories, and services",
   "unsupportedFileExtensionError": "File with .{extension} extension is not supported",
   "@unsupportedFileExtensionError": {
@@ -219,14 +213,12 @@
   "@analysisCouldNotComplete": {
     "description": "Error shown when analysis cannot be completed"
   },
-
   "@@comment_java_errors": "Errors from Java checkers (identified by error ID)",
   "@@comment_alignment": "ALIGNMENT CHECKER - Alignment",
   "errAlignment": "Incorrect text alignment",
   "@errAlignment": {
     "description": "Error shown when text alignment does not match the requirements"
   },
-
   "@@comment_font": "FONT CHECKER - Fonts",
   "errFont": "Incorrect fonts in paragraph",
   "@errFont": {
@@ -244,7 +236,6 @@
   "@errTableFontName": {
     "description": "Error shown when table font name does not match the requirements"
   },
-
   "@@comment_size": "SIZE CHECKER - Font size",
   "errFontSize": "Incorrect font size in paragraph",
   "@errFontSize": {
@@ -266,13 +257,11 @@
   "@errTableFontSize": {
     "description": "Error shown when table font size does not match the requirements"
   },
-
   "@@comment_linespacing": "LINE SPACING CHECKER - Line spacing",
   "errLinespace": "Incorrect line spacing in paragraph",
   "@errLinespace": {
     "description": "Error shown when paragraph line spacing does not match the requirements"
   },
-
   "@@comment_list": "LIST CHECKER - Lists",
   "errListLevelSkip": "Skipped list nesting level",
   "@errListLevelSkip": {
@@ -306,7 +295,6 @@
   "@warnListManual": {
     "description": "Warning shown when manual list formatting is detected"
   },
-
   "@@comment_spacing": "PARAGRAPH SPACING CHECKER - Paragraph spacing before/after",
   "errSpacingBefore": "Incorrect spacing before paragraph",
   "@errSpacingBefore": {
@@ -324,7 +312,6 @@
   "@errTableSpacingAfter": {
     "description": "Error shown when spacing after a paragraph in a table does not match the requirements"
   },
-
   "@@comment_indentation": "PARAGRAPH INDENTATION CHECKER - Paragraph indentation",
   "errIndentationLeft": "Incorrect left indentation",
   "@errIndentationLeft": {
@@ -334,7 +321,6 @@
   "@errIndentationRight": {
     "description": "Error shown when right indentation does not match the requirements"
   },
-
   "@@comment_formula": "FORMULA CHECKER - Formulas",
   "errFormulaAlignment": "Incorrectly aligned formula",
   "@errFormulaAlignment": {
@@ -384,7 +370,6 @@
   "@errFormulaNotationSpacing": {
     "description": "Error shown when spacing inside formula notation does not match the requirements"
   },
-
   "@@comment_figure": "FIGURE CHECKER - Figures",
   "errFigureAlignment": "Incorrect figure alignment",
   "@errFigureAlignment": {
@@ -406,7 +391,6 @@
   "@errFigureCaptionFormat": {
     "description": "Error shown when a figure caption does not match the required format"
   },
-
   "@@comment_structure": "STRUCTURAL ELEMENT CHECKER - Document structure",
   "errStructuralElementMissing": "Required structural element is missing",
   "@errStructuralElementMissing": {
@@ -420,19 +404,16 @@
   "@warnStructuralElementNewPage": {
     "description": "Warning shown when a structural element does not start on a new page"
   },
-
   "@@comment_file_error": "FILE ERROR - File error",
   "err000": "File open error",
   "@err000": {
     "description": "Error shown when the file cannot be opened"
   },
-
   "@@comment_error_values": "ERROR VALUES - Localized \"found\" / \"expected\" values",
   "valueDefaultFont": "Default font",
   "@valueDefaultFont": {
     "description": "Font value: default"
   },
-
   "valueAlignmentLeft": "Left",
   "@valueAlignmentLeft": {
     "description": "Alignment value: left"
@@ -457,7 +438,6 @@
   "@valueAlignmentBothOrRight": {
     "description": "Allowed alignment for formulas: justified or right"
   },
-
   "valueListFormatDecimal": "Arabic numerals",
   "@valueListFormatDecimal": {
     "description": "List numbering format: arabic numerals"
@@ -494,7 +474,6 @@
   "@valueListConsistent": {
     "description": "Expected value: one numbering format per list level"
   },
-
   "valueFigureNoBlankBefore": "no blank line before",
   "@valueFigureNoBlankBefore": {
     "description": "Found value: blank line before a figure is missing"
@@ -527,7 +506,6 @@
   "@valueFigureCaptionFormat": {
     "description": "Expected figure caption format"
   },
-
   "valueFormulaInsertViaTool": "The formula must be inserted via Insert → Formula",
   "@valueFormulaInsertViaTool": {
     "description": "Expected value: use the Word formula tool"
@@ -572,7 +550,6 @@
   "@valuePlaceholderBlankLine": {
     "description": "Placeholder for an empty paragraph"
   },
-
   "valueStructuralPageBreakBefore": "Page break before the element",
   "@valueStructuralPageBreakBefore": {
     "description": "Expected value: structural element starts on a new page"
@@ -605,7 +582,6 @@
   "@valueStructuralAppendix": {
     "description": "Structural element title: appendix"
   },
-
   "valueCentimeters": "{value} cm",
   "@valueCentimeters": {
     "description": "Length in centimeters",
@@ -615,5 +591,13 @@
         "description": "Length value"
       }
     }
+  },
+  "errFirstLineIndentation": "Incorrect first line indentation",
+  "@errFirstLineIndentation": {
+    "description": "Error shown when first line indentation does not match the requirements"
+  },
+  "warnFirstLineHanging": "Hanging indent detected",
+  "@warnFirstLineHanging": {
+    "description": "Warning shown when a paragraph uses a hanging indent"
   }
 }

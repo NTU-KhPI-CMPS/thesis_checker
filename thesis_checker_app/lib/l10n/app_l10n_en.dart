@@ -462,4 +462,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String valueCentimeters(String value) {
     return '$value cm';
   }
+
+  @override
+  String get errFirstLineIndentation => 'Incorrect first line indentation';
+
+  @override
+  String get warnFirstLineHanging => 'Hanging indent detected';
 }
