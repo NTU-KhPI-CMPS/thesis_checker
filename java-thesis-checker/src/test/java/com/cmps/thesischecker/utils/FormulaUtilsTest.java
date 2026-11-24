@@ -81,6 +81,20 @@ public class FormulaUtilsTest {
         assertFalse(FormulaUtils.hasProseOutsideFormula(outsideText));
     }
 
+    @ParameterizedTest
+    @DisplayName("A unit in brackets at the end is recognised")
+    @ValueSource(strings = {"S = a × b (грн)", "S = a × b (ГРН).", "m = ρV (кг)", "v = s/t (м/с)"})
+    void endsWithUnitBracket_unit(String text) {
+        assertTrue(FormulaUtils.endsWithUnitBracket(text));
+    }
+
+    @ParameterizedTest
+    @DisplayName("A number in brackets or no brackets is not a unit")
+    @ValueSource(strings = {"V = S/t (1.1)", "x = sin(y) (1)", "S = a × b", "p = 0.05 (0.01)"})
+    void endsWithUnitBracket_notUnit(String text) {
+        assertFalse(FormulaUtils.endsWithUnitBracket(text));
+    }
+
     // paragraphs built in memory
 
     private static void addPicture(XWPFParagraph paragraph) throws Exception {

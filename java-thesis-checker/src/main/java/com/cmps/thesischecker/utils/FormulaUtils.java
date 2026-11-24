@@ -58,7 +58,36 @@ public class FormulaUtils {
                             + "|[\\p{L}\\p{N}]\\s*[²³⁴₀₁₂₃₄₅₆₇₈₉]"
             );
 
+    // a unit / remark in brackets at the end of a formula: "(грн)", "(ГРН)", "(кг)", "(м/с)", "(%)".
+    // Letters are required, digits are not allowed, so a number such as "(1.1)" never matches.
+    private static final Pattern TRAILING_UNIT_BRACKET =
+            Pattern.compile("\\(\\s*[%°/.\\s²³]*\\p{L}[\\p{L}%°/.\\s²³]*\\)[.,;]?\\s*$");
+    // content of a delimiter that is a unit: letters only, at least two ("грн", "кг")
+    private static final Pattern UNIT_ONLY_PATTERN =
+            Pattern.compile("^\\p{L}{2,}[\\p{L}%°/.\\s²³]*$");
+
     private FormulaUtils() {
+    }
+
+    /**
+     * Tells whether the text ends with a unit in brackets, e.g. "(грн)", "(ГРН)" or "(кг)".
+     * A bracket with a number such as "(1.1)" is not a unit.
+     *
+     * @param text the paragraph text
+     * @return true if the text ends with a bracket that holds letters and no digits
+     */
+    public static boolean endsWithUnitBracket(String text) {
+        return text != null && TRAILING_UNIT_BRACKET.matcher(text.strip()).find();
+    }
+
+    /**
+     * Tells whether the content of a formula delimiter is a unit ("грн", "кг"): letters only, 2 or more.
+     *
+     * @param inner the text inside the delimiter, without the brackets
+     * @return true if it is a unit
+     */
+    public static boolean isUnitText(String inner) {
+        return inner != null && UNIT_ONLY_PATTERN.matcher(inner.strip()).matches();
     }
 
     /**

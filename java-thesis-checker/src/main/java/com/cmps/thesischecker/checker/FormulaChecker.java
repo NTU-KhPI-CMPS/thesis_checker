@@ -140,11 +140,61 @@ public class FormulaChecker implements Checker {
      * @return a list containing an alignment error if misaligned, or an empty list if aligned correctly
      */
     private List<FormatError> checkTextAlignment(XWPFParagraph paragraph, String displayedText) {
+        return checkTextAlignment(paragraph, displayedText, false);
+    }
+
+    /**
+     * Checks the alignment of a paragraph. A numbered formula may only be justified (BOTH) or RIGHT;
+     * a formula with a unit in brackets instead of a number ("(грн)") may also be CENTER.
+     *
+     * @param paragraph     the paragraph to check
+     * @param displayedText the text content of the paragraph for error reporting
+     * @param unitFormula   true if the formula ends with a unit in brackets and has no number
+     * @return a list containing an alignment error if misaligned, or an empty list if aligned correctly
+     */
+    private List<FormatError> checkTextAlignment(XWPFParagraph paragraph, String displayedText, boolean unitFormula) {
         String alignment = AlignmentUtils.getAlignment(paragraph);
-        if ("BOTH".equalsIgnoreCase(alignment) || "RIGHT".equalsIgnoreCase(alignment)) {
+        if ("BOTH".equalsIgnoreCase(alignment) || "RIGHT".equalsIgnoreCase(alignment)
+                || (unitFormula && "CENTER".equalsIgnoreCase(alignment))) {
             return List.of();
         }
         return List.of(buildAlignmentError(displayedText, alignment));
+    }
+
+    /**
+     * Tells whether a formula ends with a unit in brackets ("(грн)") instead of a number.
+     * Looks at the typed text ("... (грн)" next to the formula object, or literal brackets inside the formula)
+     * and at a formula delimiter that holds only a unit and stands at the end of the formula.
+     *
+     * @param paragraph   the paragraph that contains the formula
+     * @param formulaXmls raw XML of the OMath elements of the paragraph
+     * @return true if the formula ends with a unit in brackets
+     */
+    private boolean hasUnitInBrackets(XWPFParagraph paragraph, List<String> formulaXmls) {
+        if (FormulaUtils.endsWithUnitBracket(orderedParagraphText(paragraph))) {
+            return true;
+        }
+
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setNamespaceAware(false);
+
+            for (String xml : formulaXmls) {
+                Document document = factory.newDocumentBuilder()
+                        .parse(new InputSource(new StringReader(xml)));
+                String flat = flattenElementText(document.getDocumentElement()).trim();
+
+                NodeList delimiters = document.getElementsByTagName("m:d");
+                for (int i = 0; i < delimiters.getLength(); i++) {
+                    String inner = flattenElementText((Element) delimiters.item(i)).trim();
+                    if (FormulaUtils.isUnitText(inner) && flat.endsWith(inner)) {
+                        return true;
+                    }
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        return false;
     }
 
     /**
@@ -241,10 +291,6 @@ public class FormulaChecker implements Checker {
                     "Порожній рядок перед формулою"));
         }
 
-        if (!formulaAlone) {
-            errorList.addAll(checkTextAlignment(formulaParagraph, formulaText));
-        }
-
         List<String> formulaXmls = FormulaUtils.getFormulaXmls(formulaParagraph);
         int[] numberCount = {0};
 
@@ -279,6 +325,14 @@ public class FormulaChecker implements Checker {
             ));
         }
 
+        // "(грн)" instead of a number: the formula needs no notation ("де ...") block
+        // and may also be centered (a numbered one only justified or right-aligned)
+        boolean unitFormula = numberCount[0] == 0 && hasUnitInBrackets(formulaParagraph, formulaXmls);
+
+        if (!formulaAlone) {
+            errorList.addAll(checkTextAlignment(formulaParagraph, formulaText, unitFormula));
+        }
+
         if (formulaAlone && (formulaXmls.size() > 1 || numberCount[0] > 1)) {
             errorList.add(buildOneFormulaPerLineError(formulaText));
         }
@@ -296,7 +350,9 @@ public class FormulaChecker implements Checker {
                     formulaText,
                     "Порожній рядок після формули"));
 
-            errorList.add(buildNotationMissingError(formulaText));
+            if (!unitFormula) {
+                errorList.add(buildNotationMissingError(formulaText));
+            }
 
             return errorList;
         }
@@ -312,7 +368,9 @@ public class FormulaChecker implements Checker {
                 && FormulaUtils.isNotationParagraph(paragraphs.get(afterFormulaIndex));
 
         if (!hasNotationBlock) {
-            errorList.add(buildNotationMissingError(formulaText));
+            if (!unitFormula) {
+                errorList.add(buildNotationMissingError(formulaText));
+            }
 
             if (afterFormulaIndex == nextIndex) {
                 errorList.add(buildSpacingError(
