@@ -596,7 +596,7 @@
   "@errFirstLineIndentation": {
     "description": "Error shown when first line indentation does not match the requirements"
   },
-  "warnFirstLineHanging": "Виявлено виступ (hanging indent)",
+  "warnFirstLineHanging": "Виявлено виступ (hanging indent). Бажано використовувати відступ першого рядка (firstLine)",
   "@warnFirstLineHanging": {
     "description": "Warning shown when a paragraph uses a hanging indent"
   }

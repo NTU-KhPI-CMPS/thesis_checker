@@ -467,5 +467,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errFirstLineIndentation => 'Incorrect first line indentation';
 
   @override
-  String get warnFirstLineHanging => 'Hanging indent detected';
+  String get warnFirstLineHanging =>
+      'Hanging indent detected. It is recommended to use a first-line indent (firstLine)';
 }

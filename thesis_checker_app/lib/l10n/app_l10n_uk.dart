@@ -472,5 +472,6 @@ class AppLocalizationsUk extends AppLocalizations {
   String get errFirstLineIndentation => 'Невірний відступ першого рядка абзацу';
 
   @override
-  String get warnFirstLineHanging => 'Виявлено виступ (hanging indent)';
+  String get warnFirstLineHanging =>
+      'Виявлено виступ (hanging indent). Бажано використовувати відступ першого рядка (firstLine)';
 }

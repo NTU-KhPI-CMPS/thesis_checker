@@ -1,6 +1,5 @@
 package com.cmps.thesischecker.checker;
 
-import com.cmps.thesischecker.model.DocumentHeader;
 import com.cmps.thesischecker.model.ErrorCategory;
 import com.cmps.thesischecker.model.FormatError;
 import com.cmps.thesischecker.requirements.RequirementsHolder;
@@ -15,6 +14,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrGeneral;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyles;
+import org.w3c.dom.Node;
 
 import java.io.FileInputStream;
 import java.math.BigInteger;
@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Set;
 
 public class FirstLineIndentationChecker implements Checker {
@@ -37,29 +38,9 @@ public class FirstLineIndentationChecker implements Checker {
         try (FileInputStream fis = new FileInputStream(filePath);
              XWPFDocument doc = new XWPFDocument(fis)) {
             for (XWPFParagraph paragraph : MainContentUtils.getMainContentParagraphs(doc)) {
-                if (paragraph.getText().trim().isEmpty()) {
-                    continue;
-                }
-                if (FormulaUtils.paragraphIsFormula(paragraph)) {
-                    continue;
-                }
-                if (paragraph.getText().trim().equals("де")) {
-                    continue;
-                }
-                if (FormulaUtils.isNotationParagraph(paragraph)) {
-                    continue;
-                }
-                if (isIgnored(paragraph)) {
-                    continue;
-                }
-                Double found = getFirstLineIndentation(paragraph);
-                if (found != null && found < 0) {
-                    allErrors.add(buildHangingWarning(paragraph.getText().trim(), found));
-                    continue;
-                }
-                double expected = Double.parseDouble(RequirementsHolder.getFirstLineIndentation());
-                if (Math.abs(found - expected) > 0.02) {
-                    allErrors.add(buildError(paragraph.getText().trim(), found));
+                Optional<FormatError> error = validate(paragraph);
+                if (error.isPresent()) {
+                    allErrors.add(error.get());
                 }
             }
         } catch (Exception e) {
@@ -68,24 +49,67 @@ public class FirstLineIndentationChecker implements Checker {
         return allErrors;
     }
 
+    private Optional<FormatError> validate(XWPFParagraph paragraph) {
+        if (isIgnored(paragraph)) {
+            return Optional.empty();
+        }
+        Double found = getFirstLineIndentation(paragraph);
+        String text = paragraph.getText().trim();
+        if (found != null && found < 0) {
+            return Optional.of(buildHangingWarning(text, found));
+        }
+        double expected = Double.parseDouble(RequirementsHolder.getFirstLineIndentation());
+        if (Math.abs(found - expected) > 0.02) {
+            return Optional.of(buildError(text, found));
+        }
+        return Optional.empty();
+    }
+
     private boolean isIgnored(XWPFParagraph paragraph) {
+        String rawText = paragraph.getText();
+        if (rawText == null || rawText.trim().isEmpty()) {
+            return true;
+        }
+        String cleanText = rawText.replace('\u00A0', ' ').replaceAll("\\s+", " ").trim().toLowerCase();
+        if (cleanText.isEmpty()) {
+            return true;
+        }
+        if (cleanText.startsWith("зміст")
+                || cleanText.startsWith("вступ")
+                || cleanText.startsWith("висновки")
+                || cleanText.startsWith("реферат")
+                || cleanText.startsWith("анотація")
+                || cleanText.startsWith("abstract")
+                || cleanText.startsWith("список джерел")
+                || cleanText.startsWith("додаток")) {
+            return true;
+        }
+        if (cleanText.startsWith("таблиця")
+                || cleanText.startsWith("рисунок")
+                || cleanText.startsWith("рис.")) {
+            return true;
+        }
+        if (cleanText.startsWith("де ")) {
+            return true;
+        }
+        if (paragraph.getNumID() != null) {
+            return true;
+        }
+        CTPPr pPr = paragraph.getCTP().getPPr();
+        if (pPr != null && pPr.isSetNumPr()) {
+            return true;
+        }
         if (StyleUtils.isHeading1(paragraph)) {
             return true;
         }
         if (isHeading2Plus(paragraph)) {
             return true;
         }
-        if (isList(paragraph)) {
+        if (FormulaUtils.paragraphIsFormula(paragraph)) {
             return true;
         }
-        String trimmed = paragraph.getText().trim();
-        if (trimmed.startsWith("Рисунок") || trimmed.startsWith("Рис.")) {
+        if (FormulaUtils.isNotationParagraph(paragraph)) {
             return true;
-        }
-        for (DocumentHeader header : RequirementsHolder.getOrderStructuredElements()) {
-            if (trimmed.equals(header.getTitle())) {
-                return true;
-            }
         }
         if (isInsideTable(paragraph)) {
             return true;
@@ -116,19 +140,8 @@ public class FirstLineIndentationChecker implements Checker {
         return false;
     }
 
-    private boolean isList(XWPFParagraph paragraph) {
-        if (paragraph.getNumID() != null) {
-            return true;
-        }
-        CTPPr pPr = paragraph.getCTP().getPPr();
-        if (pPr != null && pPr.isSetNumPr()) {
-            return true;
-        }
-        return false;
-    }
-
     private boolean isInsideTable(XWPFParagraph paragraph) {
-        org.w3c.dom.Node parent = paragraph.getCTP().getDomNode().getParentNode();
+        Node parent = paragraph.getCTP().getDomNode().getParentNode();
         while (parent != null) {
             String name = parent.getLocalName();
             if (name == null) {
@@ -288,7 +301,7 @@ public class FirstLineIndentationChecker implements Checker {
         error.setId("warn_first_line_hanging");
         error.setCategory(ErrorCategory.FIRST_LINE_INDENTATION);
         error.setSeverity("warning");
-        error.setTitle("Виявлено виступ (hanging indent)");
+        error.setTitle("Виявлено виступ (hanging indent). Бажано використовувати відступ першого рядка (firstLine)");
         error.setParagraphText(text);
         error.setFound(Set.of(format(found)));
         error.setExpected(RequirementsHolder.getFirstLineIndentation());

@@ -911,7 +911,7 @@ abstract class AppLocalizations {
   /// Warning shown when a paragraph uses a hanging indent
   ///
   /// In en, this message translates to:
-  /// **'Hanging indent detected'**
+  /// **'Hanging indent detected. It is recommended to use a first-line indent (firstLine)'**
   String get warnFirstLineHanging;
 }
 

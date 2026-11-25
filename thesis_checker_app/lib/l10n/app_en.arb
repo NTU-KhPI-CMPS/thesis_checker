@@ -596,7 +596,7 @@
   "@errFirstLineIndentation": {
     "description": "Error shown when first line indentation does not match the requirements"
   },
-  "warnFirstLineHanging": "Hanging indent detected",
+  "warnFirstLineHanging": "Hanging indent detected. It is recommended to use a first-line indent (firstLine)",
   "@warnFirstLineHanging": {
     "description": "Warning shown when a paragraph uses a hanging indent"
   }
