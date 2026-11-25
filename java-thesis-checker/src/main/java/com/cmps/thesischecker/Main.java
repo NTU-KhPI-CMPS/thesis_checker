@@ -37,7 +37,8 @@ public class Main {
             new SizeChecker(),
             new ParagraphIndentationChecker(),
             new FigureChecker(),
-            new TableChecker()
+            new TableChecker(),
+            new FirstLineIndentationChecker()
     );
 
     static void main(String[] args) {

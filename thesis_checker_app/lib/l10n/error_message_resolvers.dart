@@ -13,6 +13,9 @@ final Map<String, MessageResolver> errorMessageResolvers = {
   'err_indentation_left': (l) => l.errIndentationLeft,
   'err_indentation_right': (l) => l.errIndentationRight,
 
+  'err_first_line_indentation': (l) => l.errFirstLineIndentation,
+  'warn_first_line_hanging': (l) => l.warnFirstLineHanging,
+
   'err_linespace': (l) => l.errLinespace,
 
   'err_structural_element_missing': (l) => l.errStructuralElementMissing,
