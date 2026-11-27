@@ -1,6 +1,8 @@
 package com.cmps.thesischecker.utils;
 
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -19,7 +21,7 @@ public class ParagraphUtils {
         }
 
         String text = paragraph.getText();
-        return text != null ? text.trim() : "";
+        return text != null ? text.strip() : "";
     }
 
     /**
@@ -48,6 +50,29 @@ public class ParagraphUtils {
 
         String trimmedText = ParagraphUtils.getTrimmedText(paragraph);
         return pattern.matcher(trimmedText).find();
+    }
+
+    /**
+     * Checks whether the paragraph contains a picture.
+     *
+     * @param paragraph the paragraph to inspect
+     * @return true if at least one run holds a picture
+     */
+    public static boolean paragraphHasPicture(XWPFParagraph paragraph) {
+        CTP ctp = paragraph.getCTP();
+        if (ctp == null) {
+            return false;
+        }
+
+        for (CTR run : ctp.getRList()) {
+            if (!run.getDrawingList().isEmpty()
+                    || !run.getPictList().isEmpty()
+                    || !run.getObjectList().isEmpty()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

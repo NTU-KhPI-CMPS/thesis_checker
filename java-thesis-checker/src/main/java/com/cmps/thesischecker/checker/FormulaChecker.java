@@ -13,7 +13,6 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFStyles;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
@@ -38,6 +37,7 @@ import java.util.stream.Collectors;
 public class FormulaChecker implements Checker {
 
     private static final Pattern HEADING_NUMBER_PATTERN = Pattern.compile("^\\s*(\\d+)");
+    private static final Pattern CONTAINS_LETTER_PATTERN = Pattern.compile("\\p{L}");
     private static final Pattern NUMBER_ONLY_PATTERN = Pattern.compile("^\\d+\\.\\d+$");
     private static final Pattern TRAILING_LITERAL_PAREN_PATTERN = Pattern.compile("\\(([^()]*)\\)[.,;]?\\s*$");
 
@@ -78,7 +78,43 @@ public class FormulaChecker implements Checker {
                     continue;
                 }
 
-                if (!FormulaUtils.paragraphContainsFormula(paragraph)) {
+                boolean hasWordFormula =
+                        FormulaUtils.paragraphContainsFormula(paragraph);
+
+                boolean hasManualFormula =
+                        FormulaUtils.paragraphHasManualFormulaWithTrailingNumber(paragraph);
+
+                boolean hasImageFormula = !hasWordFormula && !hasManualFormula
+                        && FormulaUtils.isImageFormulaParagraph(paragraph);
+
+                if (!hasWordFormula && !hasManualFormula && !hasImageFormula) {
+                    continue;
+                }
+
+                if (hasWordFormula) {
+                    // paragraph.getText() does not include the OMath content, so a trailing "(N.N)" found
+                    // in it is a number typed as plain text next to the formula object
+                    if (FormulaUtils.paragraphHasTrailingFormulaNumber(paragraph)) {
+                        allErrors.add(buildNumberOutsideFormulaWarning(displayText(paragraph)));
+                    }
+
+                    allErrors.addAll(
+                            checkFormulaBlock(
+                                    paragraphs,
+                                    i,
+                                    currentChapter[0],
+                                    expectedNumberInChapter
+                            )
+                    );
+                } else if (hasImageFormula) {
+                    allErrors.addAll(
+                            checkImageFormula(
+                                    paragraph,
+                                    currentChapter[0],
+                                    expectedNumberInChapter
+                            )
+                    );
+                } else {
                     allErrors.addAll(
                             checkPlainTextFormulaCandidate(
                                     paragraph,
@@ -86,25 +122,15 @@ public class FormulaChecker implements Checker {
                                     expectedNumberInChapter
                             )
                     );
-                    continue;
                 }
-
-                allErrors.addAll(
-                        checkFormulaBlock(
-                                paragraphs,
-                                i,
-                                currentChapter[0],
-                                expectedNumberInChapter
-                        )
-                );
             }
+
         } catch (Exception e) {
             allErrors.add(buildException(e));
         }
 
         return allErrors;
     }
-
     /**
      * Checks the alignment of a paragraph and returns an error if it is not BOTH or RIGHT.
      *
@@ -113,8 +139,22 @@ public class FormulaChecker implements Checker {
      * @return a list containing an alignment error if misaligned, or an empty list if aligned correctly
      */
     private List<FormatError> checkTextAlignment(XWPFParagraph paragraph, String displayedText) {
+        return checkTextAlignment(paragraph, displayedText, false);
+    }
+
+    /**
+     * Checks the alignment of a paragraph. A numbered formula may only be justified (BOTH) or RIGHT;
+     * a formula with a unit in brackets instead of a number ("(грн)") may also be CENTER.
+     *
+     * @param paragraph     the paragraph to check
+     * @param displayedText the text content of the paragraph for error reporting
+     * @param unitFormula   true if the formula ends with a unit in brackets and has no number
+     * @return a list containing an alignment error if misaligned, or an empty list if aligned correctly
+     */
+    private List<FormatError> checkTextAlignment(XWPFParagraph paragraph, String displayedText, boolean unitFormula) {
         String alignment = AlignmentUtils.getAlignment(paragraph);
-        if ("BOTH".equalsIgnoreCase(alignment) || "RIGHT".equalsIgnoreCase(alignment)) {
+        if ("BOTH".equalsIgnoreCase(alignment) || "RIGHT".equalsIgnoreCase(alignment)
+                || (unitFormula && "CENTER".equalsIgnoreCase(alignment))) {
             return List.of();
         }
         return List.of(buildAlignmentError(displayedText, alignment));
@@ -156,6 +196,30 @@ public class FormulaChecker implements Checker {
     }
 
     /**
+     * Handles a formula inserted as a picture: warns that it is not made with the formula tool
+     * and still validates its number, so the numbering sequence of the following formulas stays correct.
+     *
+     * @param paragraph               the paragraph with the picture and the typed number, e.g. "(2.6)"
+     * @param currentChapter          the current chapter number
+     * @param expectedNumberInChapter mutable holder for the expected next formula number
+     * @return the detected errors
+     */
+    private List<FormatError> checkImageFormula(XWPFParagraph paragraph, int currentChapter, int[] expectedNumberInChapter) {
+        List<FormatError> errorList = new ArrayList<>();
+
+        String text = ParagraphUtils.getTrimmedText(paragraph);
+        errorList.add(buildFormulaToolWarning(text));
+        errorList.addAll(checkTextAlignment(paragraph, text));
+
+        String number = FormulaUtils.getTypedNumberOutsideFormula(paragraph);
+        if (number != null) {
+            errorList.addAll(validateFormulaNumber(number, text, currentChapter, expectedNumberInChapter));
+        }
+
+        return errorList;
+    }
+
+    /**
      * Validates a single formula block: surrounding spacing, alignment, one-per-line,
      * numbering, and the notation ("де ...") block that may follow it.
      *
@@ -190,12 +254,27 @@ public class FormulaChecker implements Checker {
                     "Порожній рядок перед формулою"));
         }
 
-        if (!formulaAlone) {
-            errorList.addAll(checkTextAlignment(formulaParagraph, formulaText));
-        }
-
         List<String> formulaXmls = FormulaUtils.getFormulaXmls(formulaParagraph);
         int[] numberCount = {0};
+
+        // A formula embedded in a sentence ("... період (2^19937 − 1) є простим ...") has no number:
+        // its brackets are part of the math, so numbering must not be checked for it.
+        boolean numberingExpected = !FormulaUtils.isInlineFormulaInProse(formulaParagraph);
+
+        // A number typed as plain text next to the formula object ("... (2.6)" after a tab) is THE number
+        // of the formula. Validate it and do not mistake the formula's own brackets for a number.
+        String typedNumber = numberingExpected
+                ? FormulaUtils.getTypedNumberOutsideFormula(formulaParagraph) : null;
+        if (typedNumber != null) {
+            numberCount[0]++;
+            errorList.addAll(validateFormulaNumber(
+                    typedNumber,
+                    formulaText,
+                    currentChapter,
+                    expectedNumberInChapter
+            ));
+            numberingExpected = false;
+        }
 
         for (String formulaXml : formulaXmls) {
             errorList.addAll(checkFormulaXml(
@@ -204,8 +283,17 @@ public class FormulaChecker implements Checker {
                     currentChapter,
                     formulaParagraph,
                     expectedNumberInChapter,
-                    numberCount
+                    numberCount,
+                    numberingExpected
             ));
+        }
+
+        // "(грн)" instead of a number: the formula needs no notation ("де ...") block
+        // and may also be centered (a numbered one only justified or right-aligned)
+        boolean unitFormula = numberCount[0] == 0 && FormulaUtils.hasUnitInBrackets(formulaParagraph, formulaXmls);
+
+        if (!formulaAlone) {
+            errorList.addAll(checkTextAlignment(formulaParagraph, formulaText, unitFormula));
         }
 
         if (formulaAlone && (formulaXmls.size() > 1 || numberCount[0] > 1)) {
@@ -225,7 +313,9 @@ public class FormulaChecker implements Checker {
                     formulaText,
                     "Порожній рядок після формули"));
 
-            errorList.add(buildNotationMissingError(formulaText));
+            if (!unitFormula) {
+                errorList.add(buildNotationMissingError(formulaText));
+            }
 
             return errorList;
         }
@@ -241,7 +331,9 @@ public class FormulaChecker implements Checker {
                 && FormulaUtils.isNotationParagraph(paragraphs.get(afterFormulaIndex));
 
         if (!hasNotationBlock) {
-            errorList.add(buildNotationMissingError(formulaText));
+            if (!unitFormula) {
+                errorList.add(buildNotationMissingError(formulaText));
+            }
 
             if (afterFormulaIndex == nextIndex) {
                 errorList.add(buildSpacingError(
@@ -314,7 +406,8 @@ public class FormulaChecker implements Checker {
      * @return the detected formula-related errors for this XML block
      */
     private List<FormatError> checkFormulaXml(String formulaXml, String paragraphText, int currentChapter, XWPFParagraph formulaParagraph,
-                                  int[] expectedNumberInChapter, int[] numberCount
+                                              int[] expectedNumberInChapter, int[] numberCount,
+                                              boolean numberingExpected
     ) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -345,7 +438,7 @@ public class FormulaChecker implements Checker {
             boolean foundStructuralNumber = false;
             for (int i = 0; i < delimiters.getLength(); i++) {
                 Element delimiter = (Element) delimiters.item(i);
-                String inner = flattenElementText(delimiter).trim();
+                String inner = FormulaUtils.flattenElementText(delimiter).trim();
 
                 if (!NUMBER_ONLY_PATTERN.matcher(inner).matches()) {
                     continue;
@@ -364,12 +457,15 @@ public class FormulaChecker implements Checker {
             }
 
             // Fallback to trailing literal "(...)" text when no structural number is present.
-            if (!foundStructuralNumber) {
-                String flatText = flattenElementText(document.getDocumentElement());
+            // Not for a formula embedded in a sentence or one whose number is typed outside of it:
+            // there the brackets belong to the math itself.
+            if (!foundStructuralNumber && numberingExpected) {
+                String flatText = FormulaUtils.flattenElementText(document.getDocumentElement());
                 Matcher literalParen = TRAILING_LITERAL_PAREN_PATTERN.matcher(flatText.trim());
                 if (literalParen.find()) {
                     String candidate = literalParen.group(1).trim();
-                    if (!candidate.isEmpty()) {
+                    // letters mean the brackets belong to the math itself, e.g. "(x mod 2^32)"
+                    if (!candidate.isEmpty() && !CONTAINS_LETTER_PATTERN.matcher(candidate).find()) {
                         numberCount[0]++;
                         errorList.addAll(
                                 validateFormulaNumber(
@@ -447,23 +543,6 @@ public class FormulaChecker implements Checker {
     }
 
     /**
-     * Concatenates the text of every m:t descendant of the given element.
-     *
-     * @param element the element whose descendant m:t text should be collected
-     * @return the combined text from all descendant math text nodes
-     */
-    private String flattenElementText(Element element) {
-        NodeList texts = element.getElementsByTagName("m:t");
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < texts.getLength(); i++) {
-            Node node = texts.item(i);
-            String t = node.getTextContent();
-            if (t != null) builder.append(t);
-        }
-        return builder.toString();
-    }
-
-    /**
      * Validates a formula number against the current chapter and expected sequence.
      *
      * @param numberText              the extracted formula number string
@@ -473,7 +552,7 @@ public class FormulaChecker implements Checker {
      * @return the detected formula-number validation errors, or an empty list if the number is valid
      */
     private List<FormatError> validateFormulaNumber(String numberText, String paragraphText, int currentChapter,
-                                        int[] expectedNumberInChapter) {
+                                                    int[] expectedNumberInChapter) {
 
         List<FormatError> errorList = new ArrayList<>();
 
@@ -612,6 +691,24 @@ public class FormulaChecker implements Checker {
     }
 
     /**
+     * Creates a warning for a formula whose number is typed as plain text next to the formula object
+     * instead of being a part of the formula.
+     *
+     * @param paragraphText the text content of the paragraph
+     * @return a warning FormatError about a formula number placed outside of the formula
+     */
+    private static FormatError buildNumberOutsideFormulaWarning(String paragraphText) {
+        FormatError error = new FormatError();
+        error.setId("err_formula_number_outside");
+        error.setCategory(ErrorCategory.FORMULA);
+        error.setSeverity("warning");
+        error.setTitle("Номер формули набраний поза формулою");
+        error.setParagraphText(paragraphText);
+        error.setExpected("Номер має бути частиною формули: після виразу введіть #(N) і натисніть Enter");
+        return error;
+    }
+
+    /**
      * Creates a FormatError for a formula number that points to the wrong chapter.
      *
      * @param paragraphText  the text content of the paragraph
@@ -734,6 +831,15 @@ public class FormulaChecker implements Checker {
      * @return the visible paragraph text, extracted formula text, or a placeholder if both are blank
      */
     private static String displayText(XWPFParagraph paragraph) {
+        // paragraph.getText() skips the OMath content, so for a paragraph that has both text and
+        // formulas (e.g. "14.Функція φ(m):" or ", (2.16)") show the text with the formulas in place
+        if (!FormulaUtils.getFormulaXmls(paragraph).isEmpty()) {
+            String ordered = FormulaUtils.orderedParagraphText(paragraph).trim();
+            if (!ordered.isEmpty()) {
+                return ordered;
+            }
+        }
+
         String text = paragraph.getText();
         if (text != null && !text.trim().isEmpty()) {
             return text.trim();

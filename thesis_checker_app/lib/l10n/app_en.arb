@@ -370,6 +370,11 @@
   "@errFormulaNotationSpacing": {
     "description": "Error shown when spacing inside formula notation does not match the requirements"
   },
+  "errFormulaNumberOutside": "Formula number typed outside the formula",
+  "@errFormulaNumberOutside": {
+    "description": "Warning shown when the formula number is typed as plain text next to the formula instead of being part of it"
+  },
+
   "@@comment_figure": "FIGURE CHECKER - Figures",
   "errFigureAlignment": "Incorrect figure alignment",
   "@errFigureAlignment": {
@@ -509,6 +514,10 @@
   "valueFormulaInsertViaTool": "The formula must be inserted via Insert → Formula",
   "@valueFormulaInsertViaTool": {
     "description": "Expected value: use the Word formula tool"
+  },
+  "valueFormulaNumberInsideFormula": "The number must be part of the formula: type #(N) after the expression and press Enter",
+  "@valueFormulaNumberInsideFormula": {
+    "description": "Expected value: the formula number must be placed inside the formula"
   },
   "valueFormulaOnePerLine": "1 formula per line",
   "@valueFormulaOnePerLine": {

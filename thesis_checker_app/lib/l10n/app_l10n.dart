@@ -584,6 +584,12 @@ abstract class AppLocalizations {
   /// **'Incorrect spacing in formula notation'**
   String get errFormulaNotationSpacing;
 
+  /// Warning shown when the formula number is typed as plain text next to the formula instead of being part of it
+  ///
+  /// In en, this message translates to:
+  /// **'Formula number typed outside the formula'**
+  String get errFormulaNumberOutside;
+
   /// Error shown when figure alignment does not match the requirements
   ///
   /// In en, this message translates to:
@@ -787,6 +793,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The formula must be inserted via Insert → Formula'**
   String get valueFormulaInsertViaTool;
+
+  /// Expected value: the formula number must be placed inside the formula
+  ///
+  /// In en, this message translates to:
+  /// **'The number must be part of the formula: type #(N) after the expression and press Enter'**
+  String get valueFormulaNumberInsideFormula;
 
   /// Expected value: one formula per line
   ///

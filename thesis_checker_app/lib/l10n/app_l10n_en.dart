@@ -290,6 +290,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Incorrect spacing in formula notation';
 
   @override
+  String get errFormulaNumberOutside =>
+      'Formula number typed outside the formula';
+
+  @override
   String get errFigureAlignment => 'Incorrect figure alignment';
 
   @override
@@ -397,6 +401,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get valueFormulaInsertViaTool =>
       'The formula must be inserted via Insert → Formula';
+
+  @override
+  String get valueFormulaNumberInsideFormula =>
+      'The number must be part of the formula: type #(N) after the expression and press Enter';
 
   @override
   String get valueFormulaOnePerLine => '1 formula per line';

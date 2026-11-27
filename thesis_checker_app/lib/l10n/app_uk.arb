@@ -370,6 +370,11 @@
   "@errFormulaNotationSpacing": {
     "description": "Помилка, коли відступ у позначенні формули не відповідає вимогам"
   },
+  "errFormulaNumberOutside": "Номер формули набраний поза формулою",
+  "@errFormulaNumberOutside": {
+    "description": "Попередження, коли номер формули набраний звичайним текстом поруч із формулою, а не є її частиною"
+  },
+
   "@@comment_figure": "FIGURE CHECKER - Рисунки",
   "errFigureAlignment": "Невірне вирівнювання рисунка",
   "@errFigureAlignment": {
@@ -509,6 +514,10 @@
   "valueFormulaInsertViaTool": "Формула має бути вставлена через Вставлення → Формула",
   "@valueFormulaInsertViaTool": {
     "description": "Очікуване значення: використати інструмент «Формула» у Word"
+  },
+  "valueFormulaNumberInsideFormula": "Номер має бути частиною формули: після виразу введіть #(N) і натисніть Enter",
+  "@valueFormulaNumberInsideFormula": {
+    "description": "Очікуване значення: номер формули має бути всередині формули"
   },
   "valueFormulaOnePerLine": "1 формула в рядку",
   "@valueFormulaOnePerLine": {
