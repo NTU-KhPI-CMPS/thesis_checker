@@ -12,7 +12,7 @@ $dir = (Resolve-Path 'build\windows\x64\runner\Release').Path
 $manifest = "$dir\AppxManifest.xml"
 $id   = ([xml](Get-Content $manifest -Raw)).Package.Identity
 $pub  = [Security.SecurityElement]::Escape($id.Publisher)
-$msix = "${App}_$Version"
+$msix = "${App}"
 
 # Manifest: uap13 namespace + AutoUpdate entry
 $m = Get-Content $manifest -Raw
