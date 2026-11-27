@@ -4,7 +4,6 @@
   "@appTitle": {
     "description": "Назва застосунку"
   },
-
   "@@comment_home": "Головна сторінка",
   "navHome": "Головна",
   "@navHome": {
@@ -26,7 +25,6 @@
   "@uploadSelectFile": {
     "description": "Текст кнопки для відкриття вибору файлу"
   },
-
   "@@comment_loading": "Екран аналізу",
   "navAnalysis": "Аналіз",
   "@navAnalysis": {
@@ -40,7 +38,6 @@
   "@loadingAnalyzing": {
     "description": "Статусний текст під час аналізу документа"
   },
-
   "@@comment_results": "Екран результату",
   "navResults": "Результати",
   "@navResults": {
@@ -72,22 +69,24 @@
       }
     }
   },
-
   "errorCount": "{count, plural, one{{count} помилка} few{{count} помилки} many{{count} помилок} other{{count} помилки}}",
   "@errorCount": {
     "description": "Кількість помилок з правильним закінченням",
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "warningCount": "{count, plural, one{{count} попередження} few{{count} попередження} many{{count} попереджень} other{{count} попередження}}",
   "@warningCount": {
     "description": "Кількість попереджень з правильним закінченням",
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
-
   "@@comment_error_details": "Фрагменти для вказання відсутності або присутності помилки",
   "errorFragmentMissing": "Фрагмент тексту відсутній.",
   "@errorFragmentMissing": {
@@ -97,7 +96,6 @@
   "@errorArrowShouldBe": {
     "description": "Мітка в деталях помилки для показу очікуваного тексту"
   },
-
   "@@comment_dialogs": "Модальне вікно для запуску повторної перевірки",
   "dialogSettingsTitle": "Налаштування перевірки",
   "@dialogSettingsTitle": {
@@ -123,7 +121,6 @@
   "@dialogStartAnalysis": {
     "description": "Текст кнопки для запуску аналізу з діалогу"
   },
-
   "@@comment_theme": "Тема оформлення",
   "themeLight": "Світла",
   "@themeLight": {
@@ -137,7 +134,6 @@
   "@themeSystem": {
     "description": "Мітка для опції системної теми"
   },
-
   "@@comment_snackbar": "Повідомлення у snackbar",
   "snackbarError": "Виникла помилка: {error}",
   "@snackbarError": {
@@ -149,7 +145,6 @@
       }
     }
   },
-
   "@@comment_check_types": "Доступні категорії перевірок",
   "checkTypeFontTitle": "Шрифт",
   "@checkTypeFontTitle": {
@@ -199,7 +194,6 @@
   "@checkTypeOtherDescription": {
     "description": "Опис категорії інших перевірок"
   },
-
   "@@comment_flutter_errors": "Помилки, які виникають в блоках, репозиторіях, сервісах",
   "unsupportedFileExtensionError": "Файл з розширенням .{extension} не підтримується",
   "@unsupportedFileExtensionError": {
@@ -219,14 +213,12 @@
   "@analysisCouldNotComplete": {
     "description": "Помилка, коли аналіз не вдається завершити"
   },
-
   "@@comment_java_errors": "Помилки з Java чекерів (визначається за ID помилки)",
   "@@comment_alignment": "ALIGNMENT CHECKER - Вирівнювання",
   "errAlignment": "Невірне вирівнювання тексту",
   "@errAlignment": {
     "description": "Помилка, коли вирівнювання тексту не відповідає вимогам"
   },
-
   "@@comment_font": "FONT CHECKER - Шрифти",
   "errFont": "Невірні шрифти у параграфі",
   "@errFont": {
@@ -244,7 +236,6 @@
   "@errTableFontName": {
     "description": "Помилка, коли назва шрифта у таблиці не відповідає вимогам"
   },
-
   "@@comment_size": "SIZE CHECKER - Розмір шрифту",
   "errFontSize": "Неправильний розмір шрифта у параграфі",
   "@errFontSize": {
@@ -266,13 +257,11 @@
   "@errTableFontSize": {
     "description": "Помилка, коли розмір шрифта у таблиці не відповідає вимогам"
   },
-
   "@@comment_linespacing": "LINE SPACING CHECKER - Міжрядковий інтервал",
   "errLinespace": "Неправильні інтервали між рядками у параграфі",
   "@errLinespace": {
     "description": "Помилка, коли міжрядковий інтервал у параграфі не відповідає вимогам"
   },
-
   "@@comment_list": "LIST CHECKER - Списки",
   "errListLevelSkip": "Пропущено рівень вкладеності списку",
   "@errListLevelSkip": {
@@ -306,7 +295,6 @@
   "@warnListManual": {
     "description": "Попередження, коли виявлено ручне форматування списку"
   },
-
   "@@comment_spacing": "PARAGRAPH SPACING CHECKER - Відступи перед/після абзаців",
   "errSpacingBefore": "Невірний відступ перед абзацом",
   "@errSpacingBefore": {
@@ -324,7 +312,6 @@
   "@errTableSpacingAfter": {
     "description": "Помилка, коли відступ після абзацу у таблиці не відповідає вимогам"
   },
-
   "@@comment_indentation": "PARAGRAPH INDENTATION CHECKER - Індентація абзаців",
   "errIndentationLeft": "Невірний відступ зліва",
   "@errIndentationLeft": {
@@ -334,7 +321,6 @@
   "@errIndentationRight": {
     "description": "Помилка, коли правий відступ не відповідає вимогам"
   },
-
   "@@comment_formula": "FORMULA CHECKER - Формули",
   "errFormulaAlignment": "Не правильно вирівняна формула",
   "@errFormulaAlignment": {
@@ -410,7 +396,6 @@
   "@errFigureCaptionFormat": {
     "description": "Помилка, коли підпис рисунка не відповідає потрібному формату"
   },
-
   "@@comment_structure": "STRUCTURAL ELEMENT CHECKER - Структура документа",
   "errStructuralElementMissing": "Відсутній обов'язковий структурний елемент",
   "@errStructuralElementMissing": {
@@ -424,19 +409,16 @@
   "@warnStructuralElementNewPage": {
     "description": "Попередження, коли структурний елемент не починається з нової сторінки"
   },
-
   "@@comment_file_error": "FILE ERROR - Помилка файлу",
   "err000": "Помилка відкриття файлу",
   "@err000": {
     "description": "Помилка, коли файл не вдається відкрити"
   },
-
   "@@comment_error_values": "ЗНАЧЕННЯ ПОМИЛОК - Локалізовані значення \"found\" / \"expected\"",
   "valueDefaultFont": "Шрифт за замовчуванням",
   "@valueDefaultFont": {
     "description": "Значення шрифту: за замовчуванням"
   },
-
   "valueAlignmentLeft": "По лівому краю",
   "@valueAlignmentLeft": {
     "description": "Значення вирівнювання: по лівому краю"
@@ -461,7 +443,6 @@
   "@valueAlignmentBothOrRight": {
     "description": "Допустиме вирівнювання формул: по ширині або правому краю"
   },
-
   "valueListFormatDecimal": "арабські цифри",
   "@valueListFormatDecimal": {
     "description": "Формат нумерації списку: арабські цифри"
@@ -498,7 +479,6 @@
   "@valueListConsistent": {
     "description": "Очікуване значення: один формат нумерації на рівні списку"
   },
-
   "valueFigureNoBlankBefore": "немає пустого рядка перед",
   "@valueFigureNoBlankBefore": {
     "description": "Знайдене значення: немає пустого рядка перед рисунком"
@@ -531,7 +511,6 @@
   "@valueFigureCaptionFormat": {
     "description": "Очікуваний формат підпису рисунка"
   },
-
   "valueFormulaInsertViaTool": "Формула має бути вставлена через Вставлення → Формула",
   "@valueFormulaInsertViaTool": {
     "description": "Очікуване значення: використати інструмент «Формула» у Word"
@@ -580,7 +559,6 @@
   "@valuePlaceholderBlankLine": {
     "description": "Заповнювач для порожнього параграфа"
   },
-
   "valueStructuralPageBreakBefore": "Розрив сторінки перед елементом",
   "@valueStructuralPageBreakBefore": {
     "description": "Очікуване значення: структурний елемент починається з нової сторінки"
@@ -613,7 +591,6 @@
   "@valueStructuralAppendix": {
     "description": "Назва структурного елемента: додаток"
   },
-
   "valueCentimeters": "{value} см",
   "@valueCentimeters": {
     "description": "Довжина в сантиметрах",
@@ -623,5 +600,13 @@
         "description": "Числове значення довжини"
       }
     }
+  },
+  "errFirstLineIndentation": "Невірний відступ першого рядка абзацу",
+  "@errFirstLineIndentation": {
+    "description": "Error shown when first line indentation does not match the requirements"
+  },
+  "warnFirstLineHanging": "Виявлено виступ (hanging indent). Бажано використовувати відступ першого рядка (firstLine)",
+  "@warnFirstLineHanging": {
+    "description": "Warning shown when a paragraph uses a hanging indent"
   }
 }

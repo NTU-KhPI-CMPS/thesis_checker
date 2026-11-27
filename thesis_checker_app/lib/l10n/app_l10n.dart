@@ -913,6 +913,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{value} cm'**
   String valueCentimeters(String value);
+
+  /// Error shown when first line indentation does not match the requirements
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect first line indentation'**
+  String get errFirstLineIndentation;
+
+  /// Warning shown when a paragraph uses a hanging indent
+  ///
+  /// In en, this message translates to:
+  /// **'Hanging indent detected. It is recommended to use a first-line indent (firstLine)'**
+  String get warnFirstLineHanging;
 }
 
 class _AppLocalizationsDelegate
