@@ -137,6 +137,11 @@ void main() {
             'Пояснення «де» безпосередньо перед формулою',
             'The «where» («де») explanation directly below the formula, without a blank line',
           ],
+          [
+            const Locale('en'),
+            'Номер має бути частиною формули: після виразу введіть #(N) і натисніть Enter',
+            'The number must be part of the formula: type #(N) after the expression and press Enter'
+          ]
         ],
         (Locale locale, String value, String expected) {
           // Given

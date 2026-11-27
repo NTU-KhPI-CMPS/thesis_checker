@@ -13,7 +13,6 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFStyles;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
@@ -162,42 +161,6 @@ public class FormulaChecker implements Checker {
     }
 
     /**
-     * Tells whether a formula ends with a unit in brackets ("(грн)") instead of a number.
-     * Looks at the typed text ("... (грн)" next to the formula object, or literal brackets inside the formula)
-     * and at a formula delimiter that holds only a unit and stands at the end of the formula.
-     *
-     * @param paragraph   the paragraph that contains the formula
-     * @param formulaXmls raw XML of the OMath elements of the paragraph
-     * @return true if the formula ends with a unit in brackets
-     */
-    private boolean hasUnitInBrackets(XWPFParagraph paragraph, List<String> formulaXmls) {
-        if (FormulaUtils.endsWithUnitBracket(orderedParagraphText(paragraph))) {
-            return true;
-        }
-
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setNamespaceAware(false);
-
-            for (String xml : formulaXmls) {
-                Document document = factory.newDocumentBuilder()
-                        .parse(new InputSource(new StringReader(xml)));
-                String flat = flattenElementText(document.getDocumentElement()).trim();
-
-                NodeList delimiters = document.getElementsByTagName("m:d");
-                for (int i = 0; i < delimiters.getLength(); i++) {
-                    String inner = flattenElementText((Element) delimiters.item(i)).trim();
-                    if (FormulaUtils.isUnitText(inner) && flat.endsWith(inner)) {
-                        return true;
-                    }
-                }
-            }
-        } catch (Exception ignored) {
-        }
-        return false;
-    }
-
-    /**
      * Detects paragraphs that end with formula-style numbering and have no OMath object.
      *
      * @param paragraph the non-OMath paragraph to inspect
@@ -327,7 +290,7 @@ public class FormulaChecker implements Checker {
 
         // "(грн)" instead of a number: the formula needs no notation ("де ...") block
         // and may also be centered (a numbered one only justified or right-aligned)
-        boolean unitFormula = numberCount[0] == 0 && hasUnitInBrackets(formulaParagraph, formulaXmls);
+        boolean unitFormula = numberCount[0] == 0 && FormulaUtils.hasUnitInBrackets(formulaParagraph, formulaXmls);
 
         if (!formulaAlone) {
             errorList.addAll(checkTextAlignment(formulaParagraph, formulaText, unitFormula));
@@ -475,7 +438,7 @@ public class FormulaChecker implements Checker {
             boolean foundStructuralNumber = false;
             for (int i = 0; i < delimiters.getLength(); i++) {
                 Element delimiter = (Element) delimiters.item(i);
-                String inner = flattenElementText(delimiter).trim();
+                String inner = FormulaUtils.flattenElementText(delimiter).trim();
 
                 if (!NUMBER_ONLY_PATTERN.matcher(inner).matches()) {
                     continue;
@@ -497,7 +460,7 @@ public class FormulaChecker implements Checker {
             // Not for a formula embedded in a sentence or one whose number is typed outside of it:
             // there the brackets belong to the math itself.
             if (!foundStructuralNumber && numberingExpected) {
-                String flatText = flattenElementText(document.getDocumentElement());
+                String flatText = FormulaUtils.flattenElementText(document.getDocumentElement());
                 Matcher literalParen = TRAILING_LITERAL_PAREN_PATTERN.matcher(flatText.trim());
                 if (literalParen.find()) {
                     String candidate = literalParen.group(1).trim();
@@ -577,23 +540,6 @@ public class FormulaChecker implements Checker {
         }
 
         return StyleUtils.getFontSizeFromParagraphStyle(document, styleId);
-    }
-
-    /**
-     * Concatenates the text of every m:t descendant of the given element.
-     *
-     * @param element the element whose descendant m:t text should be collected
-     * @return the combined text from all descendant math text nodes
-     */
-    private String flattenElementText(Element element) {
-        NodeList texts = element.getElementsByTagName("m:t");
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < texts.getLength(); i++) {
-            Node node = texts.item(i);
-            String t = node.getTextContent();
-            if (t != null) builder.append(t);
-        }
-        return builder.toString();
     }
 
     /**
@@ -879,58 +825,6 @@ public class FormulaChecker implements Checker {
     }
 
     /**
-     * Collects the text of a paragraph in document order: ordinary text runs ({@code w:t}),
-     * tabs and the text of math runs ({@code m:t}) exactly where they stand.
-     *
-     * @param paragraph the source paragraph
-     * @return the text with formulas included, or an empty string if it cannot be read
-     */
-    private static String orderedParagraphText(XWPFParagraph paragraph) {
-        try {
-            String xml = paragraph.getCTP().xmlText();
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setNamespaceAware(false);
-            Document document = factory.newDocumentBuilder()
-                    .parse(new InputSource(new StringReader(xml)));
-
-            StringBuilder builder = new StringBuilder();
-            appendOrderedText(document.getDocumentElement(), builder);
-            return builder.toString();
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
-    private static void appendOrderedText(Node node, StringBuilder builder) {
-        if (node.getNodeType() != Node.ELEMENT_NODE) {
-            return;
-        }
-
-        String name = ((Element) node).getTagName();
-        switch (name) {
-            case "w:t", "m:t" -> {
-                builder.append(node.getTextContent());
-                return;
-            }
-            case "w:tab" -> {
-                builder.append('\t');
-                return;
-            }
-            // properties (incl. tab stop definitions in w:pPr), deleted text and field codes carry no visible text
-            case "w:pPr", "w:rPr", "m:rPr", "w:delText", "w:instrText" -> {
-                return;
-            }
-            default -> {
-            }
-        }
-
-        NodeList children = node.getChildNodes();
-        for (int i = 0; i < children.getLength(); i++) {
-            appendOrderedText(children.item(i), builder);
-        }
-    }
-
-    /**
      * Extracts visible text from a paragraph or its formula XML.
      *
      * @param paragraph the source paragraph
@@ -940,7 +834,7 @@ public class FormulaChecker implements Checker {
         // paragraph.getText() skips the OMath content, so for a paragraph that has both text and
         // formulas (e.g. "14.Функція φ(m):" or ", (2.16)") show the text with the formulas in place
         if (!FormulaUtils.getFormulaXmls(paragraph).isEmpty()) {
-            String ordered = orderedParagraphText(paragraph).trim();
+            String ordered = FormulaUtils.orderedParagraphText(paragraph).trim();
             if (!ordered.isEmpty()) {
                 return ordered;
             }

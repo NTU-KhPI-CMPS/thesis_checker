@@ -21,7 +21,7 @@ public class ParagraphUtils {
         }
 
         String text = paragraph.getText();
-        return text != null ? text.trim() : "";
+        return text != null ? text.strip() : "";
     }
 
     /**

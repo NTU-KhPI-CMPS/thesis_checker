@@ -50,6 +50,10 @@ void main() {
             'err_table_spacing_after',
             (AppLocalizations l) => l.errTableSpacingAfter,
           ],
+          [
+            'err_formula_number_outside',
+            (AppLocalizations l) => l.errFormulaNumberOutside
+          ]
         ],
         (String id, String Function(AppLocalizations) expected) {
           // Given

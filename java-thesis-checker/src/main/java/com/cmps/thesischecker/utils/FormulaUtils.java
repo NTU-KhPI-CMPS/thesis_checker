@@ -1,10 +1,18 @@
+
 package com.cmps.thesischecker.utils;
 
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.openxmlformats.schemas.officeDocument.x2006.math.CTOMath;
 import org.openxmlformats.schemas.officeDocument.x2006.math.CTOMathPara;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -18,53 +26,57 @@ public class FormulaUtils {
     // "symbol – description;" — line-continuation of the block of explanation of symbols (6.3.2.4),
     // e.g. "м — маса;". Short "symbol" (up to 10 characters), dash, and then text.
     public static final Pattern NOTATION_CONTINUATION_PATTERN =
-            Pattern.compile("^[\\p{L}\\p{N}]{1,10}\\s*[–—-]\\s*\\S.*");
+            Pattern.compile("^[\\p{L}\\p{N}]{1,10}\\h*[–—-]\\h*\\S.*");
+
     // Real formula number: "chapter.number", both natural numbers WITHOUT leading zeros,
     // chapter >= 1. This rejects decimals such as (0.01), (0.05), (1.05) used in prose.
     private static final String FORMULA_NUMBER = "[1-9]\\d*\\.[1-9]\\d*";
 
     public static final Pattern PLAIN_FORMULA_NUMBER_PATTERN =
-            Pattern.compile("\\(\\s*" + FORMULA_NUMBER + "\\s*\\)[.,;]?\\s*$");
-    private static final Pattern TRAILING_NUMBER_START_PATTERN =
-            Pattern.compile("\\(\\s*" + FORMULA_NUMBER + "\\s*\\)[.,;]?\\s*$");
+            Pattern.compile("\\(\\h*" + FORMULA_NUMBER + "\\h*\\)[.,;]?\\h*$");
+
     // a word of 3+ letters right before the "(" means the number is part of a sentence
     private static final Pattern PROSE_WORD_BEFORE_NUMBER =
-            Pattern.compile("\\p{L}{3,}\\s*$");
+            Pattern.compile("\\p{L}{3,}\\h*$");
+
     // two words in a row right before the "(" ("рівні значущості", "Див. формулу") => a sentence
     private static final Pattern TWO_WORDS_BEFORE_NUMBER =
-            Pattern.compile("\\p{L}{2,}\\p{P}?\\s+\\p{L}{3,}\\s*$");
+            Pattern.compile("\\p{L}{2,}\\p{P}?\\h+\\p{L}{3,}\\h*$");
+
     // a single word of 3+ letters used as an operand/function: operator right before it
     // ("= RMS", "· sin", optionally one single-letter operand in between: "x = a sin")
     private static final Pattern OPERATOR_BEFORE_WORD =
-            Pattern.compile("[=+\\u2212×·÷/^<>≤≥*]\\s*(?:\\p{L}\\s+)?\\p{L}{3,}\\s*$");
+            Pattern.compile("[=+\\u2212×·÷/^<>≤≥*]\\h*(?:\\p{L}\\h+)?\\p{L}{3,}\\h*$");
+
     // tab or 2+ spaces before the "(" is the typical layout of a manually typed formula number
     private static final Pattern GAP_BEFORE_NUMBER =
-            Pattern.compile("(\\t|\\s{2,})$");
+            Pattern.compile("(\\t|\\h{2,})$");
+
     public static final Pattern DASH_FIRST_SYMBOL =
             Pattern.compile("^\\p{Pd}");
-    private static final Pattern TRAILING_NUMBER_AT_END =
-            Pattern.compile("\\(\\s*" + FORMULA_NUMBER + "\\s*\\)[.,;]?\\s*$");
+
     private static final Pattern TYPED_NUMBER_AT_END =
-            Pattern.compile("\\(\\s*(" + FORMULA_NUMBER + ")\\s*\\)[.,;]?\\s*$");
+            Pattern.compile("\\(\\h*(" + FORMULA_NUMBER + ")\\h*\\)[.,;]?\\h*$");
 
     private static final Pattern WORD_3_PLUS = Pattern.compile("\\p{L}{3,}");
 
     private static final Pattern FORMULA_NUMBER_PATTERN =
-            Pattern.compile("\\(\\s*" + FORMULA_NUMBER + "\\s*\\)");
+            Pattern.compile("\\(\\h*" + FORMULA_NUMBER + "\\h*\\)");
 
     private static final Pattern MANUAL_FORMULA_EXPRESSION_PATTERN =
             Pattern.compile(
-                    "[\\p{L}\\p{N})]\\s*[=≠≤≥≈+−×÷*/^∝∈]\\s*[\\p{L}\\p{N}(]"
-                            + "|[\\p{L}\\p{N}]\\s*[²³⁴₀₁₂₃₄₅₆₇₈₉]"
+                    "[\\p{L}\\p{N})]\\h*[=≠≤≥≈+−×÷*/^∝∈]\\h*[\\p{L}\\p{N}(]"
+                            + "|[\\p{L}\\p{N}]\\h*[²³⁴₀₁₂₃₄₅₆₇₈₉]"
             );
 
     // a unit / remark in brackets at the end of a formula: "(грн)", "(ГРН)", "(кг)", "(м/с)", "(%)".
     // Letters are required, digits are not allowed, so a number such as "(1.1)" never matches.
     private static final Pattern TRAILING_UNIT_BRACKET =
-            Pattern.compile("\\(\\s*[%°/.\\s²³]*\\p{L}[\\p{L}%°/.\\s²³]*\\)[.,;]?\\s*$");
+            Pattern.compile("\\(\\h*[%°/.\\h²³]*\\p{L}[\\p{L}%°/.\\h²³]*\\)[.,;]?\\h*$");
+
     // content of a delimiter that is a unit: letters only, at least two ("грн", "кг")
     private static final Pattern UNIT_ONLY_PATTERN =
-            Pattern.compile("^\\p{L}{2,}[\\p{L}%°/.\\s²³]*$");
+            Pattern.compile("^\\p{L}{2,}[\\p{L}%°/.\\h²³]*$");
 
     private FormulaUtils() {
     }
@@ -131,10 +143,119 @@ public class FormulaUtils {
         if (outsideText == null) {
             return false;
         }
-        String withoutNumber = TRAILING_NUMBER_AT_END.matcher(outsideText.stripTrailing()).replaceFirst("");
+
+        String withoutNumber = PLAIN_FORMULA_NUMBER_PATTERN
+                .matcher(outsideText.stripTrailing())
+                .replaceFirst("");
+
         // single letters ("x", "n") can be typed as plain text next to a display formula,
         // so only a real word (3+ letters) counts as prose
         return WORD_3_PLUS.matcher(withoutNumber).find();
+    }
+
+    /**
+     * Collects the text of a paragraph in document order: ordinary text runs ({@code w:t}),
+     * tabs and the text of math runs ({@code m:t}) exactly where they stand.
+     *
+     * @param paragraph the source paragraph
+     * @return the text with formulas included, or an empty string if it cannot be read
+     */
+    public static String orderedParagraphText(XWPFParagraph paragraph) {
+        try {
+            String xml = paragraph.getCTP().xmlText();
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setNamespaceAware(false);
+            Document document = factory.newDocumentBuilder()
+                    .parse(new InputSource(new StringReader(xml)));
+
+            StringBuilder builder = new StringBuilder();
+            appendOrderedText(document.getDocumentElement(), builder);
+            return builder.toString();
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    private static void appendOrderedText(Node node, StringBuilder builder) {
+        if (node.getNodeType() != Node.ELEMENT_NODE) {
+            return;
+        }
+
+        String name = ((Element) node).getTagName();
+        switch (name) {
+            case "w:t", "m:t" -> {
+                builder.append(node.getTextContent());
+                return;
+            }
+            case "w:tab" -> {
+                builder.append('\t');
+                return;
+            }
+            // properties (incl. tab stop definitions in w:pPr), deleted text and field codes carry no visible text
+            case "w:pPr", "w:rPr", "m:rPr", "w:delText", "w:instrText" -> {
+                return;
+            }
+            default -> {
+            }
+        }
+
+        NodeList children = node.getChildNodes();
+        for (int i = 0; i < children.getLength(); i++) {
+            appendOrderedText(children.item(i), builder);
+        }
+    }
+
+    /**
+     * Tells whether a formula ends with a unit in brackets ("(грн)") instead of a number.
+     * Looks at the typed text ("... (грн)" next to the formula object, or literal brackets inside the formula)
+     * and at a formula delimiter that holds only a unit and stands at the end of the formula.
+     *
+     * @param paragraph   the paragraph that contains the formula
+     * @param formulaXmls raw XML of the OMath elements of the paragraph
+     * @return true if the formula ends with a unit in brackets
+     */
+    public static boolean hasUnitInBrackets(XWPFParagraph paragraph, List<String> formulaXmls) {
+        if (FormulaUtils.endsWithUnitBracket(orderedParagraphText(paragraph))) {
+            return true;
+        }
+
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setNamespaceAware(false);
+
+            for (String xml : formulaXmls) {
+                Document document = factory.newDocumentBuilder()
+                        .parse(new InputSource(new StringReader(xml)));
+                String flat = flattenElementText(document.getDocumentElement()).trim();
+
+                NodeList delimiters = document.getElementsByTagName("m:d");
+                for (int i = 0; i < delimiters.getLength(); i++) {
+                    String inner = flattenElementText((Element) delimiters.item(i)).trim();
+                    if (FormulaUtils.isUnitText(inner) && flat.endsWith(inner)) {
+                        return true;
+                    }
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        return false;
+    }
+
+    /**
+     * Concatenates the text of every m:t descendant of the given element.
+     *
+     * @param element the element whose descendant m:t text should be collected
+     * @return the combined text from all descendant math text nodes
+     */
+    public static String flattenElementText(Element element) {
+        NodeList texts = element.getElementsByTagName("m:t");
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < texts.getLength(); i++) {
+            Node node = texts.item(i);
+            String t = node.getTextContent();
+            if (t != null) builder.append(t);
+        }
+        return builder.toString();
     }
 
     /**
@@ -284,7 +405,7 @@ public class FormulaUtils {
             return false;
         }
         String rtrimmed = text.stripTrailing();
-        Matcher m = TRAILING_NUMBER_START_PATTERN.matcher(rtrimmed);
+        Matcher m = PLAIN_FORMULA_NUMBER_PATTERN.matcher(rtrimmed);
         if (!m.find()) {
             return false;
         }
