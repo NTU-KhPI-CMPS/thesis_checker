@@ -1,4 +1,7 @@
 # Thesis Checker
+[![Download for Windows](https://img.shields.io/badge/Windows-Download-brightgreen?style=for-the-badge)](https://github.com/NTU-KhPI-CMPS/thesis_checker/releases/latest/download/thesis_checker.msix)
+[![Download for macOS](https://img.shields.io/badge/macos-Download-brightgreen?style=for-the-badge)](https://github.com/NTU-KhPI-CMPS/thesis_checker/releases/latest/download/thesis_checker.dmg)
+
 A project to automatically verify thesis formatting.
 
 ## Project structure
