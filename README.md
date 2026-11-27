@@ -37,9 +37,8 @@ On macOS:
 
 ### Build and sign app on Windows
 1. Build java app executing `mvn install`
-2. Build an installer executing `dart run msix:create`
-3. In [signing.json](tools/signing.json) set `CodeSigningAccountName` and `CertificateProfileName`
-4. Run: [sign.bat](tools/sign.bat)
+2. In [signing.json](tools/signing.json) set `CodeSigningAccountName` and `CertificateProfileName`
+3. Run: [build_msix.ps1](tools/build_msix.ps1)
 
 ### Build, sign and notarise app on macOS
 1. Build java app executing `mvn install`

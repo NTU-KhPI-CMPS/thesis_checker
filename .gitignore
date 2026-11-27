@@ -50,3 +50,6 @@ reports/
 /java-thesis-checker/target
 /thesis_checker_app/build/
 /thesis_checker_app/assets/checker/java-thesis-checker.*
+
+# Dist
+/thesis_checker_app/dist
