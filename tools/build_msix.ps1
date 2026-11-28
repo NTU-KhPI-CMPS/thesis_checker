@@ -28,7 +28,7 @@ $ai = @"
 <AppInstaller xmlns="http://schemas.microsoft.com/appx/appinstaller/2018" Version="$Version" Uri="$BaseUrl/$App.appinstaller">
   <MainPackage Name="$($id.Name)" Publisher="$pub" Version="$Version" ProcessorArchitecture="$($id.ProcessorArchitecture)" Uri="$BaseUrl/$msix.msix" />
   <UpdateSettings>
-    <OnLaunch HoursBetweenUpdateChecks="0" ShowPrompt="true" UpdateBlocksActivation="false" />
+    <OnLaunch HoursBetweenUpdateChecks="24" ShowPrompt="true" UpdateBlocksActivation="false" />
     <AutomaticBackgroundTask />
   </UpdateSettings>
 </AppInstaller>

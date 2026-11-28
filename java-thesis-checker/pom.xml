@@ -129,14 +129,10 @@
                                 <argument>-classpath</argument>
                                 <classpath/>
                                 <argument>com.cmps.thesischecker.Main</argument>
-                                <argument>-filePath</argument>
-                                <argument>${project.basedir}/agent/file1.docx</argument>
-                                <argument>-filePath</argument>
-                                <argument>${project.basedir}/agent/file2.docx</argument>
-                                <argument>-filePath</argument>
-                                <argument>${project.basedir}/agent/file3.docx</argument>
-                                <argument>-filePath</argument>
-                                <argument>${project.basedir}/agent/file4.docx</argument>
+                                <argument>-directory</argument>
+                                <argument>${project.basedir}/agent</argument>
+                                <argument>-directory</argument>
+                                <argument>${project.basedir}/src/test/resources</argument>
                             </arguments>
                         </configuration>
                     </execution>

@@ -141,6 +141,10 @@ public class FontChecker implements Checker {
     }
 
     private String getFontFromParagraphStyle(XWPFDocument document, String styleId) {
+        if (document.getStyles() == null) {
+            return "Шрифт за замовчуванням";
+        }
+
         XWPFStyle style = document.getStyles().getStyle(styleId);
 
         if (style == null) {
