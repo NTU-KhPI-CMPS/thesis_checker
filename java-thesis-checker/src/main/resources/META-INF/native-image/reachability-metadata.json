@@ -67,6 +67,18 @@
       "type": "java.io.Serializable"
     },
     {
+      "type": "java.lang.Boolean",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "getBoolean",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
       "type": "java.lang.Iterable"
     },
     {
@@ -95,6 +107,24 @@
     },
     {
       "type": "org.apache.logging.log4j.util.SystemPropertiesPropertySource"
+    },
+    {
+      "type": "org.apache.poi.xwpf.usermodel.XWPFDefaultParagraphStyle",
+      "methods": [
+        {
+          "name": "getPPr",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.apache.poi.xwpf.usermodel.XWPFDefaultRunStyle",
+      "methods": [
+        {
+          "name": "getRPr",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "org.apache.xerces.util.SecurityManager"
@@ -320,6 +350,25 @@
       ]
     },
     {
+      "type": "org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STOnOff1$Enum",
+      "fields": [
+        {
+          "name": "table"
+        }
+      ]
+    },
+    {
+      "type": "org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.impl.STOnOff1Impl",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "org.apache.xmlbeans.SchemaType"
+          ]
+        }
+      ]
+    },
+    {
       "type": "org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.impl.STOnOffImpl",
       "methods": [
         {
@@ -446,6 +495,17 @@
     },
     {
       "type": "org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTBrImpl",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "org.apache.xmlbeans.SchemaType"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTCommentsImpl",
       "methods": [
         {
           "name": "<init>",
@@ -984,6 +1044,17 @@
       ]
     },
     {
+      "type": "org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTTblPrImpl",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "org.apache.xmlbeans.SchemaType"
+          ]
+        }
+      ]
+    },
+    {
       "type": "org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTTcImpl",
       "methods": [
         {
@@ -1007,6 +1078,17 @@
     },
     {
       "type": "org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTTextImpl",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "org.apache.xmlbeans.SchemaType"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CommentsDocumentImpl",
       "methods": [
         {
           "name": "<init>",
@@ -1293,6 +1375,9 @@
       "glob": "org/apache/poi/schemas/ooxml/system/ooxml/chartspace36e0doctype.xsb"
     },
     {
+      "glob": "org/apache/poi/schemas/ooxml/system/ooxml/comments3da0doctype.xsb"
+    },
+    {
       "glob": "org/apache/poi/schemas/ooxml/system/ooxml/ctabstractnum588etype.xsb"
     },
     {
@@ -1312,6 +1397,9 @@
     },
     {
       "glob": "org/apache/poi/schemas/ooxml/system/ooxml/ctchartspacef9b4type.xsb"
+    },
+    {
+      "glob": "org/apache/poi/schemas/ooxml/system/ooxml/ctcomments7674type.xsb"
     },
     {
       "glob": "org/apache/poi/schemas/ooxml/system/ooxml/ctdecimalnumbera518type.xsb"
@@ -1488,6 +1576,9 @@
       "glob": "org/apache/poi/schemas/ooxml/system/ooxml/cttblc014type.xsb"
     },
     {
+      "glob": "org/apache/poi/schemas/ooxml/system/ooxml/cttblpr5b72type.xsb"
+    },
+    {
       "glob": "org/apache/poi/schemas/ooxml/system/ooxml/cttc4019type.xsb"
     },
     {
@@ -1599,7 +1690,16 @@
       "glob": "org/apache/xmlbeans/impl/regex/message_uk.properties"
     },
     {
+      "glob": "org/apache/xmlbeans/impl/regex/**"
+    },
+    {
+      "glob": "org/apache/xmlbeans/impl/regex/message_uk_UA.properties"
+    },
+    {
       "glob": "org/apache/xmlbeans/impl/regex/message_uk_PL.properties"
+    },
+    {
+      "glob": "org/apache/xmlbeans/message.properties"
     },
     {
       "glob": "org/apache/xmlbeans/metadata/system/sXMLCONFIG/index.xsb"
@@ -1624,6 +1724,9 @@
     },
     {
       "bundle": "org.apache.xmlbeans.impl.regex.message"
+    },
+    {
+      "bundle": "org.apache.xmlbeans.message"
     }
   ]
 }

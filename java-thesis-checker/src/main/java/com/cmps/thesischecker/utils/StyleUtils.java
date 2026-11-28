@@ -24,6 +24,9 @@ public class StyleUtils {
      * @return the style ID for the "Normal" style, or the default ID if no match is found
      */
     public static String getNormalStyleId(XWPFStyles styles) {
+        if (styles == null) {
+            return Style.NORMAL.getPrimaryId();
+        }
         return Style.NORMAL.getAliases().stream()
                 .filter(alias -> styles.getStyle(alias) != null)
                 .findFirst()
@@ -69,6 +72,10 @@ public class StyleUtils {
      * @return the font size in points, or 12.0 if not specified
      */
     public static double getFontSizeFromParagraphStyle(XWPFDocument document, String styleId) {
+        if (document.getStyles() == null) {
+            return 12.0;
+        }
+
         XWPFStyle style = document.getStyles().getStyle(styleId);
 
         if (style == null) {
